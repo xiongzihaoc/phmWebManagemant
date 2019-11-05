@@ -14,7 +14,7 @@
 
       <el-form-item prop="username">
         <el-input
-         prefix-icon="iconfont iconiconup"
+          prefix-icon="iconfont iconiconup"
           ref="username"
           v-model="loginForm.username"
           placeholder="Username"
@@ -27,7 +27,6 @@
 
       <el-form-item prop="password">
         <el-input
-        
           :key="passwordType"
           ref="password"
           v-model="loginForm.password"
@@ -70,7 +69,8 @@ export default {
   },
   methods: {
     handleLogin() {
-        this.$router.push('/home')
+      this.$message.success("登录成功");
+      this.$router.push("/home");
     }
   }
 };

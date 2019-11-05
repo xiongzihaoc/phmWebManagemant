@@ -1,49 +1,39 @@
 <template>
-  <el-container class="container">
-    <el-header>
-      <div class="logo">
-        <!-- <img src="../assets/heima.png" alt /> -->
-        <span>卓亚科技</span>
-      </div>
-      <el-button type="info" @click="logout">退出</el-button>
-    </el-header>
-    <el-container>
-      <el-aside :width="isCollapse?'64px':'200px'">
-        <div @click="isCollapse=!isCollapse" class="string">| | |</div>
-        <el-menu
-          background-color="#333744"
-          text-color="#fff"
-          active-text-color="pink"
-          :unique-opened="true"
-          :collapse="isCollapse"
-          :collapse-transition="false"
-          router
-          :default-active="activePath"
-        >
-          <!-- 一级菜单 -->
-          <el-submenu :index=" '/' + item.id" v-for="item in menulist" :key="item.id">
-            <!-- 一级菜单的模板区域 -->
-            <template slot="title">
-              <!-- 图标 -->
-              <i :class="iconsObj[item.id]"></i>
-              <!-- 文本 -->
-              <span>{{item.authName}}</span>
-            </template>
-            <el-menu-item
-              @click="saveNavState(subItem.path)"
-              :index="'/' + subItem.path"
-              v-for="subItem in item.children"
-              :key="subItem.id"
-            >
-              <i class="el-icon-menu"></i>
-              {{subItem.authName}}
+  <!-- 容器 -->
+  <el-container>
+    <!-- 侧边栏 -->
+    <el-aside width="200px">
+      <!-- 侧边栏菜单区域 -->
+      <el-menu background-color="#304156" text-color="#BFCBD9">
+        <!-- 一级菜单 -->
+        <el-submenu index="1">
+          <template slot="title">
+            <i class="el-icon-location"></i>
+            <span>导航一</span>
+          </template>
+          <!-- 二级菜单 -->
+            <el-menu-item index="1-4-1">
+              <template slot="title">
+              <i class="el-icon-location"></i>
+              <span>导航一</span>
+              </template>
             </el-menu-item>
-          </el-submenu>
-        </el-menu>
-      </el-aside>
+        </el-submenu>
+      </el-menu>
+    </el-aside>
+    <el-container>
+      <!-- 头部区域 -->
+      <el-header>
+        <div class="header_left">
+          <h1>back-stage management</h1>
+        </div>
+        <div class="header_right" @click="logout()">
+          <img src="../assets/header.gif" />
+        </div>
+      </el-header>
+      <!-- 主体内容区域 -->
       <el-main>
-        <!-- 子组件占位符 -->
-        <router-view></router-view>
+        <h1>Main</h1>
       </el-main>
     </el-container>
   </el-container>
@@ -51,79 +41,49 @@
 <script>
 export default {
   data() {
-    return {
-      menulist: [],
-      iconsObj: {
-        // id是key icon是值
-        "125": "iconfont icon-users",
-        "103": "iconfont icon-tijikongjian",
-        "101": "iconfont icon-shangpin",
-        "102": "iconfont icon-danju",
-        "145": "iconfont icon-baobiao"
-      },
-      isCollapse: false,
-      activePath: ""
-    };
+    return {};
   },
-//   created() {
-//     this.getMenulist();
-//     this.activePath = window.sessionStorage.getItem("activePath");
-//   },
+  created() {
+    // this.getMenuList();
+  },
   methods: {
     logout() {
+      this.$message.success("退出成功");
       this.$router.push("/login");
     },
-    // async getMenulist() {
-    //   const { data: res } = await this.$http.get("menus");
-    //   if (res.meta.status != 200) return this.$message.error(res.meta.msg);
-    //   this.menulist = res.data;
-    //   // console.log(res);
-    // },
-    //保持链接的激活状态
-    // saveNavState(activePath) {
-    //   this.activePath = "/" + activePath;
-    //   sessionStorage.setItem("activePath", "/" + activePath);
-    // }
+    async getMenuList() {
+      const { data: res } = await this.$http.get("menu/getMenuList.do");
+      console.log(res);
+    }
   }
 };
 </script>
 <style lang='less' scoped>
-.container {
+.el-container {
   height: 100%;
 }
-.el-header {
-  background-color: #373d41;
-  display: flex;
-  justify-content: space-between;
-  font-size: 24px;
-  color: #fff;
-  align-items: center;
-  padding-left: 0;
-  > .logo {
-    display: flex;
-    align-items: center;
-    > span {
-      margin-left: 15px;
-    }
-  }
-}
 .el-aside {
-  background-color: rgb(51, 55, 68);
+  background: #304156;
 }
-.el-main {
-  background-color: rgb(234, 237, 241);
+
+.el-header {
+  box-shadow: 0 1px 4px rgba(0, 21, 41, 0.08);
 }
-.el-menu {
-  border: none;
+.header_left {
+  float: left;
+  margin-top: 20px;
 }
-.iconfont {
-  margin-right: 10px;
+.header_right {
+  float: right;
+  width: 40px;
+  height: 40px;
+  margin-top: 10px;
 }
-.string {
-  cursor: pointer;
-  color: #999;
-  background-color: #373d41;
-  text-align: center;
-  font-size: 18px;
+.header_right img {
+  float: left;
+  width: 100%;
+  height: 100%;
+  border-radius: 10px;
 }
+
 </style>

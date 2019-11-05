@@ -4,6 +4,12 @@ import router from './router'
 import './plugins/element.js'
 // 导入字体图表
 import './assets/iconfont/iconfont.css'
+// 导入axios
+import axios from 'axios'
+// 配置axios
+axios.defaults.baseURL = 'http://192.168.3.30:8080/admin_manager_war_exploded/'
+Vue.prototype.$http = axios
+
 
 Vue.config.productionTip = false
 // // 配置axios
