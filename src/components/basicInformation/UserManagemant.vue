@@ -1,6 +1,6 @@
 <template>
     <div>
-        <img src="../assets/logo.png" alt="">
+        <h1>用户管理</h1>
     </div>
 </template>
 <script>
@@ -16,9 +16,5 @@ export default {
 }
 </script>
 <style lang='less' scoped>
-    img {
-        display: block;
-        margin-left: 40%;
-        margin-top: 10%;
-    }
+    
 </style>

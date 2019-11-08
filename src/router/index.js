@@ -3,14 +3,24 @@ import VueRouter from 'vue-router'
 import Login from '../components/Login.vue'
 import Home from '../components/Home.vue'
 import Index from '../components/Index.vue'
-import DoctorManagement from '../components/basic information/DoctorManagement.vue'
+import MenuManagemant from '../components/basicInformation/MenuManagemant.vue'
+import DoctorManagement from '../components/basicInformation/DoctorManagement.vue'
+import SystemAccount from '../components/basicInformation/SystemAccount.vue'
+import HosptialManagement from '../components/basicInformation/HosptialManagement.vue'
+import Dictionary from '../components/basicInformation/Dictionary.vue'
+import UserManagemant from '../components/basicInformation/UserManagemant.vue'
 Vue.use(VueRouter)
 
 const routes = [{path: '/',redirect: '/login'},
   {path: '/login',component: Login},
   {path: '/home',component: Home,redirect: '/index',children: [
     { path: '/index',component: Index},
-    { path: '/user/userList.do',component: DoctorManagement},
+    { path: '/system/menu',component: MenuManagemant},
+    { path: '/system/user',component: SystemAccount},
+    { path: '/system/doctor',component: DoctorManagement},
+    { path: '/system/hosptial',component: HosptialManagement},
+    { path: '/system/dict',component: Dictionary},
+    { path: '/system/patient',component: UserManagemant},
   ]
   },
 ]
@@ -18,5 +28,4 @@ const routes = [{path: '/',redirect: '/login'},
 const router = new VueRouter({
   routes
 })
-
 export default router

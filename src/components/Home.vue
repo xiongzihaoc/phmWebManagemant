@@ -75,8 +75,7 @@ export default {
       const { data: res } = await this.$http.post("menu/getMenuList.do");
       if (res.status != 200) return this.$message.error(res.msg);
       this.menuList = res.data;
-      console.log(res);
-      // console.log(this.menuList);
+      // console.log(res);
     },
     // 是否折叠展架侧边栏
     toggleCollapse() {
@@ -120,5 +119,8 @@ export default {
   width: 100%;
   height: 100%;
   border-radius: 10px;
+}
+.el-menu {
+  border-right: none;
 }
 </style>

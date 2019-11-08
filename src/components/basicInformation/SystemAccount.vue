@@ -1,0 +1,221 @@
+<template>
+  <div>
+    <!-- 面包屑 -->
+    <el-breadcrumb separator-class="el-icon-arrow-right">
+      <el-breadcrumb-item :to="{ path: '/home' }">首页</el-breadcrumb-item>
+      <el-breadcrumb-item>系统用户</el-breadcrumb-item>
+    </el-breadcrumb>
+    <!-- 卡片视图 -->
+    <el-card>
+      <el-row :gutter="20">
+        <el-col :span="7">
+          <el-input placeholder="请输入内容" v-model="input" clearable>
+            <el-button slot="append" icon="el-icon-search"></el-button>
+          </el-input>
+        </el-col>
+        <!-- 添加用户按钮 -->
+        <el-col :span="4">
+          <el-button type="primary">添加用户</el-button>
+        </el-col>
+      </el-row>
+      <!-- 表格 -->
+      <el-table stripe :data="userList" border style="width: 100%">
+        <el-table-column align="center" type="selection" width="40"></el-table-column>
+        <el-table-column align="center" prop="acId" label="序号" width="60"></el-table-column>
+        <el-table-column align="center" prop="userName" label="用户名"></el-table-column>
+        <el-table-column align="center" prop="loginName" label="登录名"></el-table-column>
+        <el-table-column align="center" prop="userEmail" label="邮箱"></el-table-column>
+        <el-table-column align="center" prop="loginIp" label="IP"></el-table-column>
+        <el-table-column align="center" prop="userPhone" label="手机号"></el-table-column>
+        <el-table-column align="center" prop="operate" label="操作" width="180">
+          <template slot-scope="scope">
+            <!-- 修改按钮 -->
+            <el-button
+              size="mini"
+              @click="showEditdialog(scope.row)"
+              type="primary"
+              icon="el-icon-edit"
+            ></el-button>
+            <!-- 删除按钮 -->
+            <el-button
+              size="mini"
+              @click="removeUserById(scope.row.acId)"
+              type="danger"
+              icon="el-icon-delete"
+            ></el-button>
+          </template>
+        </el-table-column>
+      </el-table>
+      <!-- 分页区域 -->
+      <el-pagination
+        @size-change="handleSizeChange"
+        @current-change="handleCurrentChange"
+        :current-page="pageNum"
+        :page-sizes="[10, 20,50]"
+        :page-size="pageSize"
+        layout="total, sizes, prev, pager, next, jumper"
+        :total="total"
+      ></el-pagination>
+    </el-card>
+    <!-- 添加用户输入界面 -->
+
+    <!-- 修改页面 -->
+    <el-dialog title="修改信息" :visible.sync="editDialogVisible" width="40%">
+      <el-form
+        :rules="addFormRules"
+        ref="editFormRef"
+        :model="editForm"
+        label-width="80px"
+        @closed="editDialogClosed"
+      >
+        <el-form-item label="用户名" prop="username">
+          <el-input v-model="editForm.userName"></el-input>
+        </el-form-item>
+        <el-form-item label="邮箱" prop="email">
+          <el-input v-model="editForm.userEmail"></el-input>
+        </el-form-item>
+        <el-form-item label="手机号" prop="mobile">
+          <el-input v-model="editForm.userPhone"></el-input>
+        </el-form-item>
+      </el-form>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="editDialogVisible = false">取 消</el-button>
+        <el-button type="primary" @click="edit">确 定</el-button>
+      </span>
+    </el-dialog>
+  </div>
+</template>
+<script>
+export default {
+  data() {
+    var checkEmaile = (rule, value, cb) => {
+      const regEmail = /^([a-zA-Z0-9_-])+@([a-zA-Z0-9_-])+(\.[a-zA-Z0-9_-])+/;
+      if (regEmail.test(value)) {
+        return cb();
+      }
+      return cb(new Error("请输入合法的邮箱"));
+    };
+    var checkMobile = (rule, value, cb) => {
+      const regMoblie = /^(0|86|17951)?(13[0-9]|15[012356789]|17[678]|18[0-9]|14[57])[0-9]{8}$/;
+      if (regMoblie.test(value)) {
+        return cb();
+      }
+      return cb(new Error("请输入合法的手机号"));
+    };
+    return {
+      input: "",
+      userList: [],
+      //获取用户列表的参数对象
+      pageSize: 10,
+      pageNum: 1,
+      total: 0,
+      editDialogVisible: false,
+      editForm: {
+        userName: "",
+        userEmail: "",
+        userPhone: ""
+      },
+      addFormRules: {
+        userName: [
+          { required: true, message: "用户名不能为空", trigger: "blur" }
+        ],
+        userEmail: [
+          { required: true, message: "邮箱不能为空", trigger: "blur" },
+          { validator: checkEmaile, trigger: "blur" }
+        ],
+        userPhone: [
+          { required: true, message: "手机号不能为空", trigger: "blur" },
+          { validator: checkMobile, trigger: "blur" }
+        ]
+      }
+    };
+  },
+  created() {
+    this.getUserList();
+  },
+  methods: {
+    // 获取用户列表
+    async getUserList() {
+      const { data: res } = await this.$http.post("user/getUserList.do", {
+        pageSize: this.pageSize,
+        pageNum: this.pageNum
+      });
+      // console.log(res);
+
+      if (res.code != 200) return this.$message.error("数获取失败");
+      this.userList = res.rows;
+      this.total = res.total;
+    },
+    // 分页
+    handleSizeChange(newSize) {
+      this.pageSize = newSize;
+      this.getUserList();
+    },
+    handleCurrentChange(newPage) {
+      this.pageNum = newPage;
+      this.getUserList();
+    },
+    // 添加
+    // 修改
+    showEditdialog(info) {
+      // console.log(info);
+      this.editForm = info;
+      this.editDialogVisible = true;
+    },
+    editDialogClosed() {
+      this.$refs.editFormRef.resetFields();
+    },
+     edit() {
+      // const { data: res } = await this.$http.put("users/" + this.id, {
+      //   email: this.editForm.email,
+      //   mobile: this.editForm.mobile
+      // });
+      // if (res.meta.status != 200) {
+      //   return this.$message.error("修改用户信息失败");
+      // } else {
+      //   this.$message.success("修改用户成功");
+      //   this.getUserList();
+      //   this.editDialogVisible = false;
+      // }
+    },
+    // 删除
+    async removeUserById(id) {
+      const confirmResult = await this.$confirm(
+        "你确定要执行此操作, 是否继续?",
+        "提示",
+        {
+          confirmButtonText: "确定",
+          cancelButtonText: "取消",
+          type: "warning"
+        }
+      ).catch(err => console.log(err));
+      if (confirmResult != "confirm") {
+        return this.$message.info("取消删除");
+      }
+      const { data: res } = await this.$http.get(
+        "user/delSysUser.do?acId=" + id
+      );
+      if (res.status == 200) {
+        this.$message.success("删除成功");
+        this.getUserList();
+      } else {
+        this.$message.error("操作失败");
+      }
+    }
+  }
+};
+</script>
+<style lang='less' scoped>
+.el-card {
+  margin-top: 10px;
+}
+.el-table {
+  margin-top: 10px;
+}
+.el-pagination {
+  margin-top: 10px;
+}
+.el-form {
+    margin-right: 30px;
+}
+</style>
