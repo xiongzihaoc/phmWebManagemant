@@ -39,6 +39,8 @@
               v-model="scope.row.status"
               active-color="#409167"
               inactive-color="#ccc"
+              active-value="0"
+              inactive-value="1"
               @change="userStateChanged(scope.row)"
             ></el-switch>
           </template>
@@ -133,8 +135,7 @@ export default {
         icon: "",
         url: ""
       },
-      editId: 0,
-      status:''
+      editId: 0
     };
   },
   created() {
@@ -144,9 +145,7 @@ export default {
     // 获取菜单列表
     async getMenuList() {
       const { data: res } = await this.$http.post("menu/getMenuList2.do");
-      if (res.status != 200) return this.$message.error(res.msg);
       this.menuList = res.data;
-      //   console.log(res);
     },
     // 修改弹框
     showEditdialog(val) {
@@ -169,23 +168,20 @@ export default {
       });
       if (res.status != 200) return this.$message.error("操作失败");
       this.editDialogVisible = false;
-      this.$message.success('操作成功')
+      this.$message.success("操作成功");
       this.getMenuList();
     },
     // 改变状态按钮
     async userStateChanged(userinfo) {
-      console.log(userinfo);
-      if (userinfo.status = true) {
-        userinfo.status = 0
-      } else if (userinfo.status = false) {
-        userinfo.status = 1
-      }
-       const { data: res } = await this.$http.post("menu/updateSysMenu.do", {
-        menu_id: userinfo.menuId,
+      const { data: res } = await this.$http.post("menu/updateSysMenu.do", {
+        menuId: userinfo.menuId,
         status: userinfo.status
       });
-      console.log(res);
-      
+       if (res.status != 200) {
+        userinfo.status = !userinfo.status;
+        return this.$message.error("更新用户状态失败");
+      }
+      this.$message.success("更新用户状态成功");
       
     },
     // 增加菜单弹框
@@ -217,8 +213,5 @@ export default {
 }
 .el-form {
   margin-right: 30px;
-}
-.el-table__row--level-0 .el-table_2_column_13 {
-  display: none;
 }
 </style>
