@@ -68,13 +68,13 @@
         label-width="80px"
         @closed="editDialogClosed"
       >
-        <el-form-item label="用户名" prop="username">
+        <el-form-item label="用户名" prop="userName">
           <el-input v-model="editForm.userName"></el-input>
         </el-form-item>
-        <el-form-item label="邮箱" prop="email">
+        <el-form-item label="邮箱" prop="userEmail">
           <el-input v-model="editForm.userEmail"></el-input>
         </el-form-item>
-        <el-form-item label="手机号" prop="mobile">
+        <el-form-item label="手机号" prop="userPhone">
           <el-input v-model="editForm.userPhone"></el-input>
         </el-form-item>
       </el-form>
@@ -115,6 +115,7 @@ export default {
         userEmail: "",
         userPhone: ""
       },
+      editId: 0,
       addFormRules: {
         userName: [
           { required: true, message: "用户名不能为空", trigger: "blur" }
@@ -158,7 +159,8 @@ export default {
     // 添加
     // 修改
     showEditdialog(info) {
-      // console.log(info);
+      console.log(info);
+      this.editId = info.acId;
       this.editForm = info;
       this.editDialogVisible = true;
     },
@@ -166,7 +168,8 @@ export default {
       this.$refs.editFormRef.resetFields();
     },
     async edit() {
-      const { data: res } = await this.$http.post("users/updateSysUser.do?acId=" + this.id, {
+      const { data: res } = await this.$http.post("users/updateSysUser.do", {
+        acId: this.editId,
         email: this.editForm.email,
         mobile: this.editForm.mobile
       });
@@ -216,6 +219,6 @@ export default {
   margin-top: 10px;
 }
 .el-form {
-    margin-right: 30px;
+  margin-right: 30px;
 }
 </style>

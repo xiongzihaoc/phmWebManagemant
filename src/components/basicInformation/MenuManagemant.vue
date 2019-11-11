@@ -133,7 +133,8 @@ export default {
         icon: "",
         url: ""
       },
-      editId: 0
+      editId: 0,
+      status:''
     };
   },
   created() {
@@ -149,9 +150,6 @@ export default {
     },
     // 修改弹框
     showEditdialog(val) {
-      console.log(val);
-      
-      // if ()
       this.editForm = val;
       this.editId = val.menuId;
       this.editDialogVisible = true;
@@ -177,9 +175,17 @@ export default {
     // 改变状态按钮
     async userStateChanged(userinfo) {
       console.log(userinfo);
+      if (userinfo.status = true) {
+        userinfo.status = 0
+      } else if (userinfo.status = false) {
+        userinfo.status = 1
+      }
        const { data: res } = await this.$http.post("menu/updateSysMenu.do", {
-        menuId: userinfo.menuId,
+        menu_id: userinfo.menuId,
+        status: userinfo.status
       });
+      console.log(res);
+      
       
     },
     // 增加菜单弹框
