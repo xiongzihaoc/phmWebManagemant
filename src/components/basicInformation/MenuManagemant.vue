@@ -48,7 +48,7 @@
             <!-- 修改按钮 -->
             <el-button
               size="mini"
-              @click="showEditdialog(scope.row.acId)"
+              @click="showEditdialog(scope.row)"
               type="primary"
               icon="el-icon-edit"
             ></el-button>
@@ -64,7 +64,7 @@
       </el-table>
     </el-card>
     <!-- 添加提示框 -->
-    <el-dialog title="添加选项" :visible.sync="addDialogVisible" width="30%">
+    <el-dialog title="添加选项" :visible.sync="addDialogVisible" width="40%">
       <el-form ref="addFormRef" :model="addForm" label-width="80px">
         <el-form-item label="名称">
           <el-input v-model="addForm.menuName"></el-input>
@@ -84,6 +84,27 @@
         <el-button type="primary" @click="addEnter">确 定</el-button>
       </span>
     </el-dialog>
+    <!-- 编辑提示框 -->
+    <el-dialog title="编辑选项" :visible.sync="editDialogVisible" width="40%" @closed="editDialogClosed">
+      <el-form ref="editFormRef" :model="editForm" label-width="80px">
+        <el-form-item label="名称" prop="menuName">
+          <el-input v-model="editForm.menuName"></el-input>
+        </el-form-item>
+        <el-form-item label="菜单类型" prop="menuType">
+          <el-input v-model="editForm.menuType"></el-input>
+        </el-form-item>
+        <el-form-item label="路径" prop="url">
+          <el-input v-model="editForm.url"></el-input>
+        </el-form-item>
+        <el-form-item label="样式" prop="icon">
+          <el-input v-model="editForm.icon"></el-input>
+        </el-form-item>
+      </el-form>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="editDialogVisible = false">取 消</el-button>
+        <el-button type="primary" @click="editEnter">确 定</el-button>
+      </span>
+    </el-dialog>
   </div>
 </template>
 <script>
@@ -97,9 +118,17 @@ export default {
         menuName: "",
         menuType: "",
         icon: "",
-        url: "",
+        url: ""
       },
-      addId: 0
+      addId: 0,
+      editDialogVisible: false,
+      editForm: {
+        menuName: "",
+        menuType: "",
+        icon: "",
+        url: ""
+      },
+      editId:0
     };
   },
   created() {
@@ -112,21 +141,41 @@ export default {
       this.menuList = res.data;
       //   console.log(res);
     },
-    showEditdialog() {},
+    showEditdialog(val) {
+      this.editForm = val;
+      this.editId = val.menuId
+      this.editDialogVisible = true;
+    },
+    editDialogClosed(){
+      this.$refs.editFormRef.resetFields();
+    },
+    async editEnter() {
+      const { data: res } = await this.$http.post("menu/updateSysMenu.do" , {
+        menuId:this.editId,
+        menuName: this.editForm.menuName,
+        menuType: this.editForm.menuType,
+        url: this.editForm.url,
+        icon: this.editForm.icon
+      });
+      console.log(res);
+      if (res.status != 200) return this.$message.error('操作失败')
+      this.editDialogVisible = false;
+       this.getMenuList();
+    },
     // 状态
     userStateChanged() {},
     addDialog(val) {
-      this.addId = val.parentId;
+      this.addId = val.menuId;
       this.addDialogVisible = true;
     },
     async addEnter() {
       // console.log(this.addId);
       const { data: res } = await this.$http.post("menu/saveSysMenu.do", {
         parentId: this.addId,
-        menuName:this.addForm.menuName,
-        menuType:this.addForm.menuType,
-        url:this.addForm.url,
-        icon:this.addForm.icon,
+        menuName: this.addForm.menuName,
+        menuType: this.addForm.menuType,
+        url: this.addForm.url,
+        icon: this.addForm.icon
       });
       console.log(res);
       this.addDialogVisible = false;
@@ -143,5 +192,8 @@ export default {
 }
 .el-form {
   margin-right: 30px;
+}
+.el-table__row--level-0 .el-table_2_column_13 {
+  display: none;
 }
 </style>

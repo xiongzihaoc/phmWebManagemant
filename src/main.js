@@ -17,7 +17,7 @@ return originalPush.call(this, location).catch(err => err)
 // 导入axios
 import axios from 'axios'
 // 配置axios
-axios.defaults.baseURL = 'http://192.168.3.110:8080/zhuoya_manager/'
+axios.defaults.baseURL = 'http://192.168.3.30:8080/zhuoya_manager/'
 // axios请求拦截器
 axios.interceptors.request.use(function (config) {
   Nprogress.start()

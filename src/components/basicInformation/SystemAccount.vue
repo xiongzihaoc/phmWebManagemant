@@ -165,18 +165,18 @@ export default {
     editDialogClosed() {
       this.$refs.editFormRef.resetFields();
     },
-     edit() {
-      // const { data: res } = await this.$http.put("users/" + this.id, {
-      //   email: this.editForm.email,
-      //   mobile: this.editForm.mobile
-      // });
-      // if (res.meta.status != 200) {
-      //   return this.$message.error("修改用户信息失败");
-      // } else {
-      //   this.$message.success("修改用户成功");
-      //   this.getUserList();
-      //   this.editDialogVisible = false;
-      // }
+    async edit() {
+      const { data: res } = await this.$http.post("users/updateSysUser.do?acId=" + this.id, {
+        email: this.editForm.email,
+        mobile: this.editForm.mobile
+      });
+      if (res.meta.status != 200) {
+        return this.$message.error("修改用户信息失败");
+      } else {
+        this.$message.success("修改用户成功");
+        this.getUserList();
+        this.editDialogVisible = false;
+      }
     },
     // 删除
     async removeUserById(id) {
