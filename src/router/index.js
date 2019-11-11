@@ -9,6 +9,10 @@ import SystemAccount from '../components/basicInformation/SystemAccount.vue'
 import HosptialManagement from '../components/basicInformation/HosptialManagement.vue'
 import Dictionary from '../components/basicInformation/Dictionary.vue'
 import UserManagemant from '../components/basicInformation/UserManagemant.vue'
+import FoodManagement from '../components/dietaryManagement/FoodManagement.vue'
+import DietPlan from '../components/dietaryManagement/DietPlan.vue'
+import MovementPlan from '../components/sportManagement/MovementPlan.vue'
+import WaterSolution from '../components/waterManagement/WaterSolution.vue'
 Vue.use(VueRouter)
 
 const routes = [{path: '/',redirect: '/login'},
@@ -21,6 +25,10 @@ const routes = [{path: '/',redirect: '/login'},
     { path: '/system/hosptial',component: HosptialManagement},
     { path: '/system/dict',component: Dictionary},
     { path: '/system/patient',component: UserManagemant},
+    { path: '/food/foodManagemant',component: FoodManagement},
+    { path: '/food/DietPlan',component: DietPlan},
+    { path: '/sport/MovementPlan',component: MovementPlan},
+    { path: '/water/WaterSolution',component: WaterSolution},
   ]
   },
 ]

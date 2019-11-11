@@ -36,7 +36,7 @@
           <!-- 作用域插槽 -->
           <template slot-scope="scope">
             <el-switch
-              v-model="scope.row.mg_state"
+              v-model="scope.row.status"
               active-color="#409167"
               inactive-color="#ccc"
               @change="userStateChanged(scope.row)"
@@ -85,7 +85,12 @@
       </span>
     </el-dialog>
     <!-- 编辑提示框 -->
-    <el-dialog title="编辑选项" :visible.sync="editDialogVisible" width="40%" @closed="editDialogClosed">
+    <el-dialog
+      title="编辑选项"
+      :visible.sync="editDialogVisible"
+      width="40%"
+      @closed="editDialogClosed"
+    >
       <el-form ref="editFormRef" :model="editForm" label-width="80px">
         <el-form-item label="名称" prop="menuName">
           <el-input v-model="editForm.menuName"></el-input>
@@ -128,46 +133,61 @@ export default {
         icon: "",
         url: ""
       },
-      editId:0
+      editId: 0
     };
   },
   created() {
     this.getMenuList();
   },
   methods: {
+    // 获取菜单列表
     async getMenuList() {
       const { data: res } = await this.$http.post("menu/getMenuList2.do");
       if (res.status != 200) return this.$message.error(res.msg);
       this.menuList = res.data;
       //   console.log(res);
     },
+    // 修改弹框
     showEditdialog(val) {
+      console.log(val);
+      
+      // if ()
       this.editForm = val;
-      this.editId = val.menuId
+      this.editId = val.menuId;
       this.editDialogVisible = true;
     },
-    editDialogClosed(){
+    // 修改弹框关闭
+    editDialogClosed() {
       this.$refs.editFormRef.resetFields();
     },
+    // 确定修改
     async editEnter() {
-      const { data: res } = await this.$http.post("menu/updateSysMenu.do" , {
-        menuId:this.editId,
+      const { data: res } = await this.$http.post("menu/updateSysMenu.do", {
+        menuId: this.editId,
         menuName: this.editForm.menuName,
         menuType: this.editForm.menuType,
         url: this.editForm.url,
         icon: this.editForm.icon
       });
-      console.log(res);
-      if (res.status != 200) return this.$message.error('操作失败')
+      if (res.status != 200) return this.$message.error("操作失败");
       this.editDialogVisible = false;
-       this.getMenuList();
+      this.$message.success('操作成功')
+      this.getMenuList();
     },
-    // 状态
-    userStateChanged() {},
+    // 改变状态按钮
+    async userStateChanged(userinfo) {
+      console.log(userinfo);
+       const { data: res } = await this.$http.post("menu/updateSysMenu.do", {
+        menuId: userinfo.menuId,
+      });
+      
+    },
+    // 增加菜单弹框
     addDialog(val) {
       this.addId = val.menuId;
       this.addDialogVisible = true;
     },
+    // 确定增加
     async addEnter() {
       // console.log(this.addId);
       const { data: res } = await this.$http.post("menu/saveSysMenu.do", {
@@ -177,7 +197,6 @@ export default {
         url: this.addForm.url,
         icon: this.addForm.icon
       });
-      console.log(res);
       this.addDialogVisible = false;
     }
   }
