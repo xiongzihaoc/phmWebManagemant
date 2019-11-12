@@ -52,16 +52,46 @@
       ></el-pagination>
     </el-card>
     <!-- 修改页面 -->
-    <el-dialog title="修改信息" :visible.sync="editDialogVisible" width="40%">
+    <el-dialog title="修改" :visible.sync="editDialogVisible" width="40%">
       <el-form label-width="80px">
-        <el-form-item label="用户名">
+        <el-form-item label="食物名称">
           <el-input></el-input>
         </el-form-item>
-        <el-form-item label="邮箱">
-          <el-input></el-input>
+        <el-form-item label="食物类型">
+          <el-select v-model="value2" placeholder="请选择">
+            <el-option
+              v-for="item in options"
+              :key="item.value"
+              :label="item.label"
+              :value="item.value"
+            ></el-option>
+          </el-select>
         </el-form-item>
-        <el-form-item label="手机号">
-          <el-input></el-input>
+        <el-form-item label="是否常见">
+          <el-select v-model="value" placeholder="请选择">
+            <el-option label="0" value="0"></el-option>
+            <el-option label="1" value="1"></el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item label="食物描述">
+          <el-input
+            type="textarea"
+            :autosize="{ minRows: 10, maxRows: 10}"
+            placeholder="请输入内容"
+            v-model="textarea2"
+          ></el-input>
+        </el-form-item>
+        <el-form-item label="食物图片">
+          <el-upload
+            class="avatar-uploader"
+            action="https://jsonplaceholder.typicode.com/posts/"
+            :show-file-list="false"
+            :on-success="handleAvatarSuccess"
+            :before-upload="beforeAvatarUpload"
+          >
+            <img v-if="imageUrl" :src="imageUrl" class="avatar" />
+            <i v-else class="el-icon-plus avatar-uploader-icon"></i>
+          </el-upload>
         </el-form-item>
       </el-form>
       <span slot="footer" class="dialog-footer">
@@ -80,7 +110,33 @@ export default {
       pageSize: 10,
       pageNum: 1,
       total: 0,
-      editDialogVisible: false
+      editDialogVisible: false,
+      options: [
+        {
+          value: "选项1",
+          label: "黄金糕"
+        },
+        {
+          value: "选项2",
+          label: "双皮奶"
+        },
+        {
+          value: "选项3",
+          label: "蚵仔煎"
+        },
+        {
+          value: "选项4",
+          label: "龙须面"
+        },
+        {
+          value: "选项5",
+          label: "北京烤鸭"
+        }
+      ],
+      value: "",
+      value2: "",
+      imageUrl: "",
+      textarea2:''
     };
   },
 
@@ -117,13 +173,56 @@ export default {
     edit() {
       this.editDialogVisible = false;
     },
-    // 删除
-    removeUserById(id) {
-      console.log(id);
-      
+
+    handleAvatarSuccess(res, file) {
+      this.imageUrl = URL.createObjectURL(file.raw);
+    },
+    beforeAvatarUpload(file) {
+      const isJPG = file.type === "image/jpeg";
+      const isLt2M = file.size / 1024 / 1024 < 2;
+
+      if (!isJPG) {
+        this.$message.error("上传头像图片只能是 JPG 格式!");
+      }
+      if (!isLt2M) {
+        this.$message.error("上传头像图片大小不能超过 2MB!");
+      }
+      return isJPG && isLt2M;
     }
   }
 };
 </script>
 <style lang='less' scoped>
+.el-card {
+  margin-top: 10px;
+}
+
+.el-table {
+  margin-top: 10px;
+}
+.avatar-uploader .el-upload {
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+}
+
+.avatar-uploader-icon {
+  display: block;
+  font-size: 28px;
+  color: #8c939d;
+  width: 178px;
+  height: 178px;
+  line-height: 178px;
+  text-align: center;
+  border: 1px dashed #ccc;
+}
+.avatar {
+  width: 178px;
+  height: 178px;
+  display: block;
+}
+.diseaseDes {
+  display: block;
+  height: 100px;
+}
 </style>

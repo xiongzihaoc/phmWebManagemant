@@ -15,7 +15,7 @@
         </el-col>
         <!-- 添加用户按钮 -->
         <el-col :span="4">
-          <el-button type="primary">添加食物</el-button>
+          <el-button type="primary" @click="addWater">添加饮水</el-button>
         </el-col>
       </el-row>
       <!-- 表格 -->
@@ -50,13 +50,22 @@
       </el-table>
 
       <!-- 修改页面 -->
-      <el-dialog title="修改信息" :visible.sync="editDialogVisible" width="40%">
+      <el-dialog :title="dialogTitle" :visible.sync="editDialogVisible" width="40%">
         <el-form :model="editForm" ref="editFormRef" label-width="80px" @closed="editDialogClosed">
           <el-form-item label="名称" prop="name">
             <el-input v-model="editForm.name"></el-input>
           </el-form-item>
           <el-form-item label="图标" prop="iconUrl">
-            <el-input v-model="editForm.iconUrl"></el-input>
+            <el-upload
+              class="avatar-uploader"
+              action="http://192.168.3.30:8080/zhuoya_manager/oss/fileUpload.do"
+              :show-file-list="false"
+              :on-success="handleAvatarSuccess"
+              :before-upload="beforeAvatarUpload"
+            >
+              <img v-if="imageUrl" :src="imageUrl" class="avatar" />
+              <i v-else class="el-icon-plus avatar-uploader-icon"></i>
+            </el-upload>
           </el-form-item>
           <el-form-item label="描述" prop="description">
             <el-input v-model="editForm.description"></el-input>
@@ -85,7 +94,9 @@ export default {
         iconUrl: "",
         description: ""
       },
-      id: 0
+      id: 0,
+      dialogTitle: "",
+      imageUrl: ""
     };
   },
   created() {
@@ -97,41 +108,99 @@ export default {
         "water/type/getPWaterTypeList.do",
         { pageSize: this.pageSize, pageNum: this.pageNum }
       );
-      console.log(res);
+      console.log(res.rows);
       this.waterList = res.rows;
+      console.log(this.waterList);
     },
     // 修改
     async showEditdialog(info) {
-      // this.id = info.id
-      // const { data: res } = await this.$http.post("water/type/getPWaterTypeList.do",{id:this.id});
-      // if ()
-      this.editForm = info;
+      this.dialogTitle = "修改";
+      this.id = info.id;
+      this.editForm = JSON.parse(JSON.stringify(info));
       this.editDialogVisible = true;
     },
     editDialogClosed() {
+      this.imageUrl = "";
       this.$refs.editFormRef.resetFields();
     },
-    editEnter() {
-      const { data:res } = this.$http.post("water/type/updatePWaterType.do", {
-        id: this.id,
-        name: this.editForm.name,
-        iconUrl: this.editForm.iconUrl,
-        description: this.editForm.description
-      });
-      console.log(res);
-      
-      if (res.status != 200) {
-        return this.$message.error("修改失败");
+    async editEnter() {
+      let httpUrl = "";
+      let parm = {};
+      if (this.dialogTitle == "修改") {
+        httpUrl = "water/type/updatePWaterType.do";
+        parm = {
+          id: this.id,
+          name: this.editForm.name,
+          iconUrl: this.editForm.iconUrl,
+          description: this.editForm.description
+        };
       } else {
-        this.$$message.success('修改成功')
-        this.getWaterList()
-        this.editDialogVisible = false;
+        httpUrl = "water/type/savePWaterType.do";
+        parm = {
+          name: this.editForm.name,
+          iconUrl: this.editForm.iconUrl,
+          description: this.editForm.description
+        };
       }
+      const { data: res } = await this.$http.post(httpUrl, parm);
+      if (res.status != 200) return this.$message.error(res.msg);
+      this.$message.success(res.msg);
+      this.getWaterList();
+      this.editDialogVisible = false;
     },
     // 删除
-    removeUserById() {}
+    removeUserById() {},
+    addWater() {
+      this.dialogTitle = "新增";
+      this.editForm = {};
+      this.editDialogVisible = true;
+    },
+
+    handleAvatarSuccess(res, file) {
+      console.log(res);
+      this.imageUrl = res.data;
+      this.editForm.iconUrl = res.data;
+    },
+    beforeAvatarUpload(file) {
+      const isJPG = file.type === "image/jpeg";
+      const isGIF = file.type === "image/gif";
+      const isPNG = file.type === "image/png";
+      const isBMP = file.type === "image/bmp";
+      const isLt2M = file.size / 1024 / 1024 < 2;
+
+      if (!isJPG && !isGIF && !isPNG && !isBMP) {
+        this.common.errorTip("上传图片必须是JPG/GIF/PNG/BMP 格式!");
+      }
+      if (!isLt2M) {
+        this.common.errorTip("上传图片大小不能超过 2MB!");
+      }
+      return (isJPG || isBMP || isGIF || isPNG) && isLt2M;
+    }
   }
 };
 </script>
 <style lang='less' scoped>
+.avatar-uploader .el-upload {
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+}
+.avatar-uploader-icon:hover {
+  border-color: #409eff;
+}
+.avatar-uploader-icon {
+  display: block;
+  font-size: 28px;
+  color: #8c939d;
+  width: 80px;
+  height: 80px;
+  line-height: 80px;
+  text-align: center;
+  border: 1px dashed #ccc;
+}
+.avatar {
+  width: 60px;
+  height: 80px;
+  display: block;
+}
 </style>
