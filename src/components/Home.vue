@@ -11,7 +11,7 @@
         :collapse="isCollapse"
         :collapse-transition="false"
         router
-        :default-active="activePath"
+        :default-active="this.$route.path"
       >
         <!-- 一级菜单 -->
         <el-submenu :index="item.menuId + ''" v-for="item in menuList" :key="item.menuId">
@@ -38,10 +38,10 @@
       <!-- 头部区域 -->
       <el-header>
         <div class="header_left">
-          <i @click="toggleCollapse()" class="el-icon-s-fold"></i>
+          <i @click="toggleCollapse()" class="el-icon-s-fold" id="toggle"></i>
         </div>
         <div class="header_right" @click="logout()">
-          <img src="../assets/header.gif" alt="退出" />
+          <img src="../assets/images/header.gif" alt="退出" />
         </div>
       </el-header>
       <!-- 主体内容区域 -->
@@ -58,7 +58,7 @@ export default {
     return {
       menuList: [],
       isCollapse: false,
-      activePath:''
+      activePath:""
     };
   },
   created() {
@@ -84,7 +84,7 @@ export default {
     // 保持连接的激活状态
     saveNavState(activePath) {
       window.sessionStorage.setItem('activePath',activePath)
-    }
+    },
   }
 };
 </script>
@@ -122,5 +122,12 @@ export default {
 }
 .el-menu {
   border-right: none;
+}
+#toggle {
+  float: left;
+}
+#index {
+  float: left;
+  margin-left: 10px;
 }
 </style>

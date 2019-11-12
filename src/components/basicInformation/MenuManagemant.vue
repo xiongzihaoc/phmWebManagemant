@@ -177,12 +177,11 @@ export default {
         menuId: userinfo.menuId,
         status: userinfo.status
       });
-       if (res.status != 200) {
+      if (res.status != 200) {
         userinfo.status = !userinfo.status;
         return this.$message.error("更新用户状态失败");
       }
       this.$message.success("更新用户状态成功");
-      
     },
     // 增加菜单弹框
     addDialog(val) {
@@ -205,13 +204,4 @@ export default {
 };
 </script>
 <style lang='less' scoped>
-.el-card {
-  margin-top: 10px;
-}
-.el-table {
-  margin-top: 10px;
-}
-.el-form {
-  margin-right: 30px;
-}
 </style>

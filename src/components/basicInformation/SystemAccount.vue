@@ -209,16 +209,4 @@ export default {
 };
 </script>
 <style lang='less' scoped>
-.el-card {
-  margin-top: 10px;
-}
-.el-table {
-  margin-top: 10px;
-}
-.el-pagination {
-  margin-top: 10px;
-}
-.el-form {
-  margin-right: 30px;
-}
 </style>

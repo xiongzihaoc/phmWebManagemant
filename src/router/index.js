@@ -13,6 +13,7 @@ import FoodManagement from '../components/dietaryManagement/FoodManagement.vue'
 import DietPlan from '../components/dietaryManagement/DietPlan.vue'
 import MovementPlan from '../components/sportManagement/MovementPlan.vue'
 import WaterSolution from '../components/waterManagement/WaterSolution.vue'
+import WaterType from '../components/waterManagement/WaterType.vue'
 Vue.use(VueRouter)
 
 const routes = [{path: '/',redirect: '/login'},
@@ -29,6 +30,7 @@ const routes = [{path: '/',redirect: '/login'},
     { path: '/food/DietPlan',component: DietPlan},
     { path: '/sport/MovementPlan',component: MovementPlan},
     { path: '/water/WaterSolution',component: WaterSolution},
+    { path: '/water/WaterType',component: WaterType},
   ]
   },
 ]

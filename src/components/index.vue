@@ -1,6 +1,6 @@
 <template>
     <div>
-        <img src="../assets/logo.png" alt="">
+        <img src="../assets/images/angry.gif" alt="">
     </div>
 </template>
 <script>

@@ -69,10 +69,4 @@ export default {
 };
 </script>
 <style lang='less' scoped>
-.el-card {
-  margin-top: 10px;
-}
-.el-table {
-  margin-top: 10px;
-}
 </style>
