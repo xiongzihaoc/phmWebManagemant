@@ -39,6 +39,7 @@
       <el-header>
         <div class="header_left">
           <i @click="toggleCollapse()" class="el-icon-s-fold" id="toggle"></i>
+          <i class="el-icon-s-home" @click="jumpIndex" id="index"></i>
         </div>
         <div class="header_right" @click="logout()">
           <img src="../assets/images/header.gif" alt="退出" />
@@ -85,6 +86,9 @@ export default {
     saveNavState(activePath) {
       window.sessionStorage.setItem('activePath',activePath)
     },
+    jumpIndex() {
+      this.$router.push('/index')
+    }
   }
 };
 </script>

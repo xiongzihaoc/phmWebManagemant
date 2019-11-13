@@ -25,7 +25,7 @@
         <el-table-column align="center" prop="name" label="名称"></el-table-column>
         <el-table-column align="center" label="图标">
           <template slot-scope="scope">
-            <img :src="scope.row.iconUrl" />
+            <img id="img" :src="scope.row.iconUrl" />
           </template>
         </el-table-column>
         <el-table-column align="center" prop="description" label="描述"></el-table-column>
@@ -50,8 +50,13 @@
       </el-table>
 
       <!-- 修改页面 -->
-      <el-dialog :title="dialogTitle" :visible.sync="editDialogVisible" width="40%">
-        <el-form :model="editForm" ref="editFormRef" label-width="80px" @closed="editDialogClosed">
+      <el-dialog
+        :title="dialogTitle"
+        :visible.sync="editDialogVisible"
+        width="40%"
+        @closed="editDialogClosed"
+      >
+        <el-form :model="editForm" ref="editFormRef" label-width="80px">
           <el-form-item label="名称" prop="name">
             <el-input v-model="editForm.name"></el-input>
           </el-form-item>
@@ -108,20 +113,18 @@ export default {
         "water/type/getPWaterTypeList.do",
         { pageSize: this.pageSize, pageNum: this.pageNum }
       );
-      console.log(res.rows);
       this.waterList = res.rows;
-      console.log(this.waterList);
     },
     // 修改
-    async showEditdialog(info) {
+    showEditdialog(info) {
       this.dialogTitle = "修改";
       this.id = info.id;
       this.editForm = JSON.parse(JSON.stringify(info));
       this.editDialogVisible = true;
     },
     editDialogClosed() {
-      this.imageUrl = "";
       this.$refs.editFormRef.resetFields();
+      this.imageUrl = "";
     },
     async editEnter() {
       let httpUrl = "";
@@ -146,10 +149,36 @@ export default {
       if (res.status != 200) return this.$message.error(res.msg);
       this.$message.success(res.msg);
       this.getWaterList();
-      this.editDialogVisible = false;
+      this.editDialogVisible =false
     },
     // 删除
-    removeUserById() {},
+    async removeUserById(info) {
+      const confirmResult = await this.$confirm(
+        "你确定要执行此操作, 是否继续?",
+        "提示",
+        {
+          confirmButtonText: "确定",
+          cancelButtonText: "取消",
+          type: "warning"
+        }
+      ).catch(err => console.log(err));
+      if (confirmResult != "confirm") {
+        return this.$message.info("取消删除");
+      }
+      const { data: res } = await this.$http.post(
+        "water/type/delPWaterType.do",
+        {
+          id: info
+        }
+      );
+      if (res.status == 200) {
+        this.$message.success("删除成功");
+        this.getWaterList();
+      } else {
+        this.$message.error("删除失败");
+        return;
+      }
+    },
     addWater() {
       this.dialogTitle = "新增";
       this.editForm = {};
