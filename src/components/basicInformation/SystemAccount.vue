@@ -173,7 +173,7 @@ export default {
         email: this.editForm.email,
         mobile: this.editForm.mobile
       });
-      if (res.meta.status != 200) {
+      if (res.meta.code != 200) {
         return this.$message.error("修改用户信息失败");
       } else {
         this.$message.success("修改用户成功");
@@ -198,7 +198,7 @@ export default {
       const { data: res } = await this.$http.get(
         "user/delSysUser.do?acId=" + id
       );
-      if (res.status == 200) {
+      if (res.code == 200) {
         this.$message.success("删除成功");
         this.getUserList();
       } else {

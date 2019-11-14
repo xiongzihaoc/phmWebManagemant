@@ -3,14 +3,14 @@
     <!-- 面包屑 -->
     <el-breadcrumb separator-class="el-icon-arrow-right">
       <el-breadcrumb-item :to="{ path: '/home' }">首页</el-breadcrumb-item>
-      <el-breadcrumb-item>食物管理</el-breadcrumb-item>
+      <el-breadcrumb-item>饮水方案</el-breadcrumb-item>
     </el-breadcrumb>
     <!-- 卡片视图 -->
     <el-card>
       <el-row :gutter="20">
         <el-col :span="7">
           <el-input placeholder="请输入内容" @keyup.13.native="WaterSearch" v-model="input" clearable>
-            <el-button slot="append" icon="el-icon-search" @click="WaterSearch" ></el-button>
+            <el-button slot="append" icon="el-icon-search" @click="WaterSearch"></el-button>
           </el-input>
         </el-col>
         <!-- 添加饮水方案按钮 -->
@@ -47,7 +47,16 @@
           </template>
         </el-table-column>
       </el-table>
-
+      <!-- 分页 -->
+      <el-pagination
+        @size-change="handleSizeChange"
+        @current-change="handleCurrentChange"
+        :current-page="pageNum"
+        :page-sizes="[10, 20,50]"
+        :page-size="pageSize"
+        layout="total, sizes, prev, pager, next, jumper"
+        :total="total"
+      ></el-pagination>
       <!-- 修改添加页面 -->
       <el-dialog
         :title="dialogTitle"
@@ -117,6 +126,9 @@ export default {
     return {
       input: "",
       waterTypeList: [],
+      pageSize: 10,
+      pageNum: 1,
+      total: 0,
       DialogVisible: false,
       dialogTitle: "",
       editAddForm: {
@@ -147,10 +159,11 @@ export default {
         {
           pageSize: this.pageSize,
           pageNum: this.pageNum,
-          name:this.input
+          name: this.input
         }
       );
       this.waterTypeList = res.rows;
+      this.total = res.total
       console.log(res);
     },
     // 获取饮水种类
@@ -161,6 +174,15 @@ export default {
       );
       this.DrinkTypeList = res.rows;
     },
+    // 分页
+    handleSizeChange(newSize) {
+      this.pageSize = newSize;
+      this.getWaterTypeList();
+    },
+    handleCurrentChange(newPage) {
+      this.pageNum = newPage;
+      this.getWaterTypeList();
+    },
     // 修改
     showEditdialog(info) {
       this.dialogTitle = "修改";
@@ -168,9 +190,16 @@ export default {
       this.editAddForm = {
         ...this.editAddForm,
         ...info
-      }
-      this.editAddForm.addAllowWaterIds = this.editAddForm.allowWaterIds.split(',').filter(n => n).map(n => Number(n))
-      this.editAddForm.addNoWaterIds = this.editAddForm.noWaterIds.split(',').filter(n => n).map(n => Number(n))
+      };
+      this.editAddForm.addAllowWaterIds = this.editAddForm.allowWaterIds
+        .split(",")
+        .filter(n => n)
+        .map(n => Number(n));
+      this.editAddForm.addNoWaterIds = this.editAddForm.noWaterIds
+        .split(",")
+        .filter(n => n)
+        .map(n => Number(n));
+        
       this.DialogVisible = true;
     },
     DialogClosed() {
@@ -196,7 +225,7 @@ export default {
           id: info
         }
       );
-      if (res.status == 200) {
+      if (res.code == 200) {
         this.$message.success("删除成功");
         this.getWaterTypeList();
       } else {
@@ -205,19 +234,19 @@ export default {
       }
     },
     // 搜索
-    WaterSearch(){
-      this.getWaterTypeList()
+    WaterSearch() {
+      this.getWaterTypeList();
     },
-    
+
     // 添加
     addWaterType() {
       this.dialogTitle = "新增";
-      this.editAddForm = {}
+      this.editAddForm = {};
       this.DialogVisible = true;
     },
     // 确定修改或添加
     async editAddEnter() {
-      console.log( this.editAddForm);
+      console.log(this.editAddForm);
       let stringIds = this.editAddForm.addAllowWaterIds.join(",");
       let stringIds1 = this.editAddForm.addNoWaterIds.join(",");
       let httpUrl = "";
@@ -245,7 +274,7 @@ export default {
         };
       }
       const { data: res } = await this.$http.post(httpUrl, parm);
-      if (res.status != 200) return this.$message.error(res.msg);
+      if (res.code != 200) return this.$message.error(res.msg);
       this.$message.success(res.msg);
       this.getWaterTypeList();
       this.DialogVisible = false;

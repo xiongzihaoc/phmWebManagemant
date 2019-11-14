@@ -194,7 +194,7 @@ export default {
       const { data: res } = await this.$http.post("food/delPFood.do", {
         id: info
       });
-      if (res.status == 200) {
+      if (res.code == 200) {
         this.$message.success("删除成功");
         this.getFoodList();
       } else {
@@ -238,7 +238,7 @@ export default {
         };
       }
       const { data: res } = await this.$http.post(httpUrl, parm);
-      if (res.status != 200) return this.$message.error(res.msg);
+      if (res.code != 200) return this.$message.error(res.msg);
       this.$message.success(res.msg);
       this.getFoodList();
       this.imageUrl = "";

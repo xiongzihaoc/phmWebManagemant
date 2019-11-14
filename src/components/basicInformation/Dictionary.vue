@@ -23,16 +23,15 @@
         :data="menuList"
         :lazy="true"
         style="width: 100%;margin-bottom: 20px;"
-        row-key="menuId"
+        row-key="id"
         border
         stripe
         default-expand-all
         :tree-props="{children: 'child', hasChildren: 'hasChildren'}"
       >
-        <el-table-column align="center" prop="menuName" label="名称" sortable width="180"></el-table-column>
-        <el-table-column align="center" prop="menuType" label="菜单类型" sortable width="180"></el-table-column>
-        <el-table-column align="center" prop="url" label="路径"></el-table-column>
-        <el-table-column align="center" prop="icon" label="样式"></el-table-column>
+        <el-table-column align="center" prop="name" label="名称" sortable width="180"></el-table-column>
+        <el-table-column align="center" prop="menuType" label="键值" sortable width="180"></el-table-column>
+        <el-table-column align="center" prop="icon" label="状态"></el-table-column>
         <el-table-column align="center" prop="orderNum" label="排序号"></el-table-column>
         <el-table-column align="center" prop="operate" label="操作" width="180">
           <template slot-scope="scope">
@@ -64,7 +63,17 @@ export default {
       menuList: []
     };
   },
-  methods: {}
+  created(){
+    this.getDictionaryList()
+  },
+  methods: {
+    async getDictionaryList(){
+      const {data:res} = await this.$http.post('sys/dict/getSysDictList.do',{})
+      console.log(res);
+      this.menuList = res.rows
+      
+    },
+  }
 };
 </script>
 <style lang='less' scoped>

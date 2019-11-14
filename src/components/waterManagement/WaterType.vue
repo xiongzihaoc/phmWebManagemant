@@ -48,7 +48,16 @@
           </template>
         </el-table-column>
       </el-table>
-
+      <!-- 分页 -->
+      <el-pagination
+        @size-change="handleSizeChange"
+        @current-change="handleCurrentChange"
+        :current-page="pageNum"
+        :page-sizes="[10, 20,50]"
+        :page-size="pageSize"
+        layout="total, sizes, prev, pager, next, jumper"
+        :total="total"
+      ></el-pagination>
       <!-- 修改页面 -->
       <el-dialog
         :title="dialogTitle"
@@ -111,9 +120,19 @@ export default {
     async getWaterList() {
       const { data: res } = await this.$http.post(
         "water/type/getPWaterTypeList.do",
-        { pageSize: this.pageSize, pageNum: this.pageNum ,name:this.input}
+        { pageSize: this.pageSize, pageNum: this.pageNum, name: this.input }
       );
       this.waterList = res.rows;
+      this.total = res.total
+    },
+    // 分页
+    handleSizeChange(newSize) {
+      this.pageSize = newSize;
+      this.getWaterList();
+    },
+    handleCurrentChange(newPage) {
+      this.pageNum = newPage;
+      this.getWaterList();
     },
     // 修改
     showEditdialog(info) {
@@ -146,14 +165,14 @@ export default {
         };
       }
       const { data: res } = await this.$http.post(httpUrl, parm);
-      if (res.status != 200) return this.$message.error(res.msg);
+      if (res.code != 200) return this.$message.error(res.msg);
       this.$message.success(res.msg);
       this.getWaterList();
-      this.editDialogVisible =false
+      this.editDialogVisible = false;
     },
     // 搜索
-    WaterSearch(){
-      this.getWaterList()
+    WaterSearch() {
+      this.getWaterList();
     },
     // 删除
     async removeUserById(info) {
@@ -175,7 +194,7 @@ export default {
           id: info
         }
       );
-      if (res.status == 200) {
+      if (res.code == 200) {
         this.$message.success("删除成功");
         this.getWaterList();
       } else {

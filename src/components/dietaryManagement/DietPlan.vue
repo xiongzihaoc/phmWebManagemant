@@ -9,7 +9,7 @@
     <el-card>
       <el-row :gutter="20">
         <el-col :span="7">
-          <el-input placeholder="请输入内容" v-model="input"  @keyup.13.native="Foodsearch" clearable>
+          <el-input placeholder="请输入内容" v-model="input" @keyup.13.native="Foodsearch" clearable>
             <el-button slot="append" icon="el-icon-search" @click="Foodsearch"></el-button>
           </el-input>
         </el-col>
@@ -66,9 +66,9 @@
           <el-form-item label="名称" prop="dsName">
             <el-input v-model="AddEditForm.dsName"></el-input>
           </el-form-item>
-          <el-form-item label="禁忌食物" prop="dsTabooFood">
+          <el-form-item label="禁忌食物" prop="addFoodIds">
             <el-select
-              v-model="AddEditForm.dsTabooFood"
+              v-model="AddEditForm.addFoodIds"
               clearable
               :reserve-keyword="true"
               filterable
@@ -120,8 +120,9 @@ export default {
       editAddDialogVisible: false,
       dialogTitle: "",
       AddEditForm: {
+        addFoodIds: [],
         dsName: "",
-        dsTabooFood: "",
+        dsTabooFoodId: "",
         dsTabooDescribe: "",
         dsDescribe: ""
       },
@@ -167,9 +168,11 @@ export default {
     showEditdialog(info) {
       this.dialogTitle = "修改";
       this.id = info.id;
-      this.AddEditForm = JSON.parse(JSON.stringify(info));
-      console.log(this.AddEditForm);
-
+      this.AddEditForm = {
+        ...this.AddEditForm,
+        ...info
+      };
+      this.AddEditForm.addFoodIds = this.AddEditForm.dsTabooFoodId.split(",").filter(n => n).map(n => Number(n));
       this.editAddDialogVisible = true;
     },
     // 添加
@@ -189,7 +192,7 @@ export default {
         parm = {
           id: this.id,
           dsName: this.AddEditForm.dsName,
-          dsTabooFood: this.AddEditForm.dsTabooFood.toString(),
+          dsTabooFoodId: this.AddEditForm.addFoodIds.toString(),
           dsTabooDescribe: this.AddEditForm.dsTabooDescribe,
           dsDescribe: this.AddEditForm.dsDescribe
         };
@@ -197,13 +200,13 @@ export default {
         httpUrl = "foodPlan/savePFoodPlan.do";
         parm = {
           dsName: this.AddEditForm.dsName,
-          dsTabooFood: this.AddEditForm.dsTabooFood.toString(),
+          dsTabooFoodId: this.AddEditForm.addFoodIds.toString(),
           dsTabooDescribe: this.AddEditForm.dsTabooDescribe,
           dsDescribe: this.AddEditForm.dsDescribe
         };
       }
       const { data: res } = await this.$http.post(httpUrl, parm);
-      if (res.status != 200) return this.$message.error(res.msg);
+      if (res.code != 200) return this.$message.error(res.msg);
       this.$message.success(res.msg);
       this.getFoodTypeList();
       this.editAddDialogVisible = false;
@@ -225,7 +228,7 @@ export default {
       const { data: res } = await this.$http.post("foodPlan/delPFoodPlan.do", {
         id: id
       });
-      if (res.status == 200) {
+      if (res.code == 200) {
         this.$message.success("删除成功");
         this.getFoodTypeList();
       } else {
@@ -235,7 +238,7 @@ export default {
     },
     // 搜索
     async Foodsearch() {
-        this.getFoodTypeList()
+      this.getFoodTypeList();
     }
   }
 };
