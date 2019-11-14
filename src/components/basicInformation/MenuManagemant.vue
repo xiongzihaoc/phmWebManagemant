@@ -13,7 +13,7 @@
             <el-button slot="append" icon="el-icon-search"></el-button>
           </el-input>
         </el-col>
-        <!-- 添加用户按钮 -->
+        <!-- 添加按钮 -->
         <el-col :span="4">
           <el-button type="primary">添加选项</el-button>
         </el-col>
@@ -199,7 +199,7 @@ export default {
         icon: this.addForm.icon
       });
       this.addDialogVisible = false;
-    }
+    },
   }
 };
 </script>

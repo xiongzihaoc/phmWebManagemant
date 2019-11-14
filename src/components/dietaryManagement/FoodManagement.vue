@@ -9,8 +9,8 @@
     <el-card>
       <el-row :gutter="20">
         <el-col :span="7">
-          <el-input placeholder="请输入内容" v-model="input" clearable>
-            <el-button slot="append" icon="el-icon-search"></el-button>
+          <el-input placeholder="请输入内容" v-model="input" @keyup.13.native="foodSearch" clearable>
+            <el-button slot="append" icon="el-icon-search" @click="foodSearch"></el-button>
           </el-input>
         </el-col>
         <!-- 添加食物按钮 -->
@@ -146,6 +146,7 @@ export default {
     // 获取食物列表
     async getFoodList() {
       const { data: res } = await this.$http.post("food/getPFoodList.do", {
+        fdName:this.input,
         pageSize: this.pageSize,
         pageNum: this.pageNum
       });
@@ -267,6 +268,12 @@ export default {
         this.common.errorTip("上传图片大小不能超过 2MB!");
       }
       return (isJPG || isBMP || isGIF || isPNG) && isLt2M;
+    },
+    // 搜索
+    foodSearch(){
+      console.log(111);
+      
+      this.getFoodList()
     }
   }
 };

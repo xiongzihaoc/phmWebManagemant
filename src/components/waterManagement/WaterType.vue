@@ -9,8 +9,8 @@
     <el-card>
       <el-row :gutter="20">
         <el-col :span="7">
-          <el-input placeholder="请输入内容" v-model="input" clearable>
-            <el-button slot="append" icon="el-icon-search"></el-button>
+          <el-input placeholder="请输入内容" @keyup.13.native="WaterSearch" v-model="input" clearable>
+            <el-button slot="append" icon="el-icon-search" @click="WaterSearch"></el-button>
           </el-input>
         </el-col>
         <!-- 添加用户按钮 -->
@@ -111,7 +111,7 @@ export default {
     async getWaterList() {
       const { data: res } = await this.$http.post(
         "water/type/getPWaterTypeList.do",
-        { pageSize: this.pageSize, pageNum: this.pageNum }
+        { pageSize: this.pageSize, pageNum: this.pageNum ,name:this.input}
       );
       this.waterList = res.rows;
     },
@@ -150,6 +150,10 @@ export default {
       this.$message.success(res.msg);
       this.getWaterList();
       this.editDialogVisible =false
+    },
+    // 搜索
+    WaterSearch(){
+      this.getWaterList()
     },
     // 删除
     async removeUserById(info) {

@@ -1,20 +1,244 @@
 <template>
-    <div>
-        <h1>饮食方案</h1>
-    </div>
+  <div>
+    <!-- 面包屑 -->
+    <el-breadcrumb separator-class="el-icon-arrow-right">
+      <el-breadcrumb-item :to="{ path: '/home' }">首页</el-breadcrumb-item>
+      <el-breadcrumb-item>饮食方案</el-breadcrumb-item>
+    </el-breadcrumb>
+    <!-- 卡片视图 -->
+    <el-card>
+      <el-row :gutter="20">
+        <el-col :span="7">
+          <el-input placeholder="请输入内容" v-model="input"  @keyup.13.native="Foodsearch" clearable>
+            <el-button slot="append" icon="el-icon-search" @click="Foodsearch"></el-button>
+          </el-input>
+        </el-col>
+        <!-- 添加食物按钮 -->
+        <el-col :span="4">
+          <el-button type="primary" @click="addFoodType">添加食物</el-button>
+        </el-col>
+      </el-row>
+      <!-- 表格 -->
+      <el-table :data="foodTypeList" stripe border style="width: 100%">
+        <el-table-column align="center" type="selection" width="40"></el-table-column>
+        <el-table-column align="center" type="index" label="序号" width="60"></el-table-column>
+        <el-table-column align="center" prop="dsName" label="名称" width="200"></el-table-column>
+        <el-table-column align="center" prop="dsTabooFood" label="禁忌食物" width="200"></el-table-column>
+        <el-table-column align="center" prop="dsTabooDescribe" label="禁忌食物描述"></el-table-column>
+        <el-table-column align="center" prop="dsDescribe" label="描述"></el-table-column>
+        <el-table-column align="center" prop="operate" label="操作" width="160">
+          <template slot-scope="scope">
+            <!-- 修改按钮 -->
+            <el-button
+              size="mini"
+              @click="showEditdialog(scope.row)"
+              type="primary"
+              icon="el-icon-edit"
+            ></el-button>
+            <!-- 删除按钮 -->
+            <el-button
+              size="mini"
+              @click="removeUserById(scope.row.id)"
+              type="danger"
+              icon="el-icon-delete"
+            ></el-button>
+          </template>
+        </el-table-column>
+      </el-table>
+      <!-- 分页区域 -->
+      <el-pagination
+        @size-change="handleSizeChange"
+        @current-change="handleCurrentChange"
+        :current-page="pageNum"
+        :page-sizes="[10, 20,50]"
+        :page-size="pageSize"
+        layout="total, sizes, prev, pager, next, jumper"
+        :total="total"
+      ></el-pagination>
+      <!-- 修改页面 -->
+      <el-dialog :title="dialogTitle" :visible.sync="editAddDialogVisible" width="40%">
+        <el-form
+          :model="AddEditForm"
+          ref="editFormRef"
+          label-width="80px"
+          @closed="editAddDialogClosed"
+        >
+          <el-form-item label="名称" prop="dsName">
+            <el-input v-model="AddEditForm.dsName"></el-input>
+          </el-form-item>
+          <el-form-item label="禁忌食物" prop="dsTabooFood">
+            <el-select
+              v-model="AddEditForm.dsTabooFood"
+              clearable
+              :reserve-keyword="true"
+              filterable
+              multiple
+              placeholder="请选择"
+            >
+              <el-option
+                v-for="item in foodList"
+                :key="item.id"
+                :label="item.fdName"
+                :value="item.id"
+              ></el-option>
+            </el-select>
+          </el-form-item>
+          <el-form-item label="禁忌描述" prop="dsTabooDescribe">
+            <el-input
+              type="textarea"
+              :autosize="{ minRows: 5, maxRows: 10}"
+              placeholder="请输入内容..."
+              v-model="AddEditForm.dsTabooDescribe"
+            ></el-input>
+          </el-form-item>
+          <el-form-item label="描述" prop="dsDescribe">
+            <el-input
+              type="textarea"
+              :autosize="{ minRows: 5, maxRows: 10}"
+              placeholder="请输入内容..."
+              v-model="AddEditForm.dsDescribe"
+            ></el-input>
+          </el-form-item>
+        </el-form>
+        <span slot="footer" class="dialog-footer">
+          <el-button @click="editAddDialogVisible = false">取 消</el-button>
+          <el-button type="primary" @click="AddEdit">确 定</el-button>
+        </span>
+      </el-dialog>
+    </el-card>
+  </div>
 </template>
 <script>
-export default {
-  data () {
-    return {
-    
-    };
-  },
-    methods:{
-    
+export default {
+  data() {
+    return {
+      input: "",
+      pageSize: 10,
+      pageNum: 1,
+      total: 0,
+      foodTypeList: [],
+      editAddDialogVisible: false,
+      dialogTitle: "",
+      AddEditForm: {
+        dsName: "",
+        dsTabooFood: "",
+        dsTabooDescribe: "",
+        dsDescribe: ""
+      },
+      id: "",
+      foodList: []
+    };
+  },
+  created() {
+    this.getFoodManagemant();
+    this.getFoodTypeList();
+  },
+  methods: {
+    // 分页
+    handleSizeChange(newSize) {
+      this.pageSize = newSize;
+      this.getFoodTypeList();
+    },
+    handleCurrentChange(newPage) {
+      this.pageNum = newPage;
+      this.getFoodTypeList();
+    },
+    // 获取食物管理列表
+    async getFoodManagemant() {
+      const { data: res } = await this.$http.post("food/getPFoodList.do", {});
+      this.foodList = res.rows;
+    },
+    // 获取列表
+    async getFoodTypeList() {
+      const { data: res } = await this.$http.post(
+        "foodPlan/getPFoodPlanList.do",
+        {
+          dsName: this.input,
+          pageSize: this.pageSize,
+          pageNum: this.pageNum
+        }
+      );
+      if (res.code != 200) return this.$message.error("列表获取失败");
+      console.log(res);
+      this.foodTypeList = res.rows;
+      this.total = res.total;
+    },
+    // 弹框
+    showEditdialog(info) {
+      this.dialogTitle = "修改";
+      this.id = info.id;
+      this.AddEditForm = JSON.parse(JSON.stringify(info));
+      console.log(this.AddEditForm);
+
+      this.editAddDialogVisible = true;
+    },
+    // 添加
+    addFoodType() {
+      this.dialogTitle = "新增";
+      this.AddEditForm = {};
+      this.editAddDialogVisible = true;
+    },
+    editAddDialogClosed() {
+      this.$refs.editFormRef.resetFields();
+    },
+    async AddEdit() {
+      let httpUrl = "";
+      let parm = {};
+      if (this.dialogTitle == "修改") {
+        httpUrl = "foodPlan/updatePFoodPlan.do";
+        parm = {
+          id: this.id,
+          dsName: this.AddEditForm.dsName,
+          dsTabooFood: this.AddEditForm.dsTabooFood.toString(),
+          dsTabooDescribe: this.AddEditForm.dsTabooDescribe,
+          dsDescribe: this.AddEditForm.dsDescribe
+        };
+      } else {
+        httpUrl = "foodPlan/savePFoodPlan.do";
+        parm = {
+          dsName: this.AddEditForm.dsName,
+          dsTabooFood: this.AddEditForm.dsTabooFood.toString(),
+          dsTabooDescribe: this.AddEditForm.dsTabooDescribe,
+          dsDescribe: this.AddEditForm.dsDescribe
+        };
+      }
+      const { data: res } = await this.$http.post(httpUrl, parm);
+      if (res.status != 200) return this.$message.error(res.msg);
+      this.$message.success(res.msg);
+      this.getFoodTypeList();
+      this.editAddDialogVisible = false;
+    },
+    // 刪除
+    async removeUserById(id) {
+      const confirmResult = await this.$confirm(
+        "你确定要执行此操作, 是否继续?",
+        "提示",
+        {
+          confirmButtonText: "确定",
+          cancelButtonText: "取消",
+          type: "warning"
+        }
+      ).catch(err => console.log(err));
+      if (confirmResult != "confirm") {
+        return this.$message.info("取消删除");
+      }
+      const { data: res } = await this.$http.post("foodPlan/delPFoodPlan.do", {
+        id: id
+      });
+      if (res.status == 200) {
+        this.$message.success("删除成功");
+        this.getFoodTypeList();
+      } else {
+        this.$message.error("删除失败");
+        return;
+      }
+    },
+    // 搜索
+    async Foodsearch() {
+        this.getFoodTypeList()
     }
-}
+  }
+};
 </script>
 <style lang='less' scoped>
-    
 </style>

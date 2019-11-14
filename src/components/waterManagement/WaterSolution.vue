@@ -9,8 +9,8 @@
     <el-card>
       <el-row :gutter="20">
         <el-col :span="7">
-          <el-input placeholder="请输入内容" v-model="input" clearable>
-            <el-button slot="append" icon="el-icon-search"></el-button>
+          <el-input placeholder="请输入内容" @keyup.13.native="WaterSearch" v-model="input" clearable>
+            <el-button slot="append" icon="el-icon-search" @click="WaterSearch" ></el-button>
           </el-input>
         </el-col>
         <!-- 添加饮水方案按钮 -->
@@ -146,7 +146,8 @@ export default {
         "water/plan/getPWaterPlanList.do",
         {
           pageSize: this.pageSize,
-          pageNum: this.pageNum
+          pageNum: this.pageNum,
+          name:this.input
         }
       );
       this.waterTypeList = res.rows;
@@ -203,9 +204,15 @@ export default {
         return;
       }
     },
+    // 搜索
+    WaterSearch(){
+      this.getWaterTypeList()
+    },
+    
     // 添加
     addWaterType() {
       this.dialogTitle = "新增";
+      this.editAddForm = {}
       this.DialogVisible = true;
     },
     // 确定修改或添加
