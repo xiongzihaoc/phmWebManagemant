@@ -31,7 +31,7 @@
         <el-table-column align="center" prop="fdTypeValue" label="类型" width="100"></el-table-column>
         <el-table-column align="center" prop="elementName" label="元素名称"></el-table-column>
         <el-table-column align="center" prop="fdDescribe" label="描述"></el-table-column>
-        <el-table-column align="center" prop="operate" label="操作" width="160">
+        <el-table-column align="center" prop="operate" label="操作" width="300">
           <template slot-scope="scope">
             <!-- 修改按钮 -->
             <el-button
@@ -40,7 +40,10 @@
               type="primary"
               icon="el-icon-edit"
             ></el-button>
-            <!-- 删除按钮 -->
+            <!-- 微量元素 -->
+            <el-button size="mini" @click="jumpScruple(scope.row)" type="success">微量元素</el-button>
+            <!-- 食物单位 -->
+            <el-button size="mini" @click="jumpUnits(scope.row)" type="success">食物单位</el-button>
             <el-button
               size="mini"
               @click="removeUserById(scope.row.id)"
@@ -94,7 +97,7 @@
         <el-form-item label="食物图片" prop="fdPhotoPath">
           <el-upload
             class="avatar-uploader"
-            action="http://192.168.3.30:8080/zhuoya_manager/oss/fileUpload.do"
+            :action="this.UPLOAD_IMG"
             :show-file-list="false"
             :on-success="handleAvatarSuccess"
             :before-upload="beforeAvatarUpload"
@@ -146,7 +149,7 @@ export default {
     // 获取食物列表
     async getFoodList() {
       const { data: res } = await this.$http.post("food/getPFoodList.do", {
-        fdName:this.input,
+        fdName: this.input,
         pageSize: this.pageSize,
         pageNum: this.pageNum
       });
@@ -270,10 +273,16 @@ export default {
       return (isJPG || isBMP || isGIF || isPNG) && isLt2M;
     },
     // 搜索
-    foodSearch(){
-      console.log(111);
-      
-      this.getFoodList()
+    foodSearch() {
+      this.getFoodList();
+    },
+    // 跳转到微量元素页面
+    jumpScruple() {
+      this.$router.push("/food/Microelement");
+    },
+    // 跳转到食物单位
+    jumpUnits(info) {
+      this.$router.push({ path: "/food/Units", query: {id:info.id}});
     }
   }
 };

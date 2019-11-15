@@ -74,7 +74,7 @@
           <el-form-item label="图标" prop="fmPhotoPath">
             <el-upload
               class="avatar-uploader"
-              action="http://192.168.3.30:8080/zhuoya_manager/oss/fileUpload.do"
+              :action="this.UPLOAD_IMG"
               :show-file-list="false"
               :on-success="handleAvatarSuccess"
               :before-upload="beforeAvatarUpload"

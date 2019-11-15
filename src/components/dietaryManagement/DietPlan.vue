@@ -15,7 +15,7 @@
         </el-col>
         <!-- 添加食物按钮 -->
         <el-col :span="4">
-          <el-button type="primary" @click="addFoodType">添加食物</el-button>
+          <el-button type="primary" @click="addFoodType">添加饮食方案</el-button>
         </el-col>
       </el-row>
       <!-- 表格 -->
@@ -135,15 +135,6 @@ export default {
     this.getFoodTypeList();
   },
   methods: {
-    // 分页
-    handleSizeChange(newSize) {
-      this.pageSize = newSize;
-      this.getFoodTypeList();
-    },
-    handleCurrentChange(newPage) {
-      this.pageNum = newPage;
-      this.getFoodTypeList();
-    },
     // 获取食物管理列表
     async getFoodManagemant() {
       const { data: res } = await this.$http.post("food/getPFoodList.do", {});
@@ -163,6 +154,17 @@ export default {
       console.log(res);
       this.foodTypeList = res.rows;
       this.total = res.total;
+    },
+        // 分页
+    handleSizeChange(newSize) {
+      this.pageSize = newSize;
+      console.log(111);
+      this.getFoodTypeList();
+    },
+    handleCurrentChange(newPage) {
+      this.pageNum = newPage;
+      console.log(222);
+      this.getFoodTypeList();
     },
     // 弹框
     showEditdialog(info) {

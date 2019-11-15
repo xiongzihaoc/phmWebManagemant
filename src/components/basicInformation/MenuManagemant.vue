@@ -13,10 +13,6 @@
             <el-button slot="append" icon="el-icon-search"></el-button>
           </el-input>
         </el-col>
-        <!-- 添加按钮 -->
-        <el-col :span="4">
-          <el-button type="primary">添加选项</el-button>
-        </el-col>
       </el-row>
       <el-table
         :data="menuList"
@@ -24,7 +20,6 @@
         row-key="menuId"
         border
         stripe
-        default-expand-all
         :tree-props="{children: 'child', hasChildren: 'hasChildren'}"
       >
         <el-table-column align="center" prop="menuName" label="名称" sortable width="180"></el-table-column>
@@ -146,6 +141,7 @@ export default {
     async getMenuList() {
       const { data: res } = await this.$http.post("menu/getMenuList2.do");
       this.menuList = res.data;
+      console.log(res);
     },
     // 修改弹框
     showEditdialog(val) {
@@ -177,7 +173,7 @@ export default {
         menuId: userinfo.menuId,
         status: userinfo.status
       });
-      if (res.status != 200) {
+      if (res.code != 200) {
         userinfo.status = !userinfo.status;
         return this.$message.error("更新用户状态失败");
       }
@@ -199,7 +195,7 @@ export default {
         icon: this.addForm.icon
       });
       this.addDialogVisible = false;
-    },
+    }
   }
 };
 </script>

@@ -17,6 +17,7 @@ return originalPush.call(this, location).catch(err => err)
 }
 // 导入axios
 import axios from 'axios'
+Vue.prototype.UPLOAD_IMG = 'http://test.phmzykj.com/zhuoya_manager/oss/fileUpload.do'
 // 配置axios
 axios.defaults.baseURL = 'http://test.phmzykj.com/zhuoya_manager/'
 // axios请求拦截器

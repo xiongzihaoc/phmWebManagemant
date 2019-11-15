@@ -3,34 +3,28 @@
     <!-- 面包屑 -->
     <el-breadcrumb separator-class="el-icon-arrow-right">
       <el-breadcrumb-item :to="{ path: '/home' }">首页</el-breadcrumb-item>
-      <el-breadcrumb-item>运动方案</el-breadcrumb-item>
+      <el-breadcrumb-item :to="{ path: '/food/foodManagemant' }">食物管理</el-breadcrumb-item>
+      <el-breadcrumb-item>食物单位</el-breadcrumb-item>
     </el-breadcrumb>
     <!-- 卡片视图 -->
     <el-card>
       <el-row :gutter="20">
         <el-col :span="7">
-          <el-input
-            placeholder="请输入内容"
-            @keyup.13.native="movemenPlanSearch"
-            v-model="input"
-            clearable
-          >
-            <el-button slot="append" icon="el-icon-search" @click="movemenPlanSearch"></el-button>
+          <el-input placeholder="请输入内容" @keyup.13.native="foodUnitSearch" v-model="input" clearable>
+            <el-button slot="append" icon="el-icon-search" @click="foodUnitSearch"></el-button>
           </el-input>
         </el-col>
         <!-- 添加用户按钮 -->
         <el-col :span="4">
-          <el-button type="primary" @click="addWater">添加运动方案</el-button>
+          <el-button type="primary" @click="addWater">添加食物单位</el-button>
         </el-col>
       </el-row>
       <!-- 表格 -->
-      <el-table :data="movemenPlanList" stripe border style="width: 100%">
+      <el-table :data="foodUnitList" stripe border style="width: 100%">
         <el-table-column align="center" type="selection" width="40"></el-table-column>
         <el-table-column align="center" type="index" label="序号" width="60"></el-table-column>
-        <el-table-column align="center" prop="name" label="名称"></el-table-column>
-        <el-table-column align="center" prop="sportGroupNum" label="运动组数"></el-table-column>
-        <el-table-column align="center" prop="sportGroupRange" label="运动范围"></el-table-column>
-        <el-table-column align="center" prop="sportDescribe" label="描述"></el-table-column>
+        <el-table-column align="center" prop="fuUnit" label="单位名称"></el-table-column>
+        <el-table-column align="center" prop="fuWeight" label="食物重量 (g)"></el-table-column>
         <el-table-column align="center" prop="operate" label="操作" width="200">
           <template slot-scope="scope">
             <!-- 修改按钮 -->
@@ -50,16 +44,6 @@
           </template>
         </el-table-column>
       </el-table>
-      <!-- 分页 -->
-      <el-pagination
-        @size-change="handleSizeChange"
-        @current-change="handleCurrentChange"
-        :current-page="pageNum"
-        :page-sizes="[10, 20,50]"
-        :page-size="pageSize"
-        layout="total, sizes, prev, pager, next, jumper"
-        :total="total"
-      ></el-pagination>
       <!-- 修改页面 -->
       <el-dialog
         :title="dialogTitle"
@@ -68,17 +52,11 @@
         @closed="editDialogClosed"
       >
         <el-form :model="editForm" ref="editFormRef" label-width="80px">
-          <el-form-item label="方案名称" prop="name">
-            <el-input v-model="editForm.name"></el-input>
+          <el-form-item label="单位名称" prop="fuUnit">
+            <el-input v-model="editForm.fuUnit"></el-input>
           </el-form-item>
-          <el-form-item label="运动组数" prop="sportGroupNum">
-            <el-input v-model="editForm.sportGroupNum"></el-input>
-          </el-form-item>
-          <el-form-item label="运动范围" prop="sportGroupRange">
-            <el-input v-model="editForm.sportGroupRange"></el-input>
-          </el-form-item>
-          <el-form-item label="描述" prop="sportDescribe">
-            <el-input v-model="editForm.sportDescribe"></el-input>
+          <el-form-item label="单位描述" prop="fuWeight">
+            <el-input v-model="editForm.fuWeight"></el-input>
           </el-form-item>
         </el-form>
         <span slot="footer" class="dialog-footer">
@@ -94,42 +72,31 @@ export default {
   data() {
     return {
       input: "",
-      movemenPlanList: [],
-      pageSize: 10,
-      pageNum: 1,
-      total: 0,
+      foodId: "",
+      foodUnitList: [],
       editDialogVisible: false,
       editForm: {
-        name: "",
-        sportGroupNum: "",
-        sportGroupRange: "",
-        sportDescribe: ""
+        fuUnit: "",
+        fuWeight: ""
       },
       id: 0,
       dialogTitle: ""
     };
   },
   created() {
-    this.getMovemenPlanList();
+    this.foodId = this.$route.query.id;
+    this.getFoodUnitList();
   },
   methods: {
-    async getMovemenPlanList() {
+    async getFoodUnitList() {
       const { data: res } = await this.$http.post(
-        "sportPlan/getPSportPlanList.do",
-        { pageSize: this.pageSize, pageNum: this.pageNum, name: this.input }
+        "foodUnit/getPFoodUnitList.do",
+        { foodId: this.foodId }
       );
       console.log(res);
-      this.movemenPlanList = res.rows;
+
+      this.foodUnitList = res.rows;
       this.total = res.total;
-    },
-    // 分页
-    handleSizeChange(newSize) {
-      this.pageSize = newSize;
-      this.getMovemenPlanList();
-    },
-    handleCurrentChange(newPage) {
-      this.pageNum = newPage;
-      this.getMovemenPlanList();
     },
     // 修改
     showEditdialog(info) {
@@ -145,32 +112,30 @@ export default {
       let httpUrl = "";
       let parm = {};
       if (this.dialogTitle == "修改") {
-        httpUrl = "sportPlan/updatePSportPlan.do";
+        httpUrl = "foodUnit/updatePFoodUnit.do";
         parm = {
           id: this.id,
-          name: this.editForm.name,
-          sportGroupNum: this.editForm.sportGroupNum,
-          sportGroupRange: this.editForm.sportGroupRange,
-          sportDescribe: this.editForm.sportDescribe
+          foodId: this.foodId,
+          fuUnit: this.editForm.fuUnit,
+          fuWeight: this.editForm.fuWeight
         };
       } else {
-        httpUrl = "sportPlan/savePSportPlan.do";
+        httpUrl = "foodUnit/savePFoodUnit.do";
         parm = {
-          name: this.editForm.name,
-          sportGroupNum: this.editForm.sportGroupNum,
-          sportGroupRange: this.editForm.sportGroupRange,
-          sportDescribe: this.editForm.sportDescribe
+          foodId: this.foodId,
+          fuUnit: this.editForm.fuUnit,
+          fuWeight: this.editForm.fuWeight
         };
       }
       const { data: res } = await this.$http.post(httpUrl, parm);
       if (res.code != 200) return this.$message.error(res.msg);
       this.$message.success(res.msg);
-      this.getMovemenPlanList();
+      this.getFoodUnitList();
       this.editDialogVisible = false;
     },
     // 搜索
-    movemenPlanSearch() {
-      this.getMovemenPlanList();
+    foodUnitSearch() {
+      this.getFoodUnitList();
     },
     // 删除
     async removeUserById(info) {
@@ -186,15 +151,12 @@ export default {
       if (confirmResult != "confirm") {
         return this.$message.info("取消删除");
       }
-      const { data: res } = await this.$http.post(
-        "sportPlan/delPSportPlan.do",
-        {
-          id: info
-        }
-      );
+      const { data: res } = await this.$http.post("foodUnit/delPFoodUnit.do", {
+        id: info
+      });
       if (res.code == 200) {
         this.$message.success("删除成功");
-        this.getMovemenPlanList();
+        this.getFoodUnitList();
       } else {
         this.$message.error("删除失败");
         return;
@@ -209,27 +171,4 @@ export default {
 };
 </script>
 <style lang='less' scoped>
-.avatar-uploader .el-upload {
-  cursor: pointer;
-  position: relative;
-  overflow: hidden;
-}
-.avatar-uploader-icon:hover {
-  border-color: #409eff;
-}
-.avatar-uploader-icon {
-  display: block;
-  font-size: 28px;
-  color: #8c939d;
-  width: 80px;
-  height: 80px;
-  line-height: 80px;
-  text-align: center;
-  border: 1px dashed #ccc;
-}
-.avatar {
-  width: 60px;
-  height: 80px;
-  display: block;
-}
 </style>

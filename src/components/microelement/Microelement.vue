@@ -3,14 +3,15 @@
     <!-- 面包屑 -->
     <el-breadcrumb separator-class="el-icon-arrow-right">
       <el-breadcrumb-item :to="{ path: '/home' }">首页</el-breadcrumb-item>
-      <el-breadcrumb-item>饮水种类</el-breadcrumb-item>
+      <el-breadcrumb-item :to="{ path: '/food/foodManagemant' }">食物管理</el-breadcrumb-item>
+      <el-breadcrumb-item>微量元素</el-breadcrumb-item>
     </el-breadcrumb>
     <!-- 卡片视图 -->
     <el-card>
       <el-row :gutter="20">
         <el-col :span="7">
-          <el-input placeholder="请输入内容" @keyup.13.native="WaterSearch" v-model="input" clearable>
-            <el-button slot="append" icon="el-icon-search" @click="WaterSearch"></el-button>
+          <el-input placeholder="请输入内容" @keyup.13.native="microSearch" v-model="input" clearable>
+            <el-button slot="append" icon="el-icon-search" @click="microSearch"></el-button>
           </el-input>
         </el-col>
         <!-- 添加用户按钮 -->
@@ -23,11 +24,7 @@
         <el-table-column align="center" type="selection" width="40"></el-table-column>
         <el-table-column align="center" type="index" label="序号" width="60"></el-table-column>
         <el-table-column align="center" prop="name" label="名称"></el-table-column>
-        <el-table-column align="center" label="图标">
-          <template slot-scope="scope">
-            <img id="img" :src="scope.row.iconUrl" />
-          </template>
-        </el-table-column>
+        <el-table-column align="center" label="元素值"></el-table-column>
         <el-table-column align="center" prop="description" label="描述"></el-table-column>
         <el-table-column align="center" prop="operate" label="操作" width="200">
           <template slot-scope="scope">
@@ -48,16 +45,6 @@
           </template>
         </el-table-column>
       </el-table>
-      <!-- 分页 -->
-      <el-pagination
-        @size-change="handleSizeChange"
-        @current-change="handleCurrentChange"
-        :current-page="pageNum"
-        :page-sizes="[10, 20,50]"
-        :page-size="pageSize"
-        layout="total, sizes, prev, pager, next, jumper"
-        :total="total"
-      ></el-pagination>
       <!-- 修改页面 -->
       <el-dialog
         :title="dialogTitle"
@@ -68,18 +55,6 @@
         <el-form :model="editForm" ref="editFormRef" label-width="80px">
           <el-form-item label="名称" prop="name">
             <el-input v-model="editForm.name"></el-input>
-          </el-form-item>
-          <el-form-item label="图标" prop="iconUrl">
-            <el-upload
-              class="avatar-uploader"
-              :action="this.UPLOAD_IMG"
-              :show-file-list="false"
-              :on-success="handleAvatarSuccess"
-              :before-upload="beforeAvatarUpload"
-            >
-              <img v-if="imageUrl" :src="imageUrl" class="avatar" />
-              <i v-else class="el-icon-plus avatar-uploader-icon"></i>
-            </el-upload>
           </el-form-item>
           <el-form-item label="描述" prop="description">
             <el-input v-model="editForm.description"></el-input>
@@ -93,16 +68,12 @@
     </el-card>
   </div>
 </template>
-
 <script>
 export default {
   data() {
     return {
       input: "",
       waterList: [],
-      pageSize: 10,
-      pageNum: 1,
-      total: 0,
       editDialogVisible: false,
       editForm: {
         name: "",
@@ -110,31 +81,20 @@ export default {
         description: ""
       },
       id: 0,
-      dialogTitle: "",
-      imageUrl: "",
-      upLoad: ""
+      dialogTitle: ""
     };
   },
   created() {
-    this.getWaterList();
+    this.getMicroList();
   },
   methods: {
-    async getWaterList() {
+    async getMicroList() {
       const { data: res } = await this.$http.post(
         "water/type/getPWaterTypeList.do",
-        { pageSize: this.pageSize, pageNum: this.pageNum, name: this.input }
+        {}
       );
       this.waterList = res.rows;
       this.total = res.total;
-    },
-    // 分页
-    handleSizeChange(newSize) {
-      this.pageSize = newSize;
-      this.getWaterList();
-    },
-    handleCurrentChange(newPage) {
-      this.pageNum = newPage;
-      this.getWaterList();
     },
     // 修改
     showEditdialog(info) {
@@ -145,7 +105,6 @@ export default {
     },
     editDialogClosed() {
       this.$refs.editFormRef.resetFields();
-      this.imageUrl = "";
     },
     async editEnter() {
       let httpUrl = "";
@@ -169,12 +128,12 @@ export default {
       const { data: res } = await this.$http.post(httpUrl, parm);
       if (res.code != 200) return this.$message.error(res.msg);
       this.$message.success(res.msg);
-      this.getWaterList();
+      this.getMicroList();
       this.editDialogVisible = false;
     },
     // 搜索
-    WaterSearch() {
-      this.getWaterList();
+    microSearch() {
+      this.getMicroList();
     },
     // 删除
     async removeUserById(info) {
@@ -198,7 +157,7 @@ export default {
       );
       if (res.code == 200) {
         this.$message.success("删除成功");
-        this.getWaterList();
+        this.getMicroList();
       } else {
         this.$message.error("删除失败");
         return;
@@ -208,55 +167,9 @@ export default {
       this.dialogTitle = "新增";
       this.editForm = {};
       this.editDialogVisible = true;
-    },
-
-    handleAvatarSuccess(res, file) {
-      this.imageUrl = res.data;
-      this.editForm.iconUrl = res.data;
-    },
-    beforeAvatarUpload(file) {
-      const isJPG = file.type === "image/jpeg";
-      const isGIF = file.type === "image/gif";
-      const isPNG = file.type === "image/png";
-      const isBMP = file.type === "image/bmp";
-      const isLt2M = file.size / 1024 / 1024 < 2;
-
-      if (!isJPG && !isGIF && !isPNG && !isBMP) {
-        this.common.errorTip("上传图片必须是JPG/GIF/PNG/BMP 格式!");
-      }
-      if (!isLt2M) {
-        this.common.errorTip("上传图片大小不能超过 2MB!");
-      }
-      return (isJPG || isBMP || isGIF || isPNG) && isLt2M;
-    },
-    GetItem() {
-      this.upLoad = window.localStorage.getItem("upload");
     }
   }
 };
 </script>
 <style lang='less' scoped>
-.avatar-uploader .el-upload {
-  cursor: pointer;
-  position: relative;
-  overflow: hidden;
-}
-.avatar-uploader-icon:hover {
-  border-color: #409eff;
-}
-.avatar-uploader-icon {
-  display: block;
-  font-size: 28px;
-  color: #8c939d;
-  width: 80px;
-  height: 80px;
-  line-height: 80px;
-  text-align: center;
-  border: 1px dashed #ccc;
-}
-.avatar {
-  width: 60px;
-  height: 80px;
-  display: block;
-}
 </style>

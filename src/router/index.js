@@ -14,11 +14,13 @@ import FoodManagement from '../components/dietaryManagement/FoodManagement.vue'
 import DietPlan from '../components/dietaryManagement/DietPlan.vue'
 import EstimateFood from '../components/dietaryManagement/EstimateFood.vue'
 import EstimateFoodManagemant from '../components/dietaryManagement/EstimateFoodManagemant.vue'
+import FoodUnits from '../components/dietaryManagement/FoodUnits.vue'
 import MovementPlan from '../components/sportManagement/MovementPlan.vue'
 import WaterSolution from '../components/waterManagement/WaterSolution.vue'
 import WaterType from '../components/waterManagement/WaterType.vue'
 import DiseaseScheme from '../components/DiseaseManagement/DiseaseScheme.vue'
 import FoodType from '../components/dietaryManagement/FoodType.vue'
+import Microelement from '../components/microelement/Microelement.vue'
 Vue.use(VueRouter)
 
 const routes = [{path: '/',redirect: '/login'},
@@ -37,6 +39,8 @@ const routes = [{path: '/',redirect: '/login'},
     { path: '/food/measure',component: EstimateFood},
     { path: '/food/measuretype',component: EstimateFoodManagemant},
     { path: '/food/foodType',component: FoodType},
+    { path: '/food/Microelement',component: Microelement},
+    { path: '/food/Units',component: FoodUnits},
     { path: '/sport/MovementPlan',component: MovementPlan},
     { path: '/water/WaterSolution',component: WaterSolution},
     { path: '/water/WaterType',component: WaterType},
