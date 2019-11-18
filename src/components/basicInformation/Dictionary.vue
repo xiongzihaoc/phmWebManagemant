@@ -6,7 +6,6 @@
       <el-breadcrumb-item>数据字典</el-breadcrumb-item>
     </el-breadcrumb>
     <!-- 卡片视图 -->
-
     <el-card>
       <el-row :gutter="20">
         <el-col :span="7">
@@ -20,8 +19,10 @@
         :lazy="true"
         style="width: 100%;margin-bottom: 20px;"
         row-key="id"
-        border
-        stripe
+        :header-cell-style="{background:'#f5f5f5'}"
+        ref="singleTable"
+        highlight-current-row
+        @current-change="handleCurrentChange"
         :tree-props="{children: 'child', hasChildren: 'hasChildren'}"
       >
         <el-table-column prop="name" label="###  名称" sortable></el-table-column>
@@ -45,14 +46,14 @@
             <!-- 修改按钮 -->
             <el-button
               size="mini"
-              @click="showEditdialog(scope.row.acId)"
+              @click="showEditdialog(scope.row)"
               type="primary"
               icon="el-icon-edit"
             ></el-button>
             <!-- 新增按钮 -->
             <el-button
               size="mini"
-              @click="addDictionarybtn(scope.row.acId)"
+              @click="addDictionarybtn(scope.row)"
               type="success"
               icon="el-icon-circle-plus"
             ></el-button>
@@ -60,6 +61,29 @@
         </el-table-column>
       </el-table>
     </el-card>
+    <!-- 添加修改提示框 -->
+    <el-dialog
+      :title="dialogTitle"
+      :visible.sync="DialogVisible"
+      width="40%"
+      @closed="AddEditDialogClosed"
+    >
+      <el-form ref="addFormRef" :model="addEditForm" label-width="80px">
+        <el-form-item :label="labelTitle">
+          <el-input v-model="goBack" disabled></el-input>
+        </el-form-item>
+        <el-form-item label="名称">
+          <el-input v-model="addEditForm.name"></el-input>
+        </el-form-item>
+        <el-form-item label="键值">
+          <el-input v-model="addEditForm.dictValue"></el-input>
+        </el-form-item>
+      </el-form>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="DialogVisible = false">取 消</el-button>
+        <el-button type="primary" @click="addEditEnter">确 定</el-button>
+      </span>
+    </el-dialog>
   </div>
 </template>
 <script>
@@ -67,7 +91,19 @@ export default {
   data() {
     return {
       input: "",
-      menuList: []
+      menuList: [],
+      addEditForm: {
+        name: "",
+        dictValue: ""
+      },
+      parentId: null,
+      parentCode: "",
+      selfId: null,
+      DialogVisible: false,
+      dialogTitle: "",
+      goBack: "",
+      labelTitle: "",
+      currentRow: null
     };
   },
   created() {
@@ -79,13 +115,56 @@ export default {
         "sys/dict/getSysDictList.do",
         {}
       );
-      console.log(res);
-      this.menuList = res.rows;
+      this.menuList = res.data;
     },
     // 增加
-    addDictionary() {},
+    addDictionarybtn(info) {
+      this.dialogTitle = "添加";
+      this.labelTitle = "上一级";
+      this.goBack = info.name;
+      this.parentId = info.id;
+      this.parentCode = info.parentCode;
+      this.DialogVisible = true;
+    },
+    // 确定修改或添加
+    async addEditEnter() {
+      let httpUrl = "";
+      let parm = {};
+      if (this.dialogTitle == "修改") {
+        httpUrl = "sys/dict/updateSysDict.do";
+        parm = {
+          id: this.selfId,
+          name: this.addEditForm.name,
+          dictValue: this.addEditForm.dictValue
+        };
+      } else {
+        httpUrl = "sys/dict/saveSysDict.do";
+        parm = {
+          parentCode: this.parentCode,
+          parentId: this.parentId,
+          name: this.addEditForm.name,
+          dictValue: this.addEditForm.dictValue
+        };
+      }
+      const { data: res } = await this.$http.post(httpUrl, parm);
+      if (res.code != 200) return this.$message.error(res.msg);
+      this.$message.success(res.msg);
+      this.getDictionaryList();
+      this.DialogVisible = false;
+    },
     // 修改
-    showEditdialog() {},
+    showEditdialog(info) {
+      this.selfId = info.id;
+      this.goBack = info.name;
+      this.labelTitle = "本级";
+      this.dialogTitle = "修改";
+      this.addEditForm = JSON.parse(JSON.stringify(info));
+      this.DialogVisible = true;
+    },
+    // 重置
+    AddEditDialogClosed() {
+      this.$refs.addFormRef.resetFields();
+    },
     // 改变状态按钮
     async userStateChanged(userinfo) {
       // const { data: res } = await this.$http.post("menu/updateSysMenu.do", {
@@ -102,7 +181,13 @@ export default {
     // 搜索
     dicSearch() {},
     // 操作里面新增
-    addDictionarybtn() {},
+    // 实现表格单行选择高亮
+    setCurrent(row) {
+      this.$refs.singleTable.setCurrentRow(row);
+    },
+    handleCurrentChange(val) {
+      this.currentRow = val;
+    }
   }
 };
 </script>

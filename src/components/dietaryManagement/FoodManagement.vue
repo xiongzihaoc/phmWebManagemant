@@ -19,7 +19,15 @@
         </el-col>
       </el-row>
       <!-- 表格 -->
-      <el-table :data="foodList" stripe border style="width: 100%">
+      <el-table
+        :data="foodList"
+        ref="singleTable"
+        highlight-current-row
+        @current-change="handleCurrentChange"
+        stripe
+        border
+        style="width: 100%"
+      >
         <el-table-column align="center" type="selection" width="40"></el-table-column>
         <el-table-column align="center" type="index" label="序号" width="60"></el-table-column>
         <el-table-column align="center" prop="fdName" label="名称" width="100"></el-table-column>
@@ -136,7 +144,8 @@ export default {
       imageUrl: "",
       foodId: 0,
       value: "",
-      foodTypeList: []
+      foodTypeList: [],
+      currentRow: null
     };
   },
 
@@ -153,7 +162,6 @@ export default {
         pageSize: this.pageSize,
         pageNum: this.pageNum
       });
-      console.log(res);
       if (res.code != 200) return this.$message.error("数获取失败");
       this.foodList = res.rows;
       this.total = res.total;
@@ -167,7 +175,6 @@ export default {
           pageNum: this.pageNum
         }
       );
-      console.log(res);
       this.foodTypeList = res.data;
     },
     // 分页
@@ -253,7 +260,6 @@ export default {
       this.editDialogVisible = true;
     },
     handleAvatarSuccess(res, file) {
-      console.log(res);
       this.imageUrl = res.data;
       this.editForm.fdPhotoPath = res.data;
     },
@@ -276,13 +282,20 @@ export default {
     foodSearch() {
       this.getFoodList();
     },
+    // 实现表格单行选择高亮
+    setCurrent(row) {
+      this.$refs.singleTable.setCurrentRow(row);
+    },
+    handleCurrentChange(val) {
+      this.currentRow = val;
+    },
     // 跳转到微量元素页面
     jumpScruple() {
       this.$router.push("/food/Microelement");
     },
     // 跳转到食物单位
     jumpUnits(info) {
-      this.$router.push({ path: "/food/Units", query: {id:info.id}});
+      this.$router.push({ path: "/food/Units", query: { id: info.id } });
     }
   }
 };

@@ -19,7 +19,15 @@
         </el-col>
       </el-row>
       <!-- 表格 -->
-      <el-table :data="EstimateFoodTypeList" stripe border style="width: 100%">
+      <el-table
+        :data="EstimateFoodTypeList"
+        ref="singleTable"
+        highlight-current-row
+        @current-change="handleCurrentChange"
+        stripe
+        border
+        style="width: 100%"
+      >
         <el-table-column align="center" type="selection" width="40"></el-table-column>
         <el-table-column align="center" type="index" label="序号" width="60"></el-table-column>
         <el-table-column align="center" prop="ftName" label="名称"></el-table-column>
@@ -92,6 +100,7 @@ export default {
       },
       id: 0,
       dialogTitle: "",
+      currentRow: null
     };
   },
   created() {
@@ -104,9 +113,8 @@ export default {
         { pageSize: this.pageSize, pageNum: this.pageNum, ftName: this.input }
       );
       this.EstimateFoodTypeList = res.data;
-      this.total = res.total
+      this.total = res.total;
       console.log(res);
-      
     },
     // 分页
     handleSizeChange(newSize) {
@@ -168,12 +176,9 @@ export default {
       if (confirmResult != "confirm") {
         return this.$message.info("取消删除");
       }
-      const { data: res } = await this.$http.post(
-        "foodType/delPFoodType.do",
-        {
-          id: info
-        }
-      );
+      const { data: res } = await this.$http.post("foodType/delPFoodType.do", {
+        id: info
+      });
       if (res.code == 200) {
         this.$message.success("删除成功");
         this.getEstimateFoodList();
@@ -187,6 +192,13 @@ export default {
       this.editForm = {};
       this.editDialogVisible = true;
     },
+    // 实现表格单行选择高亮
+    setCurrent(row) {
+      this.$refs.singleTable.setCurrentRow(row);
+    },
+    handleCurrentChange(val) {
+      this.currentRow = val;
+    }
   }
 };
 </script>

@@ -14,7 +14,6 @@
 
       <el-form-item prop="username">
         <el-input
-          prefix-icon="iconfont iconiconup"
           ref="username"
           v-model="loginForm.username"
           placeholder="Username"

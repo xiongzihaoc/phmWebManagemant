@@ -21,6 +21,10 @@ import WaterType from '../components/waterManagement/WaterType.vue'
 import DiseaseScheme from '../components/DiseaseManagement/DiseaseScheme.vue'
 import FoodType from '../components/dietaryManagement/FoodType.vue'
 import Microelement from '../components/microelement/Microelement.vue'
+import NursingInstruction from '../components/DiseaseKnowledge/NursingInstruction.vue'
+import EditNursingInstruction from '../components/DiseaseKnowledge/EditNursingInstruction.vue'
+import HealthTips from '../components/DiseaseKnowledge/HealthTips.vue'
+import EditHealthTips from '../components/DiseaseKnowledge/EditHealthTips.vue'
 Vue.use(VueRouter)
 
 const routes = [{path: '/',redirect: '/login'},
@@ -45,6 +49,10 @@ const routes = [{path: '/',redirect: '/login'},
     { path: '/water/WaterSolution',component: WaterSolution},
     { path: '/water/WaterType',component: WaterType},
     { path: '/illness/case',component: DiseaseScheme},
+    { path: '/diseaseknowledge/nursingInstruction',component: NursingInstruction},
+    { path: '/diseaseknowledge/EditNursingInstruction',component: EditNursingInstruction},
+    { path: '/diseaseknowledge/healthKnowledge',component: HealthTips},
+    { path: '/diseaseknowledge/EditHealthTips',component: EditHealthTips},
   ]
   },
 ]

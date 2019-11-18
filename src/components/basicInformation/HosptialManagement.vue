@@ -17,13 +17,25 @@
       <el-table
         :data="hosMenuList"
         :lazy="true"
+        :header-cell-style="{background:'#f5f5f5'}"
         style="width: 100%;margin-bottom: 20px;"
-        row-key="deptId"
-        border
-        stripe
-        :tree-props="{children: 'child', hasChildren: 'hasChildren'}">
-        <el-table-column align="center" prop="deptName" label="名称" sortable ></el-table-column>
-        <el-table-column align="center" prop="orderNum" label="排序号" sortable ></el-table-column>
+        row-key="id"
+        ref="singleTable"
+        highlight-current-row
+        @current-change="handleCurrentChange"
+        :tree-props="{children: 'child', hasChildren: 'hasChildren'}"
+      >
+        <el-table-column align="center" prop="deptName" label="名称" sortable></el-table-column>
+        <el-table-column align="center" prop="deptManager" label="负责人" sortable></el-table-column>
+        <el-table-column align="center" prop="phone" label="联系方式" sortable></el-table-column>
+        <el-table-column align="center" prop="logo" label="图标" sortable>
+          <template slot-scope="scope">
+            <img id="img" :src="scope.row.logo" />
+          </template>
+        </el-table-column>
+        <el-table-column align="center" prop="deptType" label="组织类型" sortable></el-table-column>
+        <el-table-column align="center" prop="address" label="地址" sortable></el-table-column>
+        <el-table-column align="center" prop="orderNum" label="排序号" sortable></el-table-column>
         <el-table-column align="center" prop="status" label="状态">
           <!-- 作用域插槽 -->
           <template slot-scope="scope">
@@ -64,7 +76,9 @@ export default {
   data() {
     return {
       input: "",
-      hosMenuList: []
+      hosMenuList: [],
+      imageUrl: "",
+      currentRow: null
     };
   },
   created() {
@@ -72,8 +86,9 @@ export default {
   },
   methods: {
     async getHosMenuList() {
-      const { data: res } = await this.$http.post("dept/getDeptList.do",{});
+      const { data: res } = await this.$http.post("dept/getDeptList.do", {});
       console.log(res);
+
       this.hosMenuList = res.data;
     },
     // 增加
@@ -96,7 +111,33 @@ export default {
     // 搜索
     hospSearch() {},
     // 操作里面新增
-    addDictionarybtn(){},
+    addDictionarybtn() {},
+    // 实现表格单行选择高亮
+    setCurrent(row) {
+      this.$refs.singleTable.setCurrentRow(row);
+    },
+    handleCurrentChange(val) {
+      this.currentRow = val;
+    },
+    handleAvatarSuccess(res, file) {
+      this.imageUrl = res.data;
+      this.editForm.fdPhotoPath = res.data;
+    },
+    beforeAvatarUpload(file) {
+      const isJPG = file.type === "image/jpeg";
+      const isGIF = file.type === "image/gif";
+      const isPNG = file.type === "image/png";
+      const isBMP = file.type === "image/bmp";
+      const isLt2M = file.size / 1024 / 1024 < 2;
+
+      if (!isJPG && !isGIF && !isPNG && !isBMP) {
+        this.common.errorTip("上传图片必须是JPG/GIF/PNG/BMP 格式!");
+      }
+      if (!isLt2M) {
+        this.common.errorTip("上传图片大小不能超过 2MB!");
+      }
+      return (isJPG || isBMP || isGIF || isPNG) && isLt2M;
+    }
   }
 };
 </script>

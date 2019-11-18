@@ -14,7 +14,7 @@
         :default-active="this.$route.path"
       >
         <!-- 一级菜单 -->
-        <el-submenu :index="item.menuId + ''" v-for="item in menuList" :key="item.menuId">
+        <el-submenu :index="item.id + ''" v-for="item in menuList" :key="item.id">
           <template slot="title">
             <i :class="item.icon" height="24px"></i>
             <span>{{item.menuName}}</span>
@@ -23,7 +23,7 @@
           <el-menu-item
             :index="'/' + subItem.url"
             v-for="subItem in item.child"
-            :key="subItem.menuId"
+            :key="subItem.id"
             @click="saveNavState('/' + subItem.url)"
           >
             <template slot="title">
@@ -73,10 +73,9 @@ export default {
     },
     // 获取菜单栏数据
     async getMenuList() {
-      const { data: res } = await this.$http.post("menu/getMenuList.do");
+      const { data: res } = await this.$http.post("menu/getMenuList.do",{});
       if (res.code != 200) return this.$message.error(res.msg);
       this.menuList = res.data;
-      // console.log(res);
     },
     // 是否折叠展架侧边栏
     toggleCollapse() {

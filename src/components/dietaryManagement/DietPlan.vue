@@ -19,7 +19,15 @@
         </el-col>
       </el-row>
       <!-- 表格 -->
-      <el-table :data="foodTypeList" stripe border style="width: 100%">
+      <el-table
+        :data="foodTypeList"
+        ref="singleTable"
+        highlight-current-row
+        @current-change="handleCurrentChange"
+        stripe
+        border
+        style="width: 100%"
+      >
         <el-table-column align="center" type="selection" width="40"></el-table-column>
         <el-table-column align="center" type="index" label="序号" width="60"></el-table-column>
         <el-table-column align="center" prop="dsName" label="名称" width="200"></el-table-column>
@@ -127,7 +135,8 @@ export default {
         dsDescribe: ""
       },
       id: "",
-      foodList: []
+      foodList: [],
+      currentRow: null
     };
   },
   created() {
@@ -155,15 +164,13 @@ export default {
       this.foodTypeList = res.rows;
       this.total = res.total;
     },
-        // 分页
+    // 分页
     handleSizeChange(newSize) {
       this.pageSize = newSize;
-      console.log(111);
       this.getFoodTypeList();
     },
     handleCurrentChange(newPage) {
       this.pageNum = newPage;
-      console.log(222);
       this.getFoodTypeList();
     },
     // 弹框
@@ -174,7 +181,10 @@ export default {
         ...this.AddEditForm,
         ...info
       };
-      this.AddEditForm.addFoodIds = this.AddEditForm.dsTabooFoodId.split(",").filter(n => n).map(n => Number(n));
+      this.AddEditForm.addFoodIds = this.AddEditForm.dsTabooFoodId
+        .split(",")
+        .filter(n => n)
+        .map(n => Number(n));
       this.editAddDialogVisible = true;
     },
     // 添加
@@ -241,6 +251,13 @@ export default {
     // 搜索
     async Foodsearch() {
       this.getFoodTypeList();
+    },
+    // 实现表格单行选择高亮
+    setCurrent(row) {
+      this.$refs.singleTable.setCurrentRow(row);
+    },
+    handleCurrentChange(val) {
+      this.currentRow = val;
     }
   }
 };

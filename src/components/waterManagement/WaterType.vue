@@ -19,7 +19,15 @@
         </el-col>
       </el-row>
       <!-- 表格 -->
-      <el-table :data="waterList" stripe border style="width: 100%">
+      <el-table
+        :data="waterList"
+        ref="singleTable"
+        highlight-current-row
+        @current-change="handleCurrentChange"
+        stripe
+        border
+        style="width: 100%"
+      >
         <el-table-column align="center" type="selection" width="40"></el-table-column>
         <el-table-column align="center" type="index" label="序号" width="60"></el-table-column>
         <el-table-column align="center" prop="name" label="名称"></el-table-column>
@@ -112,7 +120,8 @@ export default {
       id: 0,
       dialogTitle: "",
       imageUrl: "",
-      upLoad: ""
+      upLoad: "",
+      currentRow: null
     };
   },
   created() {
@@ -229,8 +238,12 @@ export default {
       }
       return (isJPG || isBMP || isGIF || isPNG) && isLt2M;
     },
-    GetItem() {
-      this.upLoad = window.localStorage.getItem("upload");
+    // 实现表格单行选择高亮
+    setCurrent(row) {
+      this.$refs.singleTable.setCurrentRow(row);
+    },
+    handleCurrentChange(val) {
+      this.currentRow = val;
     }
   }
 };

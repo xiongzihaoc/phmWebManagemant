@@ -19,7 +19,15 @@
         </el-col>
       </el-row>
       <!-- 表格 -->
-      <el-table stripe :data="userList" border style="width: 100%">
+      <el-table
+        stripe
+        ref="singleTable"
+        highlight-current-row
+        @current-change="handleCurrentChange"
+        :data="userList"
+        border
+        style="width: 100%"
+      >
         <el-table-column align="center" type="selection" width="40"></el-table-column>
         <el-table-column align="center" prop="acId" label="序号" width="60"></el-table-column>
         <el-table-column align="center" prop="userName" label="用户名"></el-table-column>
@@ -109,6 +117,7 @@ export default {
       pageSize: 10,
       pageNum: 1,
       total: 0,
+      currentRow: null,
       editDialogVisible: false,
       editForm: {
         userName: "",
@@ -203,8 +212,15 @@ export default {
         this.getUserList();
       } else {
         this.$message.error("操作失败");
-        return
+        return;
       }
+    },
+    // 实现表格单行选择高亮
+    setCurrent(row) {
+      this.$refs.singleTable.setCurrentRow(row);
+    },
+    handleCurrentChange(val) {
+      this.currentRow = val;
     }
   }
 };

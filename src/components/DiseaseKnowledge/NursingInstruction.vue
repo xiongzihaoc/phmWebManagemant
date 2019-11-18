@@ -3,8 +3,7 @@
     <!-- 面包屑 -->
     <el-breadcrumb separator-class="el-icon-arrow-right">
       <el-breadcrumb-item :to="{ path: '/home' }">首页</el-breadcrumb-item>
-      <el-breadcrumb-item :to="{ path: '/food/foodManagemant' }">食物管理</el-breadcrumb-item>
-      <el-breadcrumb-item>食物单位</el-breadcrumb-item>
+      <el-breadcrumb-item>护理指导</el-breadcrumb-item>
     </el-breadcrumb>
     <!-- 卡片视图 -->
     <el-card>
@@ -16,15 +15,16 @@
         </el-col>
         <!-- 添加用户按钮 -->
         <el-col :span="4">
-          <el-button type="primary" @click="addWater">添加食物单位</el-button>
+          <el-button type="primary" @click="addWater">新增</el-button>
         </el-col>
       </el-row>
       <!-- 表格 -->
-      <el-table :data="foodUnitList" stripe border style="width: 100%">
+      <el-table :data="healthList" stripe border style="width: 100%">
         <el-table-column align="center" type="selection" width="40"></el-table-column>
         <el-table-column align="center" type="index" label="序号" width="60"></el-table-column>
-        <el-table-column align="center" prop="fuUnit" label="单位名称"></el-table-column>
-        <el-table-column align="center" prop="fuWeight" label="食物重量 (g)"></el-table-column>
+        <el-table-column align="center" prop="fuUnit" label="名称"></el-table-column>
+        <el-table-column align="center" prop="fuWeight" label="疾病类型"></el-table-column>
+        <el-table-column align="center" prop="fuWeight" label="描述"></el-table-column>
         <el-table-column align="center" prop="operate" label="操作" width="200">
           <template slot-scope="scope">
             <!-- 修改按钮 -->
@@ -44,26 +44,6 @@
           </template>
         </el-table-column>
       </el-table>
-      <!-- 修改页面 -->
-      <el-dialog
-        :title="dialogTitle"
-        :visible.sync="editDialogVisible"
-        width="40%"
-        @closed="editDialogClosed"
-      >
-        <el-form :model="editForm" ref="editFormRef" label-width="80px">
-          <el-form-item label="单位名称" prop="fuUnit">
-            <el-input v-model="editForm.fuUnit"></el-input>
-          </el-form-item>
-          <el-form-item label="单位描述" prop="fuWeight">
-            <el-input v-model="editForm.fuWeight"></el-input>
-          </el-form-item>
-        </el-form>
-        <span slot="footer" class="dialog-footer">
-          <el-button @click="editDialogVisible = false">取 消</el-button>
-          <el-button type="primary" @click="editEnter">确 定</el-button>
-        </span>
-      </el-dialog>
     </el-card>
   </div>
 </template>
@@ -72,8 +52,7 @@ export default {
   data() {
     return {
       input: "",
-      foodId: "",
-      foodUnitList: [],
+      healthList: [],
       editDialogVisible: false,
       editForm: {
         fuUnit: "",
@@ -84,56 +63,24 @@ export default {
     };
   },
   created() {
-    this.foodId = this.$route.query.id;
-    this.getFoodUnitList();
+    this.getHealthList();
   },
   methods: {
-    async getFoodUnitList() {
-      const { data: res } = await this.$http.post(
-        "foodUnit/getPFoodUnitList.do",
-        { foodId: this.foodId }
-      );
-      this.foodUnitList = res.rows;
-      this.total = res.total;
+    async getHealthList() {
+      const { data: res } = await this.$http.post("healthKnowledge/getPHealthKnowledgeList.do",{type:2});
+      console.log(res);
+      this.healthList = res.rows;
     },
     // 修改
     showEditdialog(info) {
-      this.dialogTitle = "修改";
-      this.id = info.id;
-      this.editForm = JSON.parse(JSON.stringify(info));
-      this.editDialogVisible = true;
+      this.$router.push('/diseaseknowledge/EditNursingInstruction')
     },
     editDialogClosed() {
       this.$refs.editFormRef.resetFields();
     },
-    async editEnter() {
-      let httpUrl = "";
-      let parm = {};
-      if (this.dialogTitle == "修改") {
-        httpUrl = "foodUnit/updatePFoodUnit.do";
-        parm = {
-          id: this.id,
-          foodId: this.foodId,
-          fuUnit: this.editForm.fuUnit,
-          fuWeight: this.editForm.fuWeight
-        };
-      } else {
-        httpUrl = "foodUnit/savePFoodUnit.do";
-        parm = {
-          foodId: this.foodId,
-          fuUnit: this.editForm.fuUnit,
-          fuWeight: this.editForm.fuWeight
-        };
-      }
-      const { data: res } = await this.$http.post(httpUrl, parm);
-      if (res.code != 200) return this.$message.error(res.msg);
-      this.$message.success(res.msg);
-      this.getFoodUnitList();
-      this.editDialogVisible = false;
-    },
     // 搜索
     foodUnitSearch() {
-      this.getFoodUnitList();
+      this.getHealthList();
     },
     // 删除
     async removeUserById(info) {
@@ -154,7 +101,7 @@ export default {
       });
       if (res.code == 200) {
         this.$message.success("删除成功");
-        this.getFoodUnitList();
+        this.getHealthList();
       } else {
         this.$message.error("删除失败");
         return;

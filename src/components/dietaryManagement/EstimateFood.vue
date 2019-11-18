@@ -19,7 +19,15 @@
         </el-col>
       </el-row>
       <!-- 表格 -->
-      <el-table :data="EstimateFoodList" stripe border style="width: 100%">
+      <el-table
+        :data="EstimateFoodList"
+        ref="singleTable"
+        highlight-current-row
+        @current-change="handleCurrentChange"
+        stripe
+        border
+        style="width: 100%"
+      >
         <el-table-column align="center" type="selection" width="40"></el-table-column>
         <el-table-column align="center" type="index" label="序号" width="60"></el-table-column>
         <el-table-column align="center" prop="fmName" label="名称"></el-table-column>
@@ -28,7 +36,7 @@
             <img id="img" :src="scope.row.fmPhotoPath" />
           </template>
         </el-table-column>
-        <el-table-column align="center" prop="fmType" label="类型"></el-table-column>
+        <el-table-column align="center" prop="fmTypeValue" label="类型"></el-table-column>
         <el-table-column align="center" prop="fmWeight" label="重量(g)"></el-table-column>
         <el-table-column align="center" prop="fmDescribe" label="描述"></el-table-column>
         <el-table-column align="center" prop="operate" label="操作" width="200">
@@ -114,7 +122,7 @@ export default {
     return {
       input: "",
       EstimateFoodList: [],
-      EstimateTypeList:[],
+      EstimateTypeList: [],
       pageSize: 10,
       pageNum: 1,
       total: 0,
@@ -128,7 +136,8 @@ export default {
       },
       id: 0,
       dialogTitle: "",
-      imageUrl: ""
+      imageUrl: "",
+      currentRow: null
     };
   },
   created() {
@@ -142,7 +151,7 @@ export default {
         {}
       );
 
-      this.EstimateTypeList = res.rows
+      this.EstimateTypeList = res.rows;
     },
     async getEstimateFoodList() {
       const { data: res } = await this.$http.post(
@@ -241,7 +250,6 @@ export default {
     },
 
     handleAvatarSuccess(res, file) {
-      console.log(res);
       this.imageUrl = res.data;
       this.editForm.fmPhotoPath = res.data;
     },
@@ -259,6 +267,13 @@ export default {
         this.common.errorTip("上传图片大小不能超过 2MB!");
       }
       return (isJPG || isBMP || isGIF || isPNG) && isLt2M;
+    },
+    // 实现表格单行选择高亮
+    setCurrent(row) {
+      this.$refs.singleTable.setCurrentRow(row);
+    },
+    handleCurrentChange(val) {
+      this.currentRow = val;
     }
   }
 };

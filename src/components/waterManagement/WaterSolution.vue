@@ -19,7 +19,15 @@
         </el-col>
       </el-row>
       <!-- 表格 -->
-      <el-table :data="waterTypeList" stripe border style="width: 100%">
+      <el-table
+        :data="waterTypeList"
+        ref="singleTable"
+        highlight-current-row
+        @current-change="handleCurrentChange"
+        stripe
+        border
+        style="width: 100%"
+      >
         <el-table-column align="center" type="selection" width="40"></el-table-column>
         <el-table-column align="center" type="index" label="序号" width="60"></el-table-column>
         <el-table-column align="center" prop="name" label="名称" width="120"></el-table-column>
@@ -144,7 +152,8 @@ export default {
         description: ""
       },
       id: 0,
-      DrinkTypeList: []
+      DrinkTypeList: [],
+      currentRow: null
     };
   },
   created() {
@@ -163,7 +172,7 @@ export default {
         }
       );
       this.waterTypeList = res.rows;
-      this.total = res.total
+      this.total = res.total;
       console.log(res);
     },
     // 获取饮水种类
@@ -199,7 +208,7 @@ export default {
         .split(",")
         .filter(n => n)
         .map(n => Number(n));
-        
+
       this.DialogVisible = true;
     },
     DialogClosed() {
@@ -278,6 +287,13 @@ export default {
       this.$message.success(res.msg);
       this.getWaterTypeList();
       this.DialogVisible = false;
+    },
+    // 实现表格单行选择高亮
+    setCurrent(row) {
+      this.$refs.singleTable.setCurrentRow(row);
+    },
+    handleCurrentChange(val) {
+      this.currentRow = val;
     }
   }
 };
