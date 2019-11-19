@@ -3,19 +3,20 @@
     <!-- 面包屑 -->
     <el-breadcrumb separator-class="el-icon-arrow-right">
       <el-breadcrumb-item :to="{ path: '/home' }">首页</el-breadcrumb-item>
-      <el-breadcrumb-item>数据字典</el-breadcrumb-item>
+      <el-breadcrumb-item :to="{ path: '/system/dict' }">数据字典</el-breadcrumb-item>
+      <el-breadcrumb-item>字典数据</el-breadcrumb-item>
     </el-breadcrumb>
     <!-- 卡片视图 -->
     <el-card>
       <el-row :gutter="20">
         <el-col :span="7">
-          <el-input placeholder="请输入内容" v-model="input" @keyup.13.native="dicSearch" clearable>
+          <el-input placeholder="请输入内容" v-model="input" @keyup.enter.native="dicSearch" clearable>
             <el-button slot="append" icon="el-icon-search" @click="dicSearch"></el-button>
           </el-input>
         </el-col>
         <!-- 添加按钮 -->
         <el-col :span="4">
-          <el-button type="primary" @click="addDictionary">添加字典</el-button>
+          <el-button type="primary" @click="addDictionaryInfo">添加字典数据</el-button>
         </el-col>
       </el-row>
       <el-table
@@ -25,11 +26,8 @@
         :header-cell-style="{background:'#f5f5f5'}"
         row-key="id"
         ref="singleTable"
-        highlight-current-row
-        @current-change="handleCurrentChange"
       >
-        <el-table-column align="center" prop="id" label="字典编码" sortable></el-table-column>
-        <el-table-column align="center" prop="name" label="名称" sortable></el-table-column>
+        <el-table-column align="center    " prop="name" label="名称" sortable></el-table-column>
         <el-table-column align="center" prop="dictValue" label="键值" sortable></el-table-column>
         <el-table-column align="center" prop="remark" label="备注" sortable></el-table-column>
         <el-table-column align="center" prop="dictSort" label="排序号"></el-table-column>
@@ -62,13 +60,6 @@
               type="danger"
               icon="el-icon-delete"
             ></el-button>
-            <!-- 跳转按钮 -->
-            <el-button
-              size="mini"
-              @click="jumpDictionarybtn(scope.row)"
-              type="success"
-              icon="el-icon-s-unfold"
-            ></el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -84,8 +75,8 @@
         <el-form-item label="名称">
           <el-input v-model="addEditForm.name"></el-input>
         </el-form-item>
-        <el-form-item label="键值"  v-if="this.dialogTitle='修改'">
-          <el-input disabled v-model="addEditForm.dictValue"></el-input>
+        <el-form-item label="键值">
+          <el-input v-model="addEditForm.dictValue"></el-input>
         </el-form-item>
         <el-form-item label="备注">
           <el-input v-model="addEditForm.remark"></el-input>
@@ -103,44 +94,44 @@ export default {
   data() {
     return {
       input: "",
+      dialogTitle: "",
+      DialogVisible: false,
       menuList: [],
+      id: null,
+      selfId: null,
       addEditForm: {
         name: "",
         dictValue: "",
         remark: ""
-      },
-      parentId: 1,
-      selfId: null,
-      DialogVisible: false,
-      dialogTitle: "",
-      goBack: "",
-      labelTitle: "",
-      currentRow: null
+      }
     };
   },
   created() {
+    this.id = this.$route.query.id;
     this.getDictionaryList();
   },
   methods: {
+    // 获取详情
     async getDictionaryList() {
       const { data: res } = await this.$http.post(
         "sys/dict/getSysDictList.do",
-        { parentId: 1, name: this.input }
+        { parentId: this.id, name: this.input }
       );
       console.log(res);
-
       this.menuList = res.data;
     },
-    // 跳转下一级
-    jumpDictionarybtn(info) {
-      this.$router.push({
-        path: "/JumpDictionaryNext",
-        query: { id: info.id }
-      });
+    // 修改
+    showEditdialog(info) {
+      this.selfId = info.id;
+      this.dialogTitle = "修改";
+      this.addEditForm = JSON.parse(JSON.stringify(info));
+      this.DialogVisible = true;
     },
-    // 确定修改或添加
+    AddEditDialogClosed() {
+      this.$refs.addFormRef.resetFields();
+    },
     async addEditEnter() {
-      let httpUrl = "";
+         let httpUrl = "";
       let parm = {};
       if (this.dialogTitle == "修改") {
         httpUrl = "sys/dict/updateSysDict.do";
@@ -152,7 +143,7 @@ export default {
       } else {
         httpUrl = "sys/dict/saveSysDict.do";
         parm = {
-          parentId: this.parentId,
+          parentId: this.id,
           name: this.addEditForm.name,
           dictValue: this.addEditForm.dictValue,
           remark: this.addEditForm.remark
@@ -164,20 +155,8 @@ export default {
       this.getDictionaryList();
       this.DialogVisible = false;
     },
-    // 修改
-    showEditdialog(info) {
-      this.selfId = info.id;
-      this.dialogTitle = "修改";
-      this.addEditForm = JSON.parse(JSON.stringify(info));
-      this.DialogVisible = true;
-    },
-    // 重置
-    AddEditDialogClosed() {
-      this.$refs.addFormRef.resetFields();
-    },
-    // 改变状态按钮
+    // 改变状态
     async userStateChanged(userinfo) {
-      console.log(userinfo);
       const { data: res } = await this.$http.post("sys/dict/updateSysDict.do", {
         id: userinfo.id,
         isEnable: userinfo.isEnable
@@ -188,10 +167,6 @@ export default {
       } else {
         this.$message.success("更新用户状态成功");
       }
-    },
-    // 搜索
-    dicSearch() {
-      this.getDictionaryList();
     },
     // 删除
     async removeById(info) {
@@ -218,21 +193,18 @@ export default {
         return;
       }
     },
-    // 添加按钮
-    addDictionary() {
+    // 添加字典数据
+    addDictionaryInfo() {
       this.dialogTitle = "新增";
       this.addEditForm = {};
       this.DialogVisible = true;
     },
-    // 实现表格单行选择高亮
-    setCurrent(row) {
-      this.$refs.singleTable.setCurrentRow(row);
-    },
-    handleCurrentChange(val) {
-      this.currentRow = val;
+    // 搜索
+    dicSearch() {
+      this.getDictionaryList();
     }
   }
 };
 </script>
 <style lang='less' scoped>
-</style>
+</style>\

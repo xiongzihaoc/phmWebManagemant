@@ -4,16 +4,31 @@
     <el-breadcrumb separator-class="el-icon-arrow-right">
       <el-breadcrumb-item :to="{ path: '/home' }">首页</el-breadcrumb-item>
       <el-breadcrumb-item :to="{ path: '/diseaseknowledge/healthKnowledge' }">健康小知识</el-breadcrumb-item>
-      <el-breadcrumb-item>健康小知识修改</el-breadcrumb-item>
+      <el-breadcrumb-item>健康小知识增加</el-breadcrumb-item>
     </el-breadcrumb>
     <!-- 卡片视图 -->
     <el-card>
+      <el-row :gutter="20">
+        <!-- 按钮区域 -->
+        <el-col :span="4">
+          <el-button type="primary" round @click="addImage">添加图片</el-button>
+        </el-col>
+        <el-col :span="4">
+          <el-button type="primary" round @click="addVideo">添加视频</el-button>
+        </el-col>
+        <el-col :span="4">
+          <el-button type="primary" round @click="addWord">添加文字</el-button>
+        </el-col>
+      </el-row>
       <el-form ref="form" :model="editform" label-width="80px">
         <el-form-item label="文章名称">
           <el-input v-model="editform.name"></el-input>
         </el-form-item>
         <el-form-item label="疾病类型">
-          <el-select v-model="editform.diseaseTypeValue" placeholder="请选择疾病类型"></el-select>
+          <el-select v-model="editform.region" placeholder="请选择活动区域">
+            <el-option label="区域一" value="shanghai"></el-option>
+            <el-option label="区域二" value="beijing"></el-option>
+          </el-select>
         </el-form-item>
         <el-form-item label="文本描述">
           <el-input
@@ -21,7 +36,7 @@
             type="textarea"
             :rows="2"
             placeholder="请输入内容"
-            v-model="editform.description"
+            v-model="editform.name"
           ></el-input>
         </el-form-item>
         <el-form-item label="文章封面">
@@ -37,13 +52,6 @@
           </el-upload>
         </el-form-item>
       </el-form>
-      <el-row :gutter="20">
-        <!-- 按钮区域 -->
-        <el-button class="addInfoBtn" type="primary" round @click="addImage">添加图片</el-button>
-        <el-button class="addInfoBtn" type="primary" round @click="addVideo">添加视频</el-button>
-        <el-button class="addInfoBtn" type="primary" round @click="addWord">添加文字</el-button>
-        <el-button class="saveInfoBtn" type="success" round @click="saveInfo">保存信息</el-button>
-      </el-row>
     </el-card>
   </div>
 </template>
@@ -52,33 +60,19 @@ export default {
   data() {
     return {
       editform: {},
-      imageUrl: "",
-      infoId: null
+      imageUrl: ""
     };
   },
-  created() {
-    this.infoId = this.$route.query.info.id;
-    this.getEditHealthTipsList();
-  },
   methods: {
-    async getEditHealthTipsList() {
-      const { data: res } = await this.$http.post(
-        "healthKnowledge/getDetails.do",
-        { id: this.infoId }
-      );
-      this.editform = res.data;
-    },
     // 添加图片
-    addImage() {},
+    addImage(){},
     // 添加视频
-    addVideo() {},
+    addVideo(){},
     // 添加文字
-    addWord() {},
-    // 保存信息
-    saveInfo() {},
+    addWord(){},
     handleAvatarSuccess(res, file) {
       this.imageUrl = res.data;
-      // this.editForm.iconUrl = res.data;
+      this.editForm.iconUrl = res.data;
     },
     beforeAvatarUpload(file) {
       const isJPG = file.type === "image/jpeg";
@@ -99,6 +93,9 @@ export default {
 };
 </script>
 <style lang='less' scoped>
+.el-form {
+  margin-top: 30px;
+}
 .avatar-uploader .el-upload {
   cursor: pointer;
   position: relative;
@@ -121,13 +118,5 @@ export default {
   width: 60px;
   height: 80px;
   display: block;
-}
-
-.addInfoBtn {
-  float: left;
-}
-.saveInfoBtn {
-  float: right;
-  margin-right: 30px;
 }
 </style>

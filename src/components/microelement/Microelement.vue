@@ -16,16 +16,22 @@
         </el-col>
         <!-- 添加用户按钮 -->
         <el-col :span="4">
-          <el-button type="primary" @click="addWater">添加饮水</el-button>
+          <el-button type="primary" @click="addWater">添加元素</el-button>
         </el-col>
       </el-row>
       <!-- 表格 -->
-      <el-table :data="waterList" stripe border style="width: 100%">
-        <el-table-column align="center" type="selection" width="40"></el-table-column>
+      <el-table
+        :header-cell-style="{background:'#f5f5f5'}"
+        :data="FoodEleList"
+        stripe
+        style="width: 100%"
+      >
+        <el-table-column align="center" type="selection" width="60"></el-table-column>
         <el-table-column align="center" type="index" label="序号" width="60"></el-table-column>
-        <el-table-column align="center" prop="name" label="名称"></el-table-column>
-        <el-table-column align="center" label="元素值"></el-table-column>
-        <el-table-column align="center" prop="description" label="描述"></el-table-column>
+        <el-table-column align="center" prop="miName" label="元素名称"></el-table-column>
+        <el-table-column align="center" prop="miUnit" label="元素单位"></el-table-column>
+        <el-table-column align="center" prop="miValue" label="元素值"></el-table-column>
+        <el-table-column align="center" prop="miDescribe" label="描述"></el-table-column>
         <el-table-column align="center" prop="operate" label="操作" width="200">
           <template slot-scope="scope">
             <!-- 修改按钮 -->
@@ -38,7 +44,7 @@
             <!-- 删除按钮 -->
             <el-button
               size="mini"
-              @click="removeUserById(scope.row.id)"
+              @click="removeUserById(scope.row)"
               type="danger"
               icon="el-icon-delete"
             ></el-button>
@@ -53,11 +59,31 @@
         @closed="editDialogClosed"
       >
         <el-form :model="editForm" ref="editFormRef" label-width="80px">
-          <el-form-item label="名称" prop="name">
-            <el-input v-model="editForm.name"></el-input>
+          <el-form-item label="元素名称" prop="miName">
+            <el-select v-model="editForm.miName" placeholder="请选择">
+              <el-option
+                v-for="item in eleNameList"
+                :key="item.id"
+                :label="item.name"
+                :value="item.name"
+              ></el-option>
+            </el-select>
           </el-form-item>
-          <el-form-item label="描述" prop="description">
-            <el-input v-model="editForm.description"></el-input>
+          <el-form-item label="元素单位" prop="miUnit">
+            <el-select v-model="editForm.miUnit" placeholder="请选择">
+              <el-option
+                v-for="item in eleUnitList"
+                :key="item.id"
+                :label="item.name"
+                :value="item.id"
+              ></el-option>
+            </el-select>
+          </el-form-item>
+          <el-form-item label="元素值" prop="miValue">
+            <el-input v-model="editForm.miValue"></el-input>
+          </el-form-item>
+          <el-form-item label="描述" prop="miDescribe">
+            <el-input v-model="editForm.miDescribe"></el-input>
           </el-form-item>
         </el-form>
         <span slot="footer" class="dialog-footer">
@@ -73,27 +99,54 @@ export default {
   data() {
     return {
       input: "",
-      waterList: [],
+      FoodEleList: [],
+      eleNameList: [],
+      eleUnitList: [],
       editDialogVisible: false,
       editForm: {
-        name: "",
-        iconUrl: "",
-        description: ""
+        miName: "",
+        miValue: "",
+        miUnit: "",
+        miDescribe: ""
       },
       id: 0,
+      foodId: null,
       dialogTitle: ""
     };
   },
   created() {
+    this.foodId = this.$route.query.id;
     this.getMicroList();
+    this.getDictionaryEleList();
+    this.getDictionaryUnitList();
   },
   methods: {
+    // 数据字典元素名称列表
+    async getDictionaryEleList() {
+      const { data: res } = await this.$http.post(
+        "sys/dict/getPreviewData.do",
+        { dictValue: "food_element" }
+      );
+      console.log(res);
+      this.eleNameList = res.data;
+    },
+    // 数据字典元素单位列表
+    async getDictionaryUnitList() {
+      const { data: res } = await this.$http.post(
+        "sys/dict/getPreviewData.do",
+        { dictValue: "element" }
+      );
+      console.log(res);
+      this.eleUnitList = res.data;
+    },
+    // 微量元素列表
     async getMicroList() {
       const { data: res } = await this.$http.post(
-        "water/type/getPWaterTypeList.do",
-        {}
+        "foodElement/getPFoodElementList.do",
+        { foodId: this.foodId, name: this.input }
       );
-      this.waterList = res.rows;
+      console.log(res);
+      this.FoodEleList = res.rows;
       this.total = res.total;
     },
     // 修改
@@ -110,19 +163,23 @@ export default {
       let httpUrl = "";
       let parm = {};
       if (this.dialogTitle == "修改") {
-        httpUrl = "water/type/updatePWaterType.do";
+        httpUrl = "foodElement/updatePFoodElement.do";
         parm = {
           id: this.id,
-          name: this.editForm.name,
-          iconUrl: this.editForm.iconUrl,
-          description: this.editForm.description
+          foodId: this.foodId,
+          miName: this.editForm.miName,
+          miValue: this.editForm.miValue,
+          miUnit: this.editForm.miUnit,
+          miDescribe: this.editForm.miDescribe
         };
       } else {
-        httpUrl = "water/type/savePWaterType.do";
+        httpUrl = "foodElement/savePFoodElement.do";
         parm = {
-          name: this.editForm.name,
-          iconUrl: this.editForm.iconUrl,
-          description: this.editForm.description
+          foodId: this.foodId,
+          miName: this.editForm.miName,
+          miValue: this.editForm.miValue,
+          miUnit: this.editForm.miUnit,
+          miDescribe: this.editForm.miDescribe
         };
       }
       const { data: res } = await this.$http.post(httpUrl, parm);
@@ -150,9 +207,9 @@ export default {
         return this.$message.info("取消删除");
       }
       const { data: res } = await this.$http.post(
-        "water/type/delPWaterType.do",
+        "foodElement/delPFoodElement.do",
         {
-          id: info
+          id: info.id
         }
       );
       if (res.code == 200) {

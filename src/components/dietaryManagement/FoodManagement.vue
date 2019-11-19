@@ -25,12 +25,13 @@
         highlight-current-row
         @current-change="handleCurrentChange"
         stripe
-        border
+        :header-cell-style="{background:'#f5f5f5'}"
         style="width: 100%"
       >
-        <el-table-column align="center" type="selection" width="40"></el-table-column>
+        <el-table-column align="center" type="selection" width="60"></el-table-column>
         <el-table-column align="center" type="index" label="序号" width="60"></el-table-column>
-        <el-table-column align="center" prop="fdName" label="名称" width="100"></el-table-column>
+        <el-table-column align="center" prop="id" label="id" width="100"></el-table-column>
+        <el-table-column align="center" prop="fdName" label="名称"></el-table-column>
         <el-table-column align="center" label="图标">
           <template slot-scope="scope">
             <img id="img" :src="scope.row.fdPhotoPath" />
@@ -90,8 +91,8 @@
         </el-form-item>
         <el-form-item label="是否常见" prop="fdState">
           <el-select v-model="editForm.fdState" placeholder="请选择">
-            <el-option :label="0" :value="0"></el-option>
-            <el-option :label="1" :value="1"></el-option>
+            <el-option label="否" :value="0"></el-option>
+            <el-option label="是" :value="1"></el-option>
           </el-select>
         </el-form-item>
         <el-form-item label="食物描述" prop="fdDescribe">
@@ -290,8 +291,8 @@ export default {
       this.currentRow = val;
     },
     // 跳转到微量元素页面
-    jumpScruple() {
-      this.$router.push("/food/Microelement");
+    jumpScruple(info) {
+      this.$router.push({path:"/food/Microelement",query:{id:info.id}});
     },
     // 跳转到食物单位
     jumpUnits(info) {

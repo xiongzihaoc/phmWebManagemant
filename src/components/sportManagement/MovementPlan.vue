@@ -30,10 +30,9 @@
         highlight-current-row
         @current-change="handleCurrentChange"
         stripe
-        border
         style="width: 100%"
       >
-        <el-table-column align="center" type="selection" width="40"></el-table-column>
+        <el-table-column align="center" type="selection" width="60"></el-table-column>
         <el-table-column align="center" type="index" label="序号" width="60"></el-table-column>
         <el-table-column align="center" prop="name" label="名称"></el-table-column>
         <el-table-column align="center" prop="sportGroupNum" label="运动组数"></el-table-column>

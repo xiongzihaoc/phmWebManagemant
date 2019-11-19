@@ -25,10 +25,10 @@
         highlight-current-row
         @current-change="handleCurrentChange"
         stripe
-        border
+        :header-cell-style="{background:'#f5f5f5'}"
         style="width: 100%"
       >
-        <el-table-column align="center" type="selection" width="40"></el-table-column>
+        <el-table-column align="center" type="selection" width="60"></el-table-column>
         <el-table-column align="center" type="index" label="序号" width="60"></el-table-column>
         <el-table-column align="center" prop="dsName" label="名称" width="200"></el-table-column>
         <el-table-column align="center" prop="dsTabooFood" label="禁忌食物" width="200"></el-table-column>

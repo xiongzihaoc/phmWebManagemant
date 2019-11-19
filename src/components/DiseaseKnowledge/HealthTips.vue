@@ -15,12 +15,17 @@
         </el-col>
         <!-- 添加用户按钮 -->
         <el-col :span="4">
-          <el-button type="primary" @click="addWater">新增</el-button>
+          <el-button type="primary" @click="jumpAddHealthTips">新增</el-button>
         </el-col>
       </el-row>
       <!-- 表格 -->
-      <el-table :data="healthList" stripe border style="width: 100%">
-        <el-table-column align="center" type="selection" width="40"></el-table-column>
+      <el-table
+        :header-cell-style="{background:'#f5f5f5'}"
+        :data="healthList"
+        stripe
+        style="width: 100%"
+      >
+        <el-table-column align="center" type="selection" width="60"></el-table-column>
         <el-table-column align="center" type="index" label="序号" width="60"></el-table-column>
         <el-table-column align="center" prop="name" label="名称"></el-table-column>
         <el-table-column align="center" prop="diseaseTypeValue" label="疾病类型"></el-table-column>
@@ -67,13 +72,19 @@ export default {
   },
   methods: {
     async getHealthList() {
-      const { data: res } = await this.$http.post("healthKnowledge/getPHealthKnowledgeList.do",{type:1});
+      const { data: res } = await this.$http.post(
+        "healthKnowledge/getPHealthKnowledgeList.do",
+        { type: 1 }
+      );
       console.log(res);
       this.healthList = res.rows;
     },
     // 修改
     showEditdialog(info) {
-    this.$router.push('/diseaseknowledge/EditHealthTips')
+      this.$router.push({
+        path: "/diseaseknowledge/EditHealthTips",
+        query: { info }
+      });
     },
     // 搜索
     foodUnitSearch() {
@@ -93,9 +104,12 @@ export default {
       if (confirmResult != "confirm") {
         return this.$message.info("取消删除");
       }
-      const { data: res } = await this.$http.post("foodUnit/delPFoodUnit.do", {
-        id: info
-      });
+      const { data: res } = await this.$http.post(
+        "healthKnowledge/delPHealthKnowledge.do",
+        {
+          id: info
+        }
+      );
       if (res.code == 200) {
         this.$message.success("删除成功");
         this.getHealthList();
@@ -104,10 +118,8 @@ export default {
         return;
       }
     },
-    addWater() {
-      this.dialogTitle = "新增";
-      this.editForm = {};
-      this.editDialogVisible = true;
+    jumpAddHealthTips(info) {
+      this.$router.push({ path: "/diseaseknowledge/AddHealthTips" });
     }
   }
 };

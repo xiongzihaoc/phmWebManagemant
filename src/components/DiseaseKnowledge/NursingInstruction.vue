@@ -19,8 +19,13 @@
         </el-col>
       </el-row>
       <!-- 表格 -->
-      <el-table :data="healthList" stripe border style="width: 100%">
-        <el-table-column align="center" type="selection" width="40"></el-table-column>
+      <el-table
+        :header-cell-style="{background:'#f5f5f5'}"
+        :data="healthList"
+        stripe
+        style="width: 100%"
+      >
+        <el-table-column align="center" type="selection" width="60"></el-table-column>
         <el-table-column align="center" type="index" label="序号" width="60"></el-table-column>
         <el-table-column align="center" prop="fuUnit" label="名称"></el-table-column>
         <el-table-column align="center" prop="fuWeight" label="疾病类型"></el-table-column>
@@ -67,13 +72,16 @@ export default {
   },
   methods: {
     async getHealthList() {
-      const { data: res } = await this.$http.post("healthKnowledge/getPHealthKnowledgeList.do",{type:2});
+      const { data: res } = await this.$http.post(
+        "healthKnowledge/getPHealthKnowledgeList.do",
+        { type: 2 }
+      );
       console.log(res);
       this.healthList = res.rows;
     },
     // 修改
     showEditdialog(info) {
-      this.$router.push('/diseaseknowledge/EditNursingInstruction')
+      this.$router.push("/diseaseknowledge/EditNursingInstruction");
     },
     editDialogClosed() {
       this.$refs.editFormRef.resetFields();

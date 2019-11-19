@@ -20,8 +20,13 @@
         </el-col>
       </el-row>
       <!-- 表格 -->
-      <el-table :data="foodUnitList" stripe border style="width: 100%">
-        <el-table-column align="center" type="selection" width="40"></el-table-column>
+      <el-table
+        :header-cell-style="{background:'#f5f5f5'}"
+        :data="foodUnitList"
+        stripe
+        style="width: 100%"
+      >
+        <el-table-column align="center" type="selection" width="60"></el-table-column>
         <el-table-column align="center" type="index" label="序号" width="60"></el-table-column>
         <el-table-column align="center" prop="fuUnit" label="单位名称"></el-table-column>
         <el-table-column align="center" prop="fuWeight" label="食物重量 (g)"></el-table-column>

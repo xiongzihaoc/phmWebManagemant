@@ -10,6 +10,7 @@ import HosptialManagement from '../components/basicInformation/HosptialManagemen
 import Dictionary from '../components/basicInformation/Dictionary.vue'
 import UserManagemant from '../components/basicInformation/UserManagemant.vue'
 import PatientManagement from '../components/basicInformation/PatientManagement.vue'
+import Role from '../components/basicInformation/Role.vue'
 import FoodManagement from '../components/dietaryManagement/FoodManagement.vue'
 import DietPlan from '../components/dietaryManagement/DietPlan.vue'
 import EstimateFood from '../components/dietaryManagement/EstimateFood.vue'
@@ -25,6 +26,8 @@ import NursingInstruction from '../components/DiseaseKnowledge/NursingInstructio
 import EditNursingInstruction from '../components/DiseaseKnowledge/EditNursingInstruction.vue'
 import HealthTips from '../components/DiseaseKnowledge/HealthTips.vue'
 import EditHealthTips from '../components/DiseaseKnowledge/EditHealthTips.vue'
+import AddHealthTips from '../components/DiseaseKnowledge/AddHealthTips.vue'
+import JumpDictionaryNext from '../components/basicInformation/JumpDictionaryNext.vue'
 Vue.use(VueRouter)
 
 const routes = [{path: '/',redirect: '/login'},
@@ -38,6 +41,8 @@ const routes = [{path: '/',redirect: '/login'},
     { path: '/system/hosptial',component: HosptialManagement},
     { path: '/system/dict',component: Dictionary},
     { path: '/system/patient',component: PatientManagement},
+    { path: '/system/role',component: Role},
+    { path: '/JumpDictionaryNext',component: JumpDictionaryNext},
     { path: '/food/foodManagemant',component: FoodManagement},
     { path: '/food/DietPlan',component: DietPlan},
     { path: '/food/measure',component: EstimateFood},
@@ -53,6 +58,7 @@ const routes = [{path: '/',redirect: '/login'},
     { path: '/diseaseknowledge/EditNursingInstruction',component: EditNursingInstruction},
     { path: '/diseaseknowledge/healthKnowledge',component: HealthTips},
     { path: '/diseaseknowledge/EditHealthTips',component: EditHealthTips},
+    { path: '/diseaseknowledge/AddHealthTips',component: AddHealthTips},
   ]
   },
 ]
