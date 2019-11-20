@@ -73,7 +73,7 @@
         </el-table-column>
       </el-table>
     </el-card>
-    <!-- 修改提示框 -->
+    <!-- 修改添加提示框 -->
     <el-dialog
       :title="dialogTitle"
       :visible.sync="DialogVisible"
@@ -84,8 +84,8 @@
         <el-form-item label="名称">
           <el-input v-model="addEditForm.name"></el-input>
         </el-form-item>
-        <el-form-item label="键值"  v-if="this.dialogTitle='修改'">
-          <el-input disabled v-model="addEditForm.dictValue"></el-input>
+        <el-form-item label="键值">
+          <el-input :disabled="disabled" v-model="addEditForm.dictValue"></el-input>
         </el-form-item>
         <el-form-item label="备注">
           <el-input v-model="addEditForm.remark"></el-input>
@@ -114,6 +114,7 @@ export default {
       DialogVisible: false,
       dialogTitle: "",
       goBack: "",
+      disabled: false,
       labelTitle: "",
       currentRow: null
     };
@@ -139,34 +140,38 @@ export default {
       });
     },
     // 确定修改或添加
-    async addEditEnter() {
-      let httpUrl = "";
-      let parm = {};
-      if (this.dialogTitle == "修改") {
-        httpUrl = "sys/dict/updateSysDict.do";
-        parm = {
-          id: this.selfId,
-          name: this.addEditForm.name,
-          remark: this.addEditForm.remark
-        };
-      } else {
-        httpUrl = "sys/dict/saveSysDict.do";
-        parm = {
-          parentId: this.parentId,
-          name: this.addEditForm.name,
-          dictValue: this.addEditForm.dictValue,
-          remark: this.addEditForm.remark
-        };
-      }
-      const { data: res } = await this.$http.post(httpUrl, parm);
-      if (res.code != 200) return this.$message.error(res.msg);
-      this.$message.success(res.msg);
-      this.getDictionaryList();
-      this.DialogVisible = false;
+    addEditEnter() {
+      this.$refs.addFormRef.validate(async valid => {
+        if (!valid) return this.$message.error("登录失败");
+        let httpUrl = "";
+        let parm = {};
+        if (this.dialogTitle == "修改") {
+          httpUrl = "sys/dict/updateSysDict.do";
+          parm = {
+            id: this.selfId,
+            name: this.addEditForm.name,
+            remark: this.addEditForm.remark
+          };
+        } else {
+          httpUrl = "sys/dict/saveSysDict.do";
+          parm = {
+            parentId: this.parentId,
+            name: this.addEditForm.name,
+            dictValue: this.addEditForm.dictValue,
+            remark: this.addEditForm.remark
+          };
+        }
+        const { data: res } = await this.$http.post(httpUrl, parm);
+        if (res.code != 200) return this.$message.error(res.msg);
+        this.$message.success(res.msg);
+        this.getDictionaryList();
+        this.DialogVisible = false;
+      });
     },
     // 修改
     showEditdialog(info) {
       this.selfId = info.id;
+      this.disabled = true;
       this.dialogTitle = "修改";
       this.addEditForm = JSON.parse(JSON.stringify(info));
       this.DialogVisible = true;
@@ -221,6 +226,7 @@ export default {
     // 添加按钮
     addDictionary() {
       this.dialogTitle = "新增";
+      this.disabled = false
       this.addEditForm = {};
       this.DialogVisible = true;
     },

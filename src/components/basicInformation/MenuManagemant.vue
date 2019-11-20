@@ -183,6 +183,7 @@ export default {
         userinfo.status = !userinfo.status;
         return this.$message.error("更新用户状态失败");
       }
+      this.getMenuList()
       this.$message.success("更新用户状态成功");
     },
     // 增加菜单弹框

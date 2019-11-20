@@ -76,7 +76,7 @@
           <el-input v-model="addEditForm.name"></el-input>
         </el-form-item>
         <el-form-item label="键值">
-          <el-input v-model="addEditForm.dictValue"></el-input>
+          <el-input :disabled="disabled" v-model="addEditForm.dictValue"></el-input>
         </el-form-item>
         <el-form-item label="备注">
           <el-input v-model="addEditForm.remark"></el-input>
@@ -98,6 +98,7 @@ export default {
       DialogVisible: false,
       menuList: [],
       id: null,
+      disabled: false,
       selfId: null,
       addEditForm: {
         name: "",
@@ -123,6 +124,7 @@ export default {
     // 修改
     showEditdialog(info) {
       this.selfId = info.id;
+      this.disabled = true;
       this.dialogTitle = "修改";
       this.addEditForm = JSON.parse(JSON.stringify(info));
       this.DialogVisible = true;
@@ -131,7 +133,7 @@ export default {
       this.$refs.addFormRef.resetFields();
     },
     async addEditEnter() {
-         let httpUrl = "";
+      let httpUrl = "";
       let parm = {};
       if (this.dialogTitle == "修改") {
         httpUrl = "sys/dict/updateSysDict.do";
@@ -195,6 +197,7 @@ export default {
     },
     // 添加字典数据
     addDictionaryInfo() {
+      this.disabled = false;
       this.dialogTitle = "新增";
       this.addEditForm = {};
       this.DialogVisible = true;

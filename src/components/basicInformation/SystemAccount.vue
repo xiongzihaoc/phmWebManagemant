@@ -57,7 +57,7 @@
       <!-- 分页区域 -->
       <el-pagination
         @size-change="handleSizeChange"
-        @current-change="handleCurrentChange"
+        @current-change="handleCurrentChangev"
         :current-page="pageNum"
         :page-sizes="[10, 20,50]"
         :page-size="pageSize"
@@ -114,7 +114,7 @@ export default {
       input: "",
       userList: [],
       //获取用户列表的参数对象
-      pageSize: 10,
+      pageSize: 9,
       pageNum: 1,
       total: 0,
       currentRow: null,
@@ -150,18 +150,20 @@ export default {
         pageSize: this.pageSize,
         pageNum: this.pageNum
       });
-      // console.log(res);
-
+      console.log(res);
       if (res.code != 200) return this.$message.error("数获取失败");
       this.userList = res.rows;
       this.total = res.total;
     },
     // 分页
     handleSizeChange(newSize) {
+      console.log(newSize);
+
       this.pageSize = newSize;
       this.getUserList();
     },
-    handleCurrentChange(newPage) {
+    handleCurrentChangev(newPage) {
+      console.log(newPage);
       this.pageNum = newPage;
       this.getUserList();
     },
@@ -176,19 +178,22 @@ export default {
     editDialogClosed() {
       this.$refs.editFormRef.resetFields();
     },
-    async edit() {
-      const { data: res } = await this.$http.post("users/updateSysUser.do", {
-        acId: this.editId,
-        email: this.editForm.email,
-        mobile: this.editForm.mobile
+    edit() {
+      this.$refs.editFormRef.validate(async valid => {
+        if (!valid) return this.$message.error("失败");
+        const { data: res } = await this.$http.post("users/updateSysUser.do", {
+          acId: this.editId,
+          email: this.editForm.email,
+          mobile: this.editForm.mobile
+        });
+        if (res.meta.code != 200) {
+          return this.$message.error("修改用户信息失败");
+        } else {
+          this.$message.success("修改用户成功");
+          this.getUserList();
+          this.editDialogVisible = false;
+        }
       });
-      if (res.meta.code != 200) {
-        return this.$message.error("修改用户信息失败");
-      } else {
-        this.$message.success("修改用户成功");
-        this.getUserList();
-        this.editDialogVisible = false;
-      }
     },
     // 删除
     async removeUserById(id) {

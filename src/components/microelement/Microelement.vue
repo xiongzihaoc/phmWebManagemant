@@ -75,7 +75,7 @@
                 v-for="item in eleUnitList"
                 :key="item.id"
                 :label="item.name"
-                :value="item.id"
+                :value="item.name"
               ></el-option>
             </el-select>
           </el-form-item>
@@ -127,7 +127,6 @@ export default {
         "sys/dict/getPreviewData.do",
         { dictValue: "food_element" }
       );
-      console.log(res);
       this.eleNameList = res.data;
     },
     // 数据字典元素单位列表
@@ -136,7 +135,6 @@ export default {
         "sys/dict/getPreviewData.do",
         { dictValue: "element" }
       );
-      console.log(res);
       this.eleUnitList = res.data;
     },
     // 微量元素列表

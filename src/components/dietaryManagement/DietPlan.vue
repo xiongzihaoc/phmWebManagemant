@@ -58,7 +58,7 @@
       <!-- 分页区域 -->
       <el-pagination
         @size-change="handleSizeChange"
-        @current-change="handleCurrentChange"
+        @current-change="handleCurrentChangev"
         :current-page="pageNum"
         :page-sizes="[10, 20,50]"
         :page-size="pageSize"
@@ -162,16 +162,15 @@ export default {
         }
       );
       if (res.code != 200) return this.$message.error("列表获取失败");
-      console.log(res);
       this.foodTypeList = res.rows;
       this.total = res.total;
     },
     // 分页
-    handleSizeChange(newSize) {
+    handleSizeChangev(newSize) {
       this.pageSize = newSize;
       this.getFoodTypeList();
     },
-    handleCurrentChange(newPage) {
+    handleCurrentChangev(newPage) {
       this.pageNum = newPage;
       this.getFoodTypeList();
     },

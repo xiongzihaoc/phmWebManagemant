@@ -58,7 +58,7 @@
       <!-- 分页 -->
       <el-pagination
         @size-change="handleSizeChange"
-        @current-change="handleCurrentChange"
+        @current-change="handleCurrentChangev"
         :current-page="pageNum"
         :page-sizes="[10, 20,50]"
         :page-size="pageSize"
@@ -188,7 +188,7 @@ export default {
       this.pageSize = newSize;
       this.getWaterTypeList();
     },
-    handleCurrentChange(newPage) {
+    handleCurrentChangev(newPage) {
       this.pageNum = newPage;
       this.getWaterTypeList();
     },

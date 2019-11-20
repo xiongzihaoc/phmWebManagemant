@@ -30,15 +30,15 @@
       >
         <el-table-column align="center" type="selection" width="60"></el-table-column>
         <el-table-column align="center" type="index" label="序号" width="60"></el-table-column>
-        <el-table-column align="center" prop="id" label="id" width="100"></el-table-column>
         <el-table-column align="center" prop="fdName" label="名称"></el-table-column>
-        <el-table-column align="center" label="图标">
+        <el-table-column align="center" label="图标" width="60">
           <template slot-scope="scope">
             <img id="img" :src="scope.row.fdPhotoPath" />
           </template>
         </el-table-column>
-        <el-table-column align="center" prop="fdTypeValue" label="类型" width="100"></el-table-column>
+        <el-table-column align="center" prop="fdTypeValue" label="类型" width="160"></el-table-column>
         <el-table-column align="center" prop="elementName" label="元素名称"></el-table-column>
+        <el-table-column align="center" prop="fdState" label="是否常见 (1: 是 0: 否)"></el-table-column>
         <el-table-column align="center" prop="fdDescribe" label="描述"></el-table-column>
         <el-table-column align="center" prop="operate" label="操作" width="300">
           <template slot-scope="scope">
@@ -65,7 +65,7 @@
       <!-- 分页区域 -->
       <el-pagination
         @size-change="handleSizeChange"
-        @current-change="handleCurrentChange"
+        @current-change="handleCurrentChangev"
         :current-page="pageNum"
         :page-sizes="[10, 20,50]"
         :page-size="pageSize"
@@ -183,7 +183,7 @@ export default {
       this.pageSize = newSize;
       this.getFoodList();
     },
-    handleCurrentChange(newPage) {
+    handleCurrentChangev(newPage) {
       this.pageNum = newPage;
       this.getFoodList();
     },

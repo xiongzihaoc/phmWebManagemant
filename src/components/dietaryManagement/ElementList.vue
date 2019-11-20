@@ -21,7 +21,7 @@
       </el-row>
       <!-- 表格 -->
       <el-table
-        :data="foodTypeList"
+        :data="ElementList"
         ref="singleTable"
         highlight-current-row
         @current-change="handleCurrentChange"
@@ -31,10 +31,11 @@
       >
         <el-table-column align="center" type="selection" width="60"></el-table-column>
         <el-table-column align="center" type="index" label="序号" width="60"></el-table-column>
-        <el-table-column align="center" prop="dsName" label="元素名称" width="200"></el-table-column>
-        <el-table-column align="center" prop="dsTabooFood" label="最小临界值" width="200"></el-table-column>
-        <el-table-column align="center" prop="dsTabooDescribe" label="最大临界值"></el-table-column>
-        <el-table-column align="center" prop="dsDescribe" label="描述"></el-table-column>
+        <el-table-column align="center" prop="elementName" label="元素名称" width="200"></el-table-column>
+        <el-table-column align="center" prop="elementUnit" label="元素单位" width="200"></el-table-column>
+        <el-table-column align="center" prop="elementMinValue" label="最小临界值" width="200"></el-table-column>
+        <el-table-column align="center" prop="elementMaxValue" label="最大临界值"></el-table-column>
+        <el-table-column align="center" prop="describe" label="描述"></el-table-column>
         <el-table-column align="center" prop="operate" label="操作" width="240">
           <template slot-scope="scope">
             <!-- 修改按钮 -->
@@ -62,40 +63,38 @@
           label-width="80px"
           @closed="editAddDialogClosed"
         >
-          <el-form-item label="名称" prop="dsName">
-            <el-input v-model="AddEditForm.dsName"></el-input>
-          </el-form-item>
-          <el-form-item label="禁忌食物" prop="addFoodIds">
-            <el-select
-              v-model="AddEditForm.addFoodIds"
-              clearable
-              :reserve-keyword="true"
-              filterable
-              multiple
-              placeholder="请选择"
-            >
+          <el-form-item label="元素名称" prop="elementName">
+            <el-select v-model="AddEditForm.elementName" placeholder="请选择">
               <el-option
-                v-for="item in foodList"
+                v-for="item in eleNameList"
                 :key="item.id"
-                :label="item.fdName"
-                :value="item.id"
+                :label="item.name"
+                :value="item.name"
               ></el-option>
             </el-select>
           </el-form-item>
-          <el-form-item label="禁忌描述" prop="dsTabooDescribe">
-            <el-input
-              type="textarea"
-              :autosize="{ minRows: 5, maxRows: 10}"
-              placeholder="请输入内容..."
-              v-model="AddEditForm.dsTabooDescribe"
-            ></el-input>
+          <el-form-item label="元素单位" prop="elementUnit">
+            <el-select v-model="AddEditForm.elementUnit" placeholder="请选择">
+              <el-option
+                v-for="item in eleUnitList"
+                :key="item.id"
+                :label="item.name"
+                :value="item.name"
+              ></el-option>
+            </el-select>
           </el-form-item>
-          <el-form-item label="描述" prop="dsDescribe">
+          <el-form-item label="最小临界值" prop="elementMinValue">
+            <el-input v-model="AddEditForm.elementMinValue"></el-input>
+          </el-form-item>
+          <el-form-item label="最大临界值" prop="elementMaxValue">
+            <el-input v-model="AddEditForm.elementMaxValue"></el-input>
+          </el-form-item>
+          <el-form-item label="描述" prop="description">
             <el-input
               type="textarea"
               :autosize="{ minRows: 5, maxRows: 10}"
               placeholder="请输入内容..."
-              v-model="AddEditForm.dsDescribe"
+              v-model="AddEditForm.description"
             ></el-input>
           </el-form-item>
         </el-form>
@@ -112,30 +111,45 @@ export default {
   data() {
     return {
       input: "",
-      pageSize: 10,
-      pageNum: 1,
-      total: 0,
-      foodTypeList: [],
+      ElementList: [],
+      eleNameList: [],
+      eleUnitList: [],
       editAddDialogVisible: false,
       dialogTitle: "",
       AddEditForm: {
-        addFoodIds: [],
-        dsName: "",
-        dsTabooFoodId: "",
-        dsTabooDescribe: "",
-        dsDescribe: ""
+        elementName: "",
+        elementUnit: "",
+        elementMinValue: "",
+        elementMaxValue: ""
       },
       id: "",
       foodPlanId: "",
-      foodList: [],
       currentRow: null
     };
   },
   created() {
     this.foodPlanId = this.$route.query.id;
     this.getElementList();
+    this.getDictionaryEleList();
+    this.getDictionaryUnitList();
   },
   methods: {
+    // 数据字典元素名称列表
+    async getDictionaryEleList() {
+      const { data: res } = await this.$http.post(
+        "sys/dict/getPreviewData.do",
+        { dictValue: "food_element" }
+      );
+      this.eleNameList = res.data;
+    },
+    // 数据字典元素单位列表
+    async getDictionaryUnitList() {
+      const { data: res } = await this.$http.post(
+        "sys/dict/getPreviewData.do",
+        { dictValue: "element" }
+      );
+      this.eleUnitList = res.data;
+    },
     // 获取列表
     async getElementList() {
       const { data: res } = await this.$http.post(
@@ -144,30 +158,13 @@ export default {
       );
       console.log(res);
       if (res.code != 200) return this.$message.error("列表获取失败");
-      this.foodTypeList = res.rows;
-      this.total = res.total;
-    },
-    // 分页
-    handleSizeChange(newSize) {
-      this.pageSize = newSize;
-      this.getElementList();
-    },
-    handleCurrentChange(newPage) {
-      this.pageNum = newPage;
-      this.getElementList();
+      this.ElementList = res.rows;
     },
     // 弹框
     showEditdialog(info) {
+      this.AddEditForm = info
       this.dialogTitle = "修改";
       this.id = info.id;
-      this.AddEditForm = {
-        ...this.AddEditForm,
-        ...info
-      };
-      this.AddEditForm.addFoodIds = this.AddEditForm.dsTabooFoodId
-        .split(",")
-        .filter(n => n)
-        .map(n => Number(n));
       this.editAddDialogVisible = true;
     },
     // 添加
@@ -183,21 +180,25 @@ export default {
       let httpUrl = "";
       let parm = {};
       if (this.dialogTitle == "修改") {
-        httpUrl = "foodPlan/updatePFoodPlan.do";
+        httpUrl = "foodPlanElement/updatePFoodPlanElement.do";
         parm = {
           id: this.id,
-          dsName: this.AddEditForm.dsName,
-          dsTabooFoodId: this.AddEditForm.addFoodIds.toString(),
-          dsTabooDescribe: this.AddEditForm.dsTabooDescribe,
-          dsDescribe: this.AddEditForm.dsDescribe
+          foodPlanId: this.foodPlanId,
+          elementName: this.AddEditForm.elementName,
+          elementUnit: this.AddEditForm.elementUnit,
+          elementMinValue: this.AddEditForm.elementMinValue,
+          elementMaxValue: this.AddEditForm.elementMaxValue,
+          description: this.AddEditForm.description
         };
       } else {
-        httpUrl = "foodPlan/savePFoodPlan.do";
+        httpUrl = "foodPlanElement/savePFoodPlanElement.do";
         parm = {
-          dsName: this.AddEditForm.dsName,
-          dsTabooFoodId: this.AddEditForm.addFoodIds.toString(),
-          dsTabooDescribe: this.AddEditForm.dsTabooDescribe,
-          dsDescribe: this.AddEditForm.dsDescribe
+          foodPlanId: this.foodPlanId,
+          elementName: this.AddEditForm.elementName,
+          elementUnit: this.AddEditForm.elementUnit,
+          elementMinValue: this.AddEditForm.elementMinValue,
+          elementMaxValue: this.AddEditForm.elementMaxValue,
+          description: this.AddEditForm.description
         };
       }
       const { data: res } = await this.$http.post(httpUrl, parm);
@@ -220,9 +221,12 @@ export default {
       if (confirmResult != "confirm") {
         return this.$message.info("取消删除");
       }
-      const { data: res } = await this.$http.post("foodPlan/delPFoodPlan.do", {
-        id: id
-      });
+      const { data: res } = await this.$http.post(
+        "foodPlanElement/delPFoodPlanElement.do",
+        {
+          id: id
+        }
+      );
       if (res.code == 200) {
         this.$message.success("删除成功");
         this.getElementList();

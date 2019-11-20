@@ -36,12 +36,23 @@
             <i v-else class="el-icon-plus avatar-uploader-icon"></i>
           </el-upload>
         </el-form-item>
+        <div id="addImgVidWd" v-for="(item,index) in addInfos" :key="index">
+          <el-form-item v-if="item == 1">
+            <el-upload></el-upload>
+          </el-form-item>
+          <el-form-item v-if="item == 2">
+            <el-upload></el-upload>
+          </el-form-item>
+          <el-form-item v-if="item == 0">
+            <el-upload></el-upload>
+          </el-form-item>
+        </div>
       </el-form>
       <el-row :gutter="20">
         <!-- 按钮区域 -->
-        <el-button class="addInfoBtn" type="primary" round @click="addImage">添加图片</el-button>
-        <el-button class="addInfoBtn" type="primary" round @click="addVideo">添加视频</el-button>
-        <el-button class="addInfoBtn" type="primary" round @click="addWord">添加文字</el-button>
+        <el-button class="addInfoBtn" type="primary" round @click="addImgVidWd">添加图片</el-button>
+        <el-button class="addInfoBtn" type="primary" round @click="addImgVidWd">添加视频</el-button>
+        <el-button class="addInfoBtn" type="primary" round @click="addImgVidWd">添加文字</el-button>
         <el-button class="saveInfoBtn" type="success" round @click="saveInfo">保存信息</el-button>
       </el-row>
     </el-card>
@@ -53,7 +64,8 @@ export default {
     return {
       editform: {},
       imageUrl: "",
-      infoId: null
+      infoId: null,
+      addInfos: []
     };
   },
   created() {
@@ -68,12 +80,29 @@ export default {
       );
       this.editform = res.data;
     },
-    // 添加图片
-    addImage() {},
-    // 添加视频
-    addVideo() {},
-    // 添加文字
-    addWord() {},
+    // 获取疾病种类
+    async getdisTypeList() {
+      const { data: res } = await this.$http.post(
+        "disease/type/getPDiseaseTypeList.do",
+        {
+          name: this.input,
+          pageSize: this.pageSize,
+          pageNum: this.pageNum
+        }
+      );
+      if (res.code != 200) return this.$message.error("数获取失败");
+      this.foodList = res.rows;
+      this.total = res.total;
+    },
+    // // 添加图片
+    // addImage() {},
+    // // 添加视频
+    // addVideo() {},
+    // // 添加文字
+    // addWord() {},
+    addImgVidWd() {
+      this.addInfos.push("#addImgVidWd");
+    },
     // 保存信息
     saveInfo() {},
     handleAvatarSuccess(res, file) {
