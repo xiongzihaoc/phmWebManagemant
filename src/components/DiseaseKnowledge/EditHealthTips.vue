@@ -36,9 +36,70 @@
             <i v-else class="el-icon-plus avatar-uploader-icon"></i>
           </el-upload>
         </el-form-item>
-        <div id="addImgVidWd" v-for="(item,index) in addInfos" :key="index">
+        <el-form-item>
+        <!-- 按钮区域 -->
+        <el-upload
+          class="upload-demo"
+          :action="this.UPLOAD_IMG"
+          :on-preview="handlePreview"
+          :on-remove="handleRemove"
+          :before-remove="beforeRemove"
+          multiple
+          :on-exceed="handleExceed"
+          :file-list="fileList"
+        >
+          <el-button  round type="primary">添加文字</el-button>
+          <div slot="tip" class="el-upload__tip"></div>
+        </el-upload>
+        </el-form-item>
+        <el-form-item>
+        <!-- 按钮区域 -->
+        <el-upload
+          class="upload-demo"
+          :action="this.UPLOAD_IMG"
+          :on-preview="handlePreview"
+          :on-remove="handleRemove"
+          :before-remove="beforeRemove"
+          multiple
+          :on-exceed="handleExceed"
+          :file-list="fileList"
+        >
+          <el-button  round type="primary">添加图片</el-button>
+          <div slot="tip" class="el-upload__tip"></div>
+        </el-upload>
+        </el-form-item>
+        <el-form-item>
+        <!-- 按钮区域 -->
+        <el-upload
+          class="upload-demo"
+          :action="this.UPLOAD_IMG"
+          :on-preview="handlePreview"
+          :on-remove="handleRemove"
+          :before-remove="beforeRemove"
+          multiple
+          :on-exceed="handleExceed"
+          :file-list="fileList"
+        >
+          <el-button  round type="primary">添加视频</el-button>
+          <div slot="tip" class="el-upload__tip"></div>
+        </el-upload>
+        </el-form-item>
+
+        <!-- <div id="addImgVidWd" v-for="(item,index) in addInfos" :key="index">
           <el-form-item v-if="item == 1">
-            <el-upload></el-upload>
+            <el-upload
+              class="upload-demo"
+              :action="this.UPLOAD_IMG"
+              :on-preview="handlePreview"
+              :on-remove="handleRemove"
+              :before-remove="beforeRemove"
+              multiple
+              :on-exceed="handleExceed"
+              :file-list="fileList"
+            >
+              <el-button size="small" type="primary">点击上传</el-button>
+              <div slot="tip" class="el-upload__tip">只能上传jpg/png文件，且不超过500kb</div>>
+            </el-upload>
           </el-form-item>
           <el-form-item v-if="item == 2">
             <el-upload></el-upload>
@@ -46,15 +107,8 @@
           <el-form-item v-if="item == 0">
             <el-upload></el-upload>
           </el-form-item>
-        </div>
+        </div> -->
       </el-form>
-      <el-row :gutter="20">
-        <!-- 按钮区域 -->
-        <el-button class="addInfoBtn" type="primary" round @click="addImgVidWd">添加图片</el-button>
-        <el-button class="addInfoBtn" type="primary" round @click="addImgVidWd">添加视频</el-button>
-        <el-button class="addInfoBtn" type="primary" round @click="addImgVidWd">添加文字</el-button>
-        <el-button class="saveInfoBtn" type="success" round @click="saveInfo">保存信息</el-button>
-      </el-row>
     </el-card>
   </div>
 </template>
@@ -65,7 +119,8 @@ export default {
       editform: {},
       imageUrl: "",
       infoId: null,
-      addInfos: []
+      addInfos: [],
+      fileList:[]
     };
   },
   created() {
@@ -100,10 +155,12 @@ export default {
     // addVideo() {},
     // // 添加文字
     // addWord() {},
-    addImgVidWd() {
-      this.addInfos.push("#addImgVidWd");
-    },
-    // 保存信息
+    addImgVidWd() {},
+    // 提交表单信息
+    handlePreview(){},
+    handleRemove(){},
+    beforeRemove(){},
+    handleExceed(){},
     saveInfo() {},
     handleAvatarSuccess(res, file) {
       this.imageUrl = res.data;
@@ -152,8 +209,9 @@ export default {
   display: block;
 }
 
-.addInfoBtn {
+.upload-demo {
   float: left;
+  margin-left: 20px;
 }
 .saveInfoBtn {
   float: right;

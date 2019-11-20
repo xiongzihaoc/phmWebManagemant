@@ -121,7 +121,8 @@ export default {
       dialogTitle: "",
       imageUrl: "",
       upLoad: "",
-      currentRow: null
+      currentRow: null,
+      
     };
   },
   created() {
