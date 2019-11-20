@@ -28,6 +28,8 @@ import HealthTips from '../components/DiseaseKnowledge/HealthTips.vue'
 import EditHealthTips from '../components/DiseaseKnowledge/EditHealthTips.vue'
 import AddHealthTips from '../components/DiseaseKnowledge/AddHealthTips.vue'
 import JumpDictionaryNext from '../components/basicInformation/JumpDictionaryNext.vue'
+import ElementList from '../components/dietaryManagement/ElementList.vue'
+import DiseaseType from '../components/DiseaseManagement/DiseaseType.vue'
 Vue.use(VueRouter)
 
 const routes = [{path: '/',redirect: '/login'},
@@ -50,10 +52,12 @@ const routes = [{path: '/',redirect: '/login'},
     { path: '/food/foodType',component: FoodType},
     { path: '/food/Microelement',component: Microelement},
     { path: '/food/Units',component: FoodUnits},
+    { path: '/food/ElementList',component: ElementList},
     { path: '/sport/MovementPlan',component: MovementPlan},
     { path: '/water/WaterSolution',component: WaterSolution},
     { path: '/water/WaterType',component: WaterType},
     { path: '/illness/case',component: DiseaseScheme},
+    { path: '/illness/type',component: DiseaseType},
     { path: '/diseaseknowledge/nursingInstruction',component: NursingInstruction},
     { path: '/diseaseknowledge/EditNursingInstruction',component: EditNursingInstruction},
     { path: '/diseaseknowledge/healthKnowledge',component: HealthTips},

@@ -3,7 +3,8 @@
     <!-- 面包屑 -->
     <el-breadcrumb separator-class="el-icon-arrow-right">
       <el-breadcrumb-item :to="{ path: '/home' }">首页</el-breadcrumb-item>
-      <el-breadcrumb-item>饮食方案</el-breadcrumb-item>
+      <el-breadcrumb-item :to="{ path: '/food/DietPlan' }">饮食方案</el-breadcrumb-item>
+      <el-breadcrumb-item>元素列表</el-breadcrumb-item>
     </el-breadcrumb>
     <!-- 卡片视图 -->
     <el-card>
@@ -15,7 +16,7 @@
         </el-col>
         <!-- 添加食物按钮 -->
         <el-col :span="4">
-          <el-button type="primary" @click="addFoodType">添加饮食方案</el-button>
+          <el-button type="primary" @click="addFoodType">添加元素</el-button>
         </el-col>
       </el-row>
       <!-- 表格 -->
@@ -30,9 +31,9 @@
       >
         <el-table-column align="center" type="selection" width="60"></el-table-column>
         <el-table-column align="center" type="index" label="序号" width="60"></el-table-column>
-        <el-table-column align="center" prop="dsName" label="名称" width="200"></el-table-column>
-        <el-table-column align="center" prop="dsTabooFood" label="禁忌食物" width="200"></el-table-column>
-        <el-table-column align="center" prop="dsTabooDescribe" label="禁忌食物描述"></el-table-column>
+        <el-table-column align="center" prop="dsName" label="元素名称" width="200"></el-table-column>
+        <el-table-column align="center" prop="dsTabooFood" label="最小临界值" width="200"></el-table-column>
+        <el-table-column align="center" prop="dsTabooDescribe" label="最大临界值"></el-table-column>
         <el-table-column align="center" prop="dsDescribe" label="描述"></el-table-column>
         <el-table-column align="center" prop="operate" label="操作" width="240">
           <template slot-scope="scope">
@@ -43,8 +44,6 @@
               type="primary"
               icon="el-icon-edit"
             ></el-button>
-            <!-- 元素列表按钮 -->
-            <el-button size="mini" @click="jumpElementList(scope.row)" type="success">元素列表</el-button>
             <!-- 删除按钮 -->
             <el-button
               size="mini"
@@ -55,16 +54,6 @@
           </template>
         </el-table-column>
       </el-table>
-      <!-- 分页区域 -->
-      <el-pagination
-        @size-change="handleSizeChange"
-        @current-change="handleCurrentChange"
-        :current-page="pageNum"
-        :page-sizes="[10, 20,50]"
-        :page-size="pageSize"
-        layout="total, sizes, prev, pager, next, jumper"
-        :total="total"
-      ></el-pagination>
       <!-- 修改页面 -->
       <el-dialog :title="dialogTitle" :visible.sync="editAddDialogVisible" width="40%">
         <el-form
@@ -137,43 +126,35 @@ export default {
         dsDescribe: ""
       },
       id: "",
+      foodPlanId: "",
       foodList: [],
       currentRow: null
     };
   },
   created() {
-    this.getFoodManagemant();
-    this.getFoodTypeList();
+    this.foodPlanId = this.$route.query.id;
+    this.getElementList();
   },
   methods: {
-    // 获取食物管理列表
-    async getFoodManagemant() {
-      const { data: res } = await this.$http.post("food/getPFoodList.do", {});
-      this.foodList = res.rows;
-    },
     // 获取列表
-    async getFoodTypeList() {
+    async getElementList() {
       const { data: res } = await this.$http.post(
-        "foodPlan/getPFoodPlanList.do",
-        {
-          dsName: this.input,
-          pageSize: this.pageSize,
-          pageNum: this.pageNum
-        }
+        "foodPlanElement/getPFoodPlanElementList.do",
+        { foodPlanId: this.foodPlanId }
       );
-      if (res.code != 200) return this.$message.error("列表获取失败");
       console.log(res);
+      if (res.code != 200) return this.$message.error("列表获取失败");
       this.foodTypeList = res.rows;
       this.total = res.total;
     },
     // 分页
     handleSizeChange(newSize) {
       this.pageSize = newSize;
-      this.getFoodTypeList();
+      this.getElementList();
     },
     handleCurrentChange(newPage) {
       this.pageNum = newPage;
-      this.getFoodTypeList();
+      this.getElementList();
     },
     // 弹框
     showEditdialog(info) {
@@ -222,7 +203,7 @@ export default {
       const { data: res } = await this.$http.post(httpUrl, parm);
       if (res.code != 200) return this.$message.error(res.msg);
       this.$message.success(res.msg);
-      this.getFoodTypeList();
+      this.getElementList();
       this.editAddDialogVisible = false;
     },
     // 刪除
@@ -244,7 +225,7 @@ export default {
       });
       if (res.code == 200) {
         this.$message.success("删除成功");
-        this.getFoodTypeList();
+        this.getElementList();
       } else {
         this.$message.error("删除失败");
         return;
@@ -252,13 +233,7 @@ export default {
     },
     // 搜索
     async Foodsearch() {
-      this.getFoodTypeList();
-    },
-    // 跳转到元素列表
-    jumpElementList(info) {
-      // console.log(info);
-
-      this.$router.push({ path: "/food/ElementList", query: { id: info.id } });
+      this.getElementList();
     },
     // 实现表格单行选择高亮
     setCurrent(row) {

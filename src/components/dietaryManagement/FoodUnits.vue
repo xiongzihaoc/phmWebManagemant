@@ -29,7 +29,7 @@
         <el-table-column align="center" type="selection" width="60"></el-table-column>
         <el-table-column align="center" type="index" label="序号" width="60"></el-table-column>
         <el-table-column align="center" prop="fuUnit" label="单位名称"></el-table-column>
-        <el-table-column align="center" prop="fuWeight" label="食物重量 (g)"></el-table-column>
+        <el-table-column align="center" prop="fuWeight" label="重量 (g)"></el-table-column>
         <el-table-column align="center" prop="operate" label="操作" width="200">
           <template slot-scope="scope">
             <!-- 修改按钮 -->
@@ -60,7 +60,7 @@
           <el-form-item label="单位名称" prop="fuUnit">
             <el-input v-model="editForm.fuUnit"></el-input>
           </el-form-item>
-          <el-form-item label="单位描述" prop="fuWeight">
+          <el-form-item label="重量" prop="fuWeight">
             <el-input v-model="editForm.fuWeight"></el-input>
           </el-form-item>
         </el-form>
@@ -98,6 +98,8 @@ export default {
         "foodUnit/getPFoodUnitList.do",
         { foodId: this.foodId }
       );
+      console.log(res);
+      
       this.foodUnitList = res.rows;
       this.total = res.total;
     },
