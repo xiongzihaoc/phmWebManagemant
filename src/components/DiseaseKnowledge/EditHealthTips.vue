@@ -36,80 +36,22 @@
             <i v-else class="el-icon-plus avatar-uploader-icon"></i>
           </el-upload>
         </el-form-item>
-        <el-form-item>
-        <!-- 按钮区域 -->
-        <el-upload
-          class="upload-demo"
-          :action="this.UPLOAD_IMG"
-          :on-preview="handlePreview"
-          :on-remove="handleRemove"
-          :before-remove="beforeRemove"
-          multiple
-          :on-exceed="handleExceed"
-          :file-list="fileList"
-        >
-          <el-button  round type="primary">添加文字</el-button>
-          <div slot="tip" class="el-upload__tip"></div>
-        </el-upload>
-        </el-form-item>
-        <el-form-item>
-        <!-- 按钮区域 -->
-        <el-upload
-          class="upload-demo"
-          :action="this.UPLOAD_IMG"
-          :on-preview="handlePreview"
-          :on-remove="handleRemove"
-          :before-remove="beforeRemove"
-          multiple
-          :on-exceed="handleExceed"
-          :file-list="fileList"
-        >
-          <el-button  round type="primary">添加图片</el-button>
-          <div slot="tip" class="el-upload__tip"></div>
-        </el-upload>
-        </el-form-item>
-        <el-form-item>
-        <!-- 按钮区域 -->
-        <el-upload
-          class="upload-demo"
-          :action="this.UPLOAD_IMG"
-          :on-preview="handlePreview"
-          :on-remove="handleRemove"
-          :before-remove="beforeRemove"
-          multiple
-          :on-exceed="handleExceed"
-          :file-list="fileList"
-        >
-          <el-button  round type="primary">添加视频</el-button>
-          <div slot="tip" class="el-upload__tip"></div>
-        </el-upload>
-        </el-form-item>
-
-        <!-- <div id="addImgVidWd" v-for="(item,index) in addInfos" :key="index">
-          <el-form-item v-if="item == 1">
-            <el-upload
-              class="upload-demo"
-              :action="this.UPLOAD_IMG"
-              :on-preview="handlePreview"
-              :on-remove="handleRemove"
-              :before-remove="beforeRemove"
-              multiple
-              :on-exceed="handleExceed"
-              :file-list="fileList"
-            >
-              <el-button size="small" type="primary">点击上传</el-button>
-              <div slot="tip" class="el-upload__tip">只能上传jpg/png文件，且不超过500kb</div>>
-            </el-upload>
-          </el-form-item>
-          <el-form-item v-if="item == 2">
-            <el-upload></el-upload>
-          </el-form-item>
-          <el-form-item v-if="item == 0">
-            <el-upload></el-upload>
-          </el-form-item>
-        </div> -->
       </el-form>
+      <el-button type="primary" @click="addIMGDialog">添加图片</el-button>
+      <div class="addIMGVID"></div>
     </el-card>
+    <!-- 上传图片提示框 -->
+    <el-dialog title="添加图片" :visible.sync="addDialogVisible" width="40%">
+      <el-form ref="addFormRef" :model="addForm" label-width="80px">
+        <el-form-item label="上一级">
+          
+        </el-form-item>
+      </el-form>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="addDialogVisible = false">取 消</el-button>
+        <el-button type="primary" @click="addEnter">确 定</el-button>
+      </span>
+    </el-dialog>
   </div>
 </template>
 <script>
@@ -118,9 +60,12 @@ export default {
     return {
       editform: {},
       imageUrl: "",
+      addForm:{
+        ImgUrl:"",
+      },
       infoId: null,
-      addInfos: [],
-      fileList:[]
+      resourcesList: [],
+      addDialogVisible: false
     };
   },
   created() {
@@ -149,19 +94,12 @@ export default {
       this.foodList = res.rows;
       this.total = res.total;
     },
-    // // 添加图片
-    // addImage() {},
-    // // 添加视频
-    // addVideo() {},
-    // // 添加文字
-    // addWord() {},
+    // 添加图片
+    addIMGDialog() {
+      this.addDialogVisible = true
+    },
     addImgVidWd() {},
-    // 提交表单信息
-    handlePreview(){},
-    handleRemove(){},
-    beforeRemove(){},
-    handleExceed(){},
-    saveInfo() {},
+    addEnter(){},
     handleAvatarSuccess(res, file) {
       this.imageUrl = res.data;
       // this.editForm.iconUrl = res.data;
@@ -208,13 +146,13 @@ export default {
   height: 80px;
   display: block;
 }
-
-.upload-demo {
-  float: left;
-  margin-left: 20px;
-}
 .saveInfoBtn {
   float: right;
   margin-right: 30px;
+}
+.addIMGVID {
+  width: 800px;
+  height: 200px;
+  background-color: pink;
 }
 </style>

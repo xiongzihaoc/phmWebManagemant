@@ -11,6 +11,7 @@ import Dictionary from '../components/basicInformation/Dictionary.vue'
 import UserManagemant from '../components/basicInformation/UserManagemant.vue'
 import PatientManagement from '../components/basicInformation/PatientManagement.vue'
 import Role from '../components/basicInformation/Role.vue'
+import Logmanagemant from '../components/basicInformation/Logmanagemant.vue'
 import FoodManagement from '../components/dietaryManagement/FoodManagement.vue'
 import DietPlan from '../components/dietaryManagement/DietPlan.vue'
 import EstimateFood from '../components/dietaryManagement/EstimateFood.vue'
@@ -30,6 +31,7 @@ import AddHealthTips from '../components/DiseaseKnowledge/AddHealthTips.vue'
 import JumpDictionaryNext from '../components/basicInformation/JumpDictionaryNext.vue'
 import ElementList from '../components/dietaryManagement/ElementList.vue'
 import DiseaseType from '../components/DiseaseManagement/DiseaseType.vue'
+import EasyInquiry from '../components/HealthManagemant/EasyInquiry.vue'
 Vue.use(VueRouter)
 
 const routes = [{path: '/',redirect: '/login'},
@@ -44,6 +46,7 @@ const routes = [{path: '/',redirect: '/login'},
     { path: '/system/dict',component: Dictionary},
     { path: '/system/patient',component: PatientManagement},
     { path: '/system/role',component: Role},
+    { path: '/system/log',component: Logmanagemant},
     { path: '/JumpDictionaryNext',component: JumpDictionaryNext},
     { path: '/food/foodManagemant',component: FoodManagement},
     { path: '/food/DietPlan',component: DietPlan},
@@ -63,6 +66,7 @@ const routes = [{path: '/',redirect: '/login'},
     { path: '/diseaseknowledge/healthKnowledge',component: HealthTips},
     { path: '/diseaseknowledge/EditHealthTips',component: EditHealthTips},
     { path: '/diseaseknowledge/AddHealthTips',component: AddHealthTips},
+    { path: '/Health/inquiry',component: EasyInquiry},
   ]
   },
 ]
