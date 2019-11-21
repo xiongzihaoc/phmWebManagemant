@@ -71,7 +71,15 @@
         >
           <el-button class="addBTN upImg" round type="primary">添加图片</el-button>
         </el-upload>
-        <el-button class="addBTN" type="primary" round @click="addVideo">添加视频</el-button>
+        <el-upload
+          class="upload-demo"
+          :action="this.UPLOAD_IMG"
+          :on-success="handleAvatarSuccessVid"
+          :before-upload="beforeAvatarUploadVid"
+          :show-file-list="false"
+        >
+          <el-button class="addBTN upImg" round type="primary">添加视频</el-button>
+        </el-upload>
         <el-button @click="saveInfo" type="success" class="saveInfo" round>保存修改</el-button>
       </div>
     </el-card>
@@ -91,7 +99,8 @@ export default {
       infoId: null,
       illnessId: null,
       addInfos: [],
-      ImgUrl: ""
+      ImgUrl: "",
+      VidUrl:"",
     };
   },
   created() {
@@ -109,6 +118,7 @@ export default {
       this.editform = res.data;
       this.illnessId = res.data.id;
       this.addInfos = res.data.resourcesList;
+      // this.healthList = 
     },
     // 获取疾病类型
     async getHealthList() {
@@ -140,13 +150,6 @@ export default {
       };
       this.addInfos.push(objWord);
     },
-    addVideo() {
-      let objVideo = {
-        videoUrl: "",
-        type: 2
-      };
-      this.addInfos.push(objVideo);
-    },
     // 單個刪除
     infoDelete(info) {
       var arr = this.addInfos;
@@ -158,6 +161,8 @@ export default {
       }
     },
     handleAvatarSuccessSM(res, file) {
+      // console.log(res);
+      
       this.imageUrl = res.data;
     },
     beforeAvatarUploadSM(file) {
@@ -196,6 +201,27 @@ export default {
         this.common.errorTip("上传图片大小不能超过 2MB!");
       }
       return (isJPG || isBMP || isGIF || isPNG) && isLt2M;
+    },
+    handleAvatarSuccessVid(res, file) {
+      console.log(res);
+      
+      this.VidUrl = res.data;
+      let objVideo = {
+        videoUrl: this.VidUrl,
+        type: 2
+      };
+      this.addInfos.push(objVideo);
+    },
+    beforeAvatarUploadVid(file) {
+    //  const isLt10M = file.size / 1024 / 1024  < 10;
+    // if (['video/mp4', 'video/ogg', 'video/flv','video/avi','video/wmv','video/rmvb'].indexOf(file.type) == -1) {
+    //     this.$message.error('请上传正确的视频格式');
+    //     return false;
+    // }
+    // if (!isLt10M) {
+    //     this.$message.error('上传视频大小不能超过10MB哦!');
+    //     return false;
+    // }
     }
   }
 };
