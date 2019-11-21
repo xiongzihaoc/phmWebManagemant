@@ -166,7 +166,7 @@ export default {
       this.total = res.total;
     },
     // 分页
-    handleSizeChangev(newSize) {
+    handleSizeChange(newSize) {
       this.pageSize = newSize;
       this.getFoodTypeList();
     },

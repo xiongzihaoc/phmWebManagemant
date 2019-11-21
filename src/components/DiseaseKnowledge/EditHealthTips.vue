@@ -13,7 +13,14 @@
           <el-input v-model="editform.name"></el-input>
         </el-form-item>
         <el-form-item label="疾病类型">
-          <el-select v-model="editform.diseaseTypeValue" placeholder="请选择疾病类型"></el-select>
+          <el-select v-model="editform.diseaseTypeValue" placeholder="请选择疾病类型">
+            <el-option
+              v-for="item in healthList"
+              :key="item.diseaseTypeId"
+              :label="item.diseaseTypeValue"
+              :value="item.diseaseTypeId"
+            ></el-option>
+          </el-select>
         </el-form-item>
         <el-form-item label="文本描述">
           <el-input
@@ -36,41 +43,51 @@
             <i v-else class="el-icon-plus avatar-uploader-icon"></i>
           </el-upload>
         </el-form-item>
+        <el-form-item></el-form-item>
       </el-form>
-      <el-button type="primary" @click="addIMGDialog">添加图片</el-button>
-      <div class="addIMGVID"></div>
-    </el-card>
-    <!-- 上传图片提示框 -->
-    <el-dialog title="添加图片" :visible.sync="addDialogVisible" width="40%">
-      <el-form ref="addFormRef" :model="addForm" label-width="80px">
-        <el-form-item label="上一级">
-          
+
+      <el-form class="addImgVid" v-for="item in addInfos" :key="item.id">
+        <el-form-item class="addChild" v-if="item.type==0">
+          <textarea class="txtClass" placeholder="请输入内容" v-model="item.description"></textarea>
+        </el-form-item>
+        <el-form-item class="addChild" v-if="item.type==1" style="width:1000px;height:400px;background:pink;">
+          <img class="impImg" :src="item.imageUrl" alt />
+        </el-form-item>
+        <el-form-item
+          class="addChild"
+          v-if="item.type==2"
+          style="width:1000px;height:400px;background:orange;"
+        >
+          <video :src="item.videoUrl" controls :poster="item.imageUrl"></video>
         </el-form-item>
       </el-form>
-      <span slot="footer" class="dialog-footer">
-        <el-button @click="addDialogVisible = false">取 消</el-button>
-        <el-button type="primary" @click="addEnter">确 定</el-button>
-      </span>
-    </el-dialog>
+      <el-button class="addBTN" type="primary" round @click="addWord">添加文字</el-button>
+      <el-button class="addBTN" type="primary" round @click="addImg">添加图片</el-button>
+      <el-button class="addBTN" type="primary" round @click="addVideo">添加视频</el-button>
+      <el-button @click="saveInfo" type="success" class="saveInfo" round>保存修改</el-button>
+    </el-card>
   </div>
 </template>
 <script>
 export default {
   data() {
     return {
-      editform: {},
-      imageUrl: "",
-      addForm:{
-        ImgUrl:"",
+      editform: {
+        name: "",
+        diseaseTypeId: "",
+        description: ""
       },
+      healthList: [],
+      imageUrl: "",
       infoId: null,
-      resourcesList: [],
-      addDialogVisible: false
+      illnessId: null,
+      addInfos: []
     };
   },
   created() {
     this.infoId = this.$route.query.info.id;
     this.getEditHealthTipsList();
+    this.getHealthList();
   },
   methods: {
     async getEditHealthTipsList() {
@@ -78,28 +95,56 @@ export default {
         "healthKnowledge/getDetails.do",
         { id: this.infoId }
       );
+      // console.log(res);
       this.editform = res.data;
+      this.illnessId = res.data.id;
+      this.addInfos = res.data.resourcesList;
     },
-    // 获取疾病种类
-    async getdisTypeList() {
+    // 获取疾病类型
+    async getHealthList() {
       const { data: res } = await this.$http.post(
-        "disease/type/getPDiseaseTypeList.do",
+        "healthKnowledge/getPHealthKnowledgeList.do",
+        { type: 1, name: this.editform.name }
+      );
+      // console.log(res);
+      this.healthList = res.rows;
+    },
+    async saveInfo() {
+      const { data: res } = this.$http.post(
+        "healthKnowledge/updatePHealthKnowledge.do",
         {
-          name: this.input,
-          pageSize: this.pageSize,
-          pageNum: this.pageNum
+          id: this.illnessId,
+          name: this.editform.name,
+          diseaseTypeId: this.editform.diseaseTypeId,
+          description: this.editform.description,
+          type: 1,
+          resourcesList: this.addInfos
         }
       );
-      if (res.code != 200) return this.$message.error("数获取失败");
-      this.foodList = res.rows;
-      this.total = res.total;
+      console.log(res);
     },
-    // 添加图片
-    addIMGDialog() {
-      this.addDialogVisible = true
+    addWord() {
+      let objWord = {
+        textDescription: "",
+        type: 0
+      };
+      this.addInfos.push(objWord);
     },
-    addImgVidWd() {},
-    addEnter(){},
+
+    addImg() {
+      let objImg = {
+        imageUrl: "",
+        type: 1
+      };
+      this.addInfos.push(objImg);
+    },
+    addVideo() {
+      let objVideo = {
+        videoUrl: "",
+        type: 2
+      };
+      this.addInfos.push(objVideo);
+    },
     handleAvatarSuccess(res, file) {
       this.imageUrl = res.data;
       // this.editForm.iconUrl = res.data;
@@ -123,6 +168,9 @@ export default {
 };
 </script>
 <style lang='less' scoped>
+ul {
+  list-style-type: none;
+}
 .avatar-uploader .el-upload {
   cursor: pointer;
   position: relative;
@@ -146,13 +194,42 @@ export default {
   height: 80px;
   display: block;
 }
+
+.upload-demo {
+  float: left;
+  margin-left: 20px;
+}
 .saveInfoBtn {
   float: right;
   margin-right: 30px;
 }
-.addIMGVID {
-  width: 800px;
-  height: 200px;
-  background-color: pink;
+.impImg {
+  width: 1000px;
+  height: 400px;
+}
+.addChild {
+  margin-top: 10px;
+}
+.addBTN {
+  float: right;
+  margin-right: 10px;
+  margin-top: 20px;
+  margin-bottom: 20px;
+}
+.saveInfo {
+  float: right;
+  margin-top: 20px;
+}
+.txtClass {
+  width: 965px;
+  height: 300px;
+  border: 1px solid #e0e3e9;
+  border-radius: 3px;
+  resize: none;
+  padding: 15px;
+}
+video {
+  width: 100%;
+  height: 100%;
 }
 </style>

@@ -36,7 +36,7 @@
             <img id="img" :src="scope.row.fdPhotoPath" />
           </template>
         </el-table-column>
-        <el-table-column align="center" prop="fdTypeValue" label="类型" width="160"></el-table-column>
+        <el-table-column align="center" prop="fdType" label="类型" width="160"></el-table-column>
         <el-table-column align="center" prop="elementName" label="元素名称"></el-table-column>
         <el-table-column align="center" prop="fdState" label="是否常见 (1: 是 0: 否)"></el-table-column>
         <el-table-column align="center" prop="fdDescribe" label="描述"></el-table-column>
