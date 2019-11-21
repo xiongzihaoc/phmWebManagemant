@@ -36,8 +36,8 @@
             class="avatar-uploader"
             :action="this.UPLOAD_IMG"
             :show-file-list="false"
-            :on-success="handleAvatarSuccess"
-            :before-upload="beforeAvatarUpload"
+            :on-success="handleAvatarSuccessSM"
+            :before-upload="beforeAvatarUploadSM"
           >
             <img v-if="imageUrl" :src="imageUrl" class="avatar" />
             <i v-else class="el-icon-plus avatar-uploader-icon"></i>
@@ -46,25 +46,34 @@
         <el-form-item></el-form-item>
       </el-form>
 
-      <el-form class="addImgVid" v-for="item in addInfos" :key="item.id">
-        <el-form-item class="addChild" v-if="item.type==0">
-          <textarea class="txtClass" placeholder="请输入内容" v-model="item.description"></textarea>
-        </el-form-item>
-        <el-form-item class="addChild" v-if="item.type==1" style="width:1000px;height:400px;background:pink;">
+      <ul class="addImgVid" v-for="item in addInfos" :key="item.id">
+        <li class="addChild" v-if="item.type==0">
+          <textarea class="txtClass" placeholder="请输入内容" v-model="item.textDescription"></textarea>
+          <span @click="infoDelete(item.id)" class="el-icon-error closeTxt"></span>
+        </li>
+        <li class="addChild" v-if="item.type==1">
           <img class="impImg" :src="item.imageUrl" alt />
-        </el-form-item>
-        <el-form-item
-          class="addChild"
-          v-if="item.type==2"
-          style="width:1000px;height:400px;background:orange;"
-        >
+          <span @click="infoDelete(item.id)" class="el-icon-error closeImg"></span>
+        </li>
+        <li class="addChild" v-if="item.type==2">
           <video :src="item.videoUrl" controls :poster="item.imageUrl"></video>
-        </el-form-item>
-      </el-form>
-      <el-button class="addBTN" type="primary" round @click="addWord">添加文字</el-button>
-      <el-button class="addBTN" type="primary" round @click="addImg">添加图片</el-button>
-      <el-button class="addBTN" type="primary" round @click="addVideo">添加视频</el-button>
-      <el-button @click="saveInfo" type="success" class="saveInfo" round>保存修改</el-button>
+          <span @click="infoDelete(item.id)" class="el-icon-error closeVideo"></span>
+        </li>
+      </ul>
+      <div style="overflow:hidden;">
+        <el-button class="addBTN offSetWord" type="primary" round @click="addWord">添加文字</el-button>
+        <el-upload
+          class="upload-demo"
+          :action="this.UPLOAD_IMG"
+          :on-success="handleAvatarSuccessImg"
+          :before-upload="beforeAvatarUploadImg"
+          :show-file-list="false"
+        >
+          <el-button class="addBTN upImg" round type="primary">添加图片</el-button>
+        </el-upload>
+        <el-button class="addBTN" type="primary" round @click="addVideo">添加视频</el-button>
+        <el-button @click="saveInfo" type="success" class="saveInfo" round>保存修改</el-button>
+      </div>
     </el-card>
   </div>
 </template>
@@ -81,7 +90,8 @@ export default {
       imageUrl: "",
       infoId: null,
       illnessId: null,
-      addInfos: []
+      addInfos: [],
+      ImgUrl: ""
     };
   },
   created() {
@@ -95,7 +105,7 @@ export default {
         "healthKnowledge/getDetails.do",
         { id: this.infoId }
       );
-      // console.log(res);
+      console.log(res);
       this.editform = res.data;
       this.illnessId = res.data.id;
       this.addInfos = res.data.resourcesList;
@@ -121,22 +131,14 @@ export default {
           resourcesList: this.addInfos
         }
       );
-      console.log(res);
     },
+    // 修改
     addWord() {
       let objWord = {
         textDescription: "",
         type: 0
       };
       this.addInfos.push(objWord);
-    },
-
-    addImg() {
-      let objImg = {
-        imageUrl: "",
-        type: 1
-      };
-      this.addInfos.push(objImg);
     },
     addVideo() {
       let objVideo = {
@@ -145,11 +147,20 @@ export default {
       };
       this.addInfos.push(objVideo);
     },
-    handleAvatarSuccess(res, file) {
-      this.imageUrl = res.data;
-      // this.editForm.iconUrl = res.data;
+    // 單個刪除
+    infoDelete(info) {
+      var arr = this.addInfos;
+      for (let i = 0; i < arr.length; i++) {
+        if (arr[i].id == info) {
+          arr[i].ImgUrl = "";
+          arr.splice(i, 1);
+        }
+      }
     },
-    beforeAvatarUpload(file) {
+    handleAvatarSuccessSM(res, file) {
+      this.imageUrl = res.data;
+    },
+    beforeAvatarUploadSM(file) {
       const isJPG = file.type === "image/jpeg";
       const isGIF = file.type === "image/gif";
       const isPNG = file.type === "image/png";
@@ -163,12 +174,34 @@ export default {
         this.common.errorTip("上传图片大小不能超过 2MB!");
       }
       return (isJPG || isBMP || isGIF || isPNG) && isLt2M;
+    },
+    handleAvatarSuccessImg(res, file) {
+      this.ImgUrl = res.data;
+      let objImg = {
+        imageUrl: this.ImgUrl,
+        type: 1
+      };
+      this.addInfos.push(objImg);
+    },
+    beforeAvatarUploadImg(file) {
+      const isJPG = file.type === "image/jpeg";
+      const isGIF = file.type === "image/gif";
+      const isPNG = file.type === "image/png";
+      const isBMP = file.type === "image/bmp";
+      const isLt2M = file.size / 1024 / 1024 < 2;
+      if (!isJPG && !isGIF && !isPNG && !isBMP) {
+        this.common.errorTip("上传图片必须是JPG/GIF/PNG/BMP 格式!");
+      }
+      if (!isLt2M) {
+        this.common.errorTip("上传图片大小不能超过 2MB!");
+      }
+      return (isJPG || isBMP || isGIF || isPNG) && isLt2M;
     }
   }
 };
 </script>
 <style lang='less' scoped>
-ul {
+li {
   list-style-type: none;
 }
 .avatar-uploader .el-upload {
@@ -204,25 +237,31 @@ ul {
   margin-right: 30px;
 }
 .impImg {
-  width: 1000px;
+  width: 800px;
   height: 400px;
 }
 .addChild {
-  margin-top: 10px;
+  position: relative;
+  width: 800px;
+  height: 400px;
+  margin-top: 20px;
+  padding: 50px;
+  border: 1px solid #ccc;
 }
 .addBTN {
-  float: right;
+  float: left;
   margin-right: 10px;
   margin-top: 20px;
   margin-bottom: 20px;
 }
 .saveInfo {
-  float: right;
+  float: left;
   margin-top: 20px;
 }
 .txtClass {
-  width: 965px;
-  height: 300px;
+  position: relative;
+  width: 765px;
+  height: 365px;
   border: 1px solid #e0e3e9;
   border-radius: 3px;
   resize: none;
@@ -230,6 +269,29 @@ ul {
 }
 video {
   width: 100%;
-  height: 100%;
+  height: 400px;
+}
+.closeTxt {
+  position: absolute;
+  right: -4px;
+  top: -4px;
+  cursor: pointer;
+}
+.closeImg {
+  position: absolute;
+  top: -4px;
+  z-index: 999;
+  right: -4px;
+  cursor: pointer;
+}
+.closeVideo {
+  position: absolute;
+  top: -4px;
+  right: -4px;
+  z-index: 999;
+  cursor: pointer;
+}
+.upImg {
+  margin-right: 30px;
 }
 </style>
