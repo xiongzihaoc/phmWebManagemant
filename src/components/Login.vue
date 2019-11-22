@@ -10,31 +10,33 @@
     >
       <div class="title-container">
         <h3 class="title">卓亚科技</h3>
+        <h6 class="title">Talk For Less Do More</h6>
       </div>
 
-      <el-form-item prop="username">
+      <el-form-item prop="loginName">
         <el-input
           ref="username"
-          v-model="loginForm.username"
-          placeholder="Username"
+          v-model="loginForm.loginName"
+          placeholder="用户名"
           name="username"
           type="text"
+          prefix-icon="el-icon-user-solid"
           tabindex="1"
           auto-complete="on"
         />
       </el-form-item>
-
-      <el-form-item prop="password">
+      <el-form-item prop="userPassword">
         <el-input
           :key="passwordType"
           ref="password"
-          v-model="loginForm.password"
+          v-model="loginForm.userPassword"
           :type="passwordType"
-          placeholder="Password"
+          placeholder="密码"
           name="password"
           tabindex="2"
+          prefix-icon="el-icon-lock"
           auto-complete="on"
-          @keyup.enter.native="handleLogin"
+          @keyup.13.native="handleLogin"
         />
       </el-form-item>
 
@@ -54,12 +56,18 @@ export default {
   data() {
     return {
       loginForm: {
-        username: "admin",
-        password: "12345678"
+        loginName: "",
+        userPassword: ""
       },
       loginRules: {
-        username: [{ required: true, trigger: "blur" }],
-        password: [{ required: true, trigger: "blur" }]
+        loginName: [
+          { required: true, message: "请输入用户名", trigger: "blur" },
+          { min: 3, max: 10, message: "长度在 3 到 10 个字符", trigger: "blur" }
+        ],
+        userPassword: [
+          { required: true, message: "请输入密码", trigger: "blur" },
+          { min: 5, max: 16, message: "长度在 6 到 16 个字符", trigger: "blur" }
+        ]
       },
       loading: false,
       passwordType: "password",
@@ -69,8 +77,17 @@ export default {
   methods: {
     handleLogin() {
       this.$refs.loginForm.validate(async valid => {
-        if (!valid) return this.$message.error("登录失败");
+        if (!valid) return;
+        var { data: res } = await this.$http.post(
+          "user/userLogin.do",
+          this.loginForm
+        );
+        if (res.code != 200) return this.$message.error("用户名或者密码错误");
+        console.log(res);
         this.$message.success("登录成功");
+        // token 存入 sessionstorage
+        window.sessionStorage.setItem("token", res.data.token);
+        // 跳转
         this.$router.push("/home");
       });
     }
@@ -80,8 +97,6 @@ export default {
 
 <style lang="scss">
 /* 修复input 背景不协调 和光标变色 */
-/* Detail see https://github.com/PanJiaChen/vue-element-admin/pull/927 */
-
 $bg: #283443;
 $light_gray: #fff;
 $cursor: #fff;
@@ -175,6 +190,13 @@ $light_gray: #eee;
       text-align: center;
       font-weight: bold;
     }
+  }
+  .el-input {
+    width: 100%;
+    padding-left: 20px;
+  }
+  .el-input__icon {
+    margin-top: 10px;
   }
 }
 </style>

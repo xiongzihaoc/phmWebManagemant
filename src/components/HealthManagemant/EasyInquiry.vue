@@ -9,7 +9,7 @@
     <el-card>
       <el-row :gutter="20">
         <el-col :span="7">
-          <el-input placeholder="请输入内容" v-model="input" @keyup.13.native="nameSearch" clearable>
+          <el-input placeholder="请输入内容" v-model="input" @keyup.13.native="disTypeSearch" clearable>
             <el-button slot="append" icon="el-icon-search" @click="disTypeSearch"></el-button>
           </el-input>
         </el-col>
@@ -79,7 +79,7 @@ export default {
     // 获取疾病种类列表
     async getHealthPackageList() {
       const { data: res } = await this.$http.post("member/disease/getPMemberDiseaseList.do", {
-        name: this.input,
+        memberName: this.input,
         pageSize: this.pageSize,
         pageNum: this.pageNum
       });

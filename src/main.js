@@ -13,16 +13,16 @@ import Router from 'vue-router'
 Vue.use(Router)
 const originalPush = Router.prototype.push
 Router.prototype.push = function push(location) {
-return originalPush.call(this, location).catch(err => err)
+  return originalPush.call(this, location).catch(err => err)
 }
 // 导入axios
 import axios from 'axios'
-Vue.prototype.UPLOAD_IMG = 'http://test.phmzykj.com/zhuoya_manager/oss/fileUpload.do'
 // 配置axios
 axios.defaults.baseURL = 'http://test.phmzykj.com/zhuoya_manager/'
 // axios请求拦截器
 axios.interceptors.request.use(function (config) {
   Nprogress.start()
+  config.headers.Authorization = window.sessionStorage.getItem('token')
   return config
 }, function (error) {
   console.log(error);
@@ -36,7 +36,8 @@ axios.interceptors.response.use(function (config) {
 })
 // 全局挂载axios this.$http调用即可
 Vue.prototype.$http = axios
-
+// 文件上传地址
+Vue.prototype.UPLOAD_IMG = 'http://test.phmzykj.com/zhuoya_manager/oss/fileUpload.do'
 Vue.config.productionTip = false
 
 

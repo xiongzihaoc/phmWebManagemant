@@ -3,8 +3,8 @@
     <!-- 面包屑 -->
     <el-breadcrumb separator-class="el-icon-arrow-right">
       <el-breadcrumb-item :to="{ path: '/home' }">首页</el-breadcrumb-item>
-      <el-breadcrumb-item :to="{ path: '/diseaseknowledge/nursingInstruction'}">护理指导</el-breadcrumb-item>
-      <el-breadcrumb-item>护理指导修改</el-breadcrumb-item>
+      <el-breadcrumb-item :to="{ path: '/diseaseknowledge/nursingInstruction' }">护理指导</el-breadcrumb-item>
+      <el-breadcrumb-item>护理指导新增</el-breadcrumb-item>
     </el-breadcrumb>
     <!-- 卡片视图 -->
     <el-card>
@@ -46,7 +46,7 @@
         <el-form-item></el-form-item>
       </el-form>
 
-      <ul class="addImgVid" v-for="item in addInfos" :key="item.id">
+      <ul class="addImgVid" v-for="item in addInfoss" :key="item.id">
         <li class="addChild" v-if="item.type==0">
           <textarea class="txtClass" placeholder="请输入内容" v-model="item.textDescription"></textarea>
           <span @click="infoDelete(item.id)" class="el-icon-error closeTxt"></span>
@@ -98,56 +98,40 @@ export default {
       },
       healthList: [],
       imageUrl: "",
-      infoId: null,
-      illnessId: null,
-      addInfos: [],
+      addInfoss: [],
       ImgUrl: "",
       VidUrl: ""
     };
   },
   created() {
-    this.infoId = this.$route.query.info.id;
-    this.getEditHealthTipsList();
     this.getHealthList();
   },
   methods: {
-    async getEditHealthTipsList() {
-      const { data: res } = await this.$http.post(
-        "healthKnowledge/getDetails.do",
-        { id: this.infoId }
-      );
-      this.editform = res.data;
-      this.illnessId = res.data.id;
-      this.addInfos = res.data.resourcesList;
-    },
     // 获取疾病类型
     async getHealthList() {
       const { data: res } = await this.$http.post(
         "disease/type/getPDiseaseTypeList.do",
         {}
       );
-      console.log(res);
-
       if (res.code != 200) return this.$message.error("数获取失败");
+      console.log(res);
+      
       this.foodList = res.rows;
       this.total = res.total;
       this.healthList = res.rows;
     },
     async saveInfo() {
       const { data: res } = await this.$http.post(
-        "healthKnowledge/updatePHealthKnowledge.do",
+        "healthKnowledge/savePHealthKnowledge.do",
         {
-          id: this.illnessId,
           name: this.editform.name,
           diseaseTypeId: this.editform.diseaseTypeId,
           description: this.editform.description,
-          articleImagesUrl: this.editform.articleImagesUrl,
-          type: 1,
-          resourcesList: this.addInfos
+          type: 2,
+          resourcesList: this.addInfoss,
+          articleImagesUrl: this.editform.articleImagesUrl
         }
       );
-      console.log(res);
-
       if (res.code != 200) {
         this.$message.error("保存失败");
         return;
@@ -156,20 +140,21 @@ export default {
         this.$router.push("/diseaseknowledge/nursingInstruction");
       }
     },
-    // 文字修改
+    // 修改
     addWord() {
       let objWord = {
         textDescription: "",
         type: 0
       };
-      this.addInfos.push(objWord);
+      this.addInfoss.push(objWord);
     },
     // 單個刪除
     infoDelete(info) {
-      var arr = this.addInfos;
+      var arr = this.addInfoss;
       for (let i = 0; i < arr.length; i++) {
         if (arr[i].id == info) {
           arr[i].ImgUrl = "";
+          arr[i].VidUrl = "";
           arr.splice(i, 1);
         }
       }
@@ -198,7 +183,7 @@ export default {
         imageUrl: this.ImgUrl,
         type: 1
       };
-      this.addInfos.push(objImg);
+      this.addInfoss.push(objImg);
     },
     beforeAvatarUploadImg(file) {
       const isJPG = file.type === "image/jpeg";
@@ -222,7 +207,7 @@ export default {
         videoUrl: this.VidUrl,
         type: 2
       };
-      this.addInfos.push(objVideo);
+      this.addInfoss.push(objVideo);
     },
     beforeAvatarUploadVid(file) {
       const isLt10M = file.size / 1024 / 1024 < 10;

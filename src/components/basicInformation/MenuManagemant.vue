@@ -7,13 +7,6 @@
     </el-breadcrumb>
     <!-- 卡片视图 -->
     <el-card>
-      <el-row :gutter="20">
-        <el-col :span="7">
-          <el-input placeholder="请输入内容" v-model="input" clearable>
-            <el-button slot="append" icon="el-icon-search"></el-button>
-          </el-input>
-        </el-col>
-      </el-row>
       <el-table
         :data="menuList"
         style="width: 100%;margin-bottom: 20px;"
@@ -50,14 +43,14 @@
               @click="showEditdialog(scope.row)"
               type="primary"
               icon="el-icon-edit"
-            ></el-button>
+            >编辑</el-button>
             <!-- 新增按钮 -->
             <el-button
               size="mini"
               @click="addDialog(scope.row)"
               type="success"
               icon="el-icon-circle-plus"
-            ></el-button>
+            >新增</el-button>
           </template>
         </el-table-column>
       </el-table>

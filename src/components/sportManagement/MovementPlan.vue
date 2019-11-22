@@ -25,6 +25,7 @@
       </el-row>
       <!-- 表格 -->
       <el-table
+        tooltip-effect="dark"
         :data="movemenPlanList"
         ref="singleTable"
         highlight-current-row
@@ -37,7 +38,7 @@
         <el-table-column align="center" prop="name" label="名称"></el-table-column>
         <el-table-column align="center" prop="sportGroupNum" label="运动组数"></el-table-column>
         <el-table-column align="center" prop="sportGroupRange" label="运动范围"></el-table-column>
-        <el-table-column align="center" prop="sportDescribe" label="描述"></el-table-column>
+        <el-table-column align="center" show-overflow-tooltip prop="sportDescribe" label="描述"></el-table-column>
         <el-table-column align="center" prop="operate" label="操作" width="200">
           <template slot-scope="scope">
             <!-- 修改按钮 -->
@@ -46,14 +47,14 @@
               @click="showEditdialog(scope.row)"
               type="primary"
               icon="el-icon-edit"
-            ></el-button>
+            >编辑</el-button>
             <!-- 删除按钮 -->
             <el-button
               size="mini"
               @click="removeUserById(scope.row.id)"
               type="danger"
               icon="el-icon-delete"
-            ></el-button>
+            >删除</el-button>
           </template>
         </el-table-column>
       </el-table>

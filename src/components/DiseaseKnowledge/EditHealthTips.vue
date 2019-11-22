@@ -13,12 +13,12 @@
           <el-input v-model="editform.name"></el-input>
         </el-form-item>
         <el-form-item label="疾病类型">
-          <el-select v-model="editform.diseaseTypeValue" placeholder="请选择疾病类型">
+          <el-select v-model="editform.diseaseTypeId" placeholder="请选择疾病类型">
             <el-option
               v-for="item in healthList"
-              :key="item.diseaseTypeId"
-              :label="item.diseaseTypeValue"
-              :value="item.diseaseTypeId"
+              :key="item.id"
+              :label="item.name"
+              :value="item.id"
             ></el-option>
           </el-select>
         </el-form-item>
@@ -39,7 +39,7 @@
             :on-success="handleAvatarSuccessSM"
             :before-upload="beforeAvatarUploadSM"
           >
-            <img v-if="imageUrl" :src="imageUrl" class="avatar" />
+            <img v-if="editform.articleImagesUrl" :src="editform.articleImagesUrl" class="avatar" />
             <i v-else class="el-icon-plus avatar-uploader-icon"></i>
           </el-upload>
         </el-form-item>
@@ -92,7 +92,9 @@ export default {
       editform: {
         name: "",
         diseaseTypeId: "",
-        description: ""
+        description: "",
+        diseaseTypeValue: "",
+        articleImagesUrl: ""
       },
       healthList: [],
       imageUrl: "",
@@ -100,7 +102,7 @@ export default {
       illnessId: null,
       addInfos: [],
       ImgUrl: "",
-      VidUrl:"",
+      VidUrl: ""
     };
   },
   created() {
@@ -114,35 +116,47 @@ export default {
         "healthKnowledge/getDetails.do",
         { id: this.infoId }
       );
-      console.log(res);
       this.editform = res.data;
       this.illnessId = res.data.id;
       this.addInfos = res.data.resourcesList;
-      // this.healthList = 
     },
     // 获取疾病类型
     async getHealthList() {
       const { data: res } = await this.$http.post(
-        "healthKnowledge/getPHealthKnowledgeList.do",
-        { type: 1, name: this.editform.name }
+        "disease/type/getPDiseaseTypeList.do",
+        {}
       );
-      // console.log(res);
+      console.log(res);
+      
+      if (res.code != 200) return this.$message.error("数获取失败");
+      this.foodList = res.rows;
+      this.total = res.total;
       this.healthList = res.rows;
     },
     async saveInfo() {
-      const { data: res } = this.$http.post(
+      const { data: res } = await this.$http.post(
         "healthKnowledge/updatePHealthKnowledge.do",
         {
           id: this.illnessId,
           name: this.editform.name,
           diseaseTypeId: this.editform.diseaseTypeId,
           description: this.editform.description,
+          articleImagesUrl: this.editform.articleImagesUrl,
           type: 1,
           resourcesList: this.addInfos
         }
       );
+      console.log(res);
+      
+      if (res.code != 200) {
+        this.$message.error("保存失败");
+        return;
+      } else {
+        this.$message.success("保存成功");
+        this.$router.push("/diseaseknowledge/healthKnowledge");
+      }
     },
-    // 修改
+    // 文字修改
     addWord() {
       let objWord = {
         textDescription: "",
@@ -161,9 +175,7 @@ export default {
       }
     },
     handleAvatarSuccessSM(res, file) {
-      // console.log(res);
-      
-      this.imageUrl = res.data;
+      this.editform.articleImagesUrl = res.data;
     },
     beforeAvatarUploadSM(file) {
       const isJPG = file.type === "image/jpeg";
@@ -204,7 +216,7 @@ export default {
     },
     handleAvatarSuccessVid(res, file) {
       console.log(res);
-      
+
       this.VidUrl = res.data;
       let objVideo = {
         videoUrl: this.VidUrl,
@@ -213,15 +225,24 @@ export default {
       this.addInfos.push(objVideo);
     },
     beforeAvatarUploadVid(file) {
-    //  const isLt10M = file.size / 1024 / 1024  < 10;
-    // if (['video/mp4', 'video/ogg', 'video/flv','video/avi','video/wmv','video/rmvb'].indexOf(file.type) == -1) {
-    //     this.$message.error('请上传正确的视频格式');
-    //     return false;
-    // }
-    // if (!isLt10M) {
-    //     this.$message.error('上传视频大小不能超过10MB哦!');
-    //     return false;
-    // }
+      const isLt10M = file.size / 1024 / 1024 < 10;
+      if (
+        [
+          "video/mp4",
+          "video/ogg",
+          "video/flv",
+          "video/avi",
+          "video/wmv",
+          "video/rmvb"
+        ].indexOf(file.type) == -1
+      ) {
+        this.$message.error("请上传正确的视频格式");
+        return false;
+      }
+      if (!isLt10M) {
+        this.$message.error("上传视频大小不能超过10MB哦!");
+        return false;
+      }
     }
   }
 };

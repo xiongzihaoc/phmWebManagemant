@@ -38,14 +38,14 @@
               @click="showEditdialog(scope.row)"
               type="primary"
               icon="el-icon-edit"
-            ></el-button>
+            >编辑</el-button>
             <!-- 删除按钮 -->
             <el-button
               size="mini"
               @click="removeUserById(scope.row.id)"
               type="danger"
               icon="el-icon-delete"
-            ></el-button>
+            >删除</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -74,9 +74,8 @@ export default {
     async getHealthList() {
       const { data: res } = await this.$http.post(
         "healthKnowledge/getPHealthKnowledgeList.do",
-        { type: 1 }
+        { type: 1 ,name:this.input}
       );
-      console.log(res);
       this.healthList = res.rows;
     },
     // 修改

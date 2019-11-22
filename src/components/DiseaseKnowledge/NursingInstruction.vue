@@ -3,7 +3,7 @@
     <!-- 面包屑 -->
     <el-breadcrumb separator-class="el-icon-arrow-right">
       <el-breadcrumb-item :to="{ path: '/home' }">首页</el-breadcrumb-item>
-      <el-breadcrumb-item>护理指导</el-breadcrumb-item>
+      <el-breadcrumb-item>健康小知识</el-breadcrumb-item>
     </el-breadcrumb>
     <!-- 卡片视图 -->
     <el-card>
@@ -15,7 +15,7 @@
         </el-col>
         <!-- 添加用户按钮 -->
         <el-col :span="4">
-          <el-button type="primary" @click="addWater">新增</el-button>
+          <el-button type="primary" @click="jumpAddNursing">新增</el-button>
         </el-col>
       </el-row>
       <!-- 表格 -->
@@ -27,9 +27,9 @@
       >
         <el-table-column align="center" type="selection" width="60"></el-table-column>
         <el-table-column align="center" type="index" label="序号" width="60"></el-table-column>
-        <el-table-column align="center" prop="fuUnit" label="名称"></el-table-column>
-        <el-table-column align="center" prop="fuWeight" label="疾病类型"></el-table-column>
-        <el-table-column align="center" prop="fuWeight" label="描述"></el-table-column>
+        <el-table-column align="center" prop="name" label="名称"></el-table-column>
+        <el-table-column align="center" prop="diseaseTypeValue" label="疾病类型"></el-table-column>
+        <el-table-column align="center" prop="description" label="描述"></el-table-column>
         <el-table-column align="center" prop="operate" label="操作" width="200">
           <template slot-scope="scope">
             <!-- 修改按钮 -->
@@ -38,14 +38,14 @@
               @click="showEditdialog(scope.row)"
               type="primary"
               icon="el-icon-edit"
-            ></el-button>
+            >编辑</el-button>
             <!-- 删除按钮 -->
             <el-button
               size="mini"
               @click="removeUserById(scope.row.id)"
               type="danger"
               icon="el-icon-delete"
-            ></el-button>
+            >删除</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -74,17 +74,20 @@ export default {
     async getHealthList() {
       const { data: res } = await this.$http.post(
         "healthKnowledge/getPHealthKnowledgeList.do",
-        { type: 2 }
+        { type: 2 ,name:this.input}
       );
       console.log(res);
+      
       this.healthList = res.rows;
     },
     // 修改
     showEditdialog(info) {
-      this.$router.push("/diseaseknowledge/EditNursingInstruction");
-    },
-    editDialogClosed() {
-      this.$refs.editFormRef.resetFields();
+      console.log(info);
+      
+      this.$router.push({
+        path: "/diseaseknowledge/EditNursingInstruction",
+        query: { info }
+      });
     },
     // 搜索
     foodUnitSearch() {
@@ -104,9 +107,12 @@ export default {
       if (confirmResult != "confirm") {
         return this.$message.info("取消删除");
       }
-      const { data: res } = await this.$http.post("foodUnit/delPFoodUnit.do", {
-        id: info
-      });
+      const { data: res } = await this.$http.post(
+        "healthKnowledge/delPHealthKnowledge.do",
+        {
+          id: info
+        }
+      );
       if (res.code == 200) {
         this.$message.success("删除成功");
         this.getHealthList();
@@ -115,10 +121,8 @@ export default {
         return;
       }
     },
-    addWater() {
-      this.dialogTitle = "新增";
-      this.editForm = {};
-      this.editDialogVisible = true;
+    jumpAddNursing(info) {
+      this.$router.push({ path: "/diseaseknowledge/AddNursingInstruction" });
     }
   }
 };

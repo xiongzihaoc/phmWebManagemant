@@ -13,7 +13,14 @@
           <el-input v-model="editform.name"></el-input>
         </el-form-item>
         <el-form-item label="疾病类型">
-          <el-select v-model="editform.diseaseTypeValue" placeholder="请选择疾病类型"></el-select>
+          <el-select v-model="editform.diseaseTypeId" placeholder="请选择疾病类型">
+            <el-option
+              v-for="item in healthList"
+              :key="item.id"
+              :label="item.name"
+              :value="item.id"
+            ></el-option>
+          </el-select>
         </el-form-item>
         <el-form-item label="文本描述">
           <el-input
@@ -29,40 +36,52 @@
             class="avatar-uploader"
             :action="this.UPLOAD_IMG"
             :show-file-list="false"
-            :on-success="handleAvatarSuccess"
-            :before-upload="beforeAvatarUpload"
+            :on-success="handleAvatarSuccessSM"
+            :before-upload="beforeAvatarUploadSM"
           >
-            <img v-if="imageUrl" :src="imageUrl" class="avatar" />
+            <img v-if="editform.articleImagesUrl" :src="editform.articleImagesUrl" class="avatar" />
             <i v-else class="el-icon-plus avatar-uploader-icon"></i>
           </el-upload>
         </el-form-item>
         <el-form-item></el-form-item>
       </el-form>
 
-      <div class="addImgVid" v-for="item in addInfos" :key="item.id">
-        <div
-          class="addChild"
-          v-if="item.type==0"
-          style="width:1000px;height:400px;border:1px solid #ccc;"
-        >
-          <i class></i>
-          <div :v-model="item.textDescription">{{item.textDescription}}</div>
-        </div>
-        <div class="addChild" v-if="item.type==1" style="width:1000px;height:400px;">
+      <ul class="addImgVid" v-for="item in addInfoss" :key="item.id">
+        <li class="addChild" v-if="item.type==0">
+          <textarea class="txtClass" placeholder="请输入内容" v-model="item.textDescription"></textarea>
+          <span @click="infoDelete(item.id)" class="el-icon-error closeTxt"></span>
+        </li>
+        <li class="addChild" v-if="item.type==1">
           <img class="impImg" :src="item.imageUrl" alt />
-        </div>
-        <div
-          class="addChild"
-          v-if="item.type==2"
-          style="width:1000px;height:400px;background:orange;"
-        >
+          <span @click="infoDelete(item.id)" class="el-icon-error closeImg"></span>
+        </li>
+        <li class="addChild" v-if="item.type==2">
           <video :src="item.videoUrl" controls :poster="item.imageUrl"></video>
-        </div>
+          <span @click="infoDelete(item.id)" class="el-icon-error closeVideo"></span>
+        </li>
+      </ul>
+      <div style="overflow:hidden;">
+        <el-button class="addBTN offSetWord" type="primary" round @click="addWord">添加文字</el-button>
+        <el-upload
+          class="upload-demo"
+          :action="this.UPLOAD_IMG"
+          :on-success="handleAvatarSuccessImg"
+          :before-upload="beforeAvatarUploadImg"
+          :show-file-list="false"
+        >
+          <el-button class="addBTN upImg" round type="primary">添加图片</el-button>
+        </el-upload>
+        <el-upload
+          class="upload-demo"
+          :action="this.UPLOAD_IMG"
+          :on-success="handleAvatarSuccessVid"
+          :before-upload="beforeAvatarUploadVid"
+          :show-file-list="false"
+        >
+          <el-button class="addBTN upImg" round type="primary">添加视频</el-button>
+        </el-upload>
+        <el-button @click="saveInfo" type="success" class="saveInfo" round>保存修改</el-button>
       </div>
-      <el-button class="addBTN" type="primary" round @click="addWord">添加文字</el-button>
-      <el-button class="addBTN" type="primary" round @click="addImg">添加图片</el-button>
-      <el-button class="addBTN" type="primary" round @click="addVideo">添加视频</el-button>
-      <el-button @click="saveInfo" type="success" class="saveInfo" round>保存修改</el-button>
     </el-card>
   </div>
 </template>
@@ -73,64 +92,77 @@ export default {
       editform: {
         name: "",
         diseaseTypeId: "",
-        description: ""
+        description: "",
+        diseaseTypeValue: "",
+        articleImagesUrl: ""
       },
+      healthList: [],
       imageUrl: "",
-      infoId: null,
-      illnessId: null,
-      addInfos: []
+      addInfoss: [],
+      ImgUrl: "",
+      VidUrl: ""
     };
   },
   created() {
-    // this.infoId = this.$route.query.info.id;
-    this.getEditHealthTipsList();
+    this.getHealthList();
   },
   methods: {
-    async getEditHealthTipsList() {
-      const { data: res } = await this.$http.post(
-        "healthKnowledge/getDetails.do",
-        { id: this.infoId }
-      );
-      console.log(res);
-      this.editform = res.data;
-      this.illnessId = res.data.id;
-      this.addInfos = res.data.resourcesList;
-    },
-    // 获取疾病种类
-    async getdisTypeList() {
+    // 获取疾病类型
+    async getHealthList() {
       const { data: res } = await this.$http.post(
         "disease/type/getPDiseaseTypeList.do",
-        {
-          pageSize: this.pageSize,
-          pageNum: this.pageNum
-        }
+        {}
       );
       if (res.code != 200) return this.$message.error("数获取失败");
+      console.log(res);
+      
       this.foodList = res.rows;
       this.total = res.total;
+      this.healthList = res.rows;
     },
     async saveInfo() {
-      const { data: res } = this.$http.post(
-        "healthKnowledge/updatePHealthKnowledge.do",
+      const { data: res } = await this.$http.post(
+        "healthKnowledge/savePHealthKnowledge.do",
         {
-          id: this.illnessId,
           name: this.editform.name,
           diseaseTypeId: this.editform.diseaseTypeId,
           description: this.editform.description,
           type: 1,
-          resourcesList: this.addInfos
+          resourcesList: this.addInfoss,
+          articleImagesUrl: this.editform.articleImagesUrl
         }
       );
-      console.log(res);
+      if (res.code != 200) {
+        this.$message.error("保存失败");
+        return;
+      } else {
+        this.$message.success("保存成功");
+        this.$router.push("/diseaseknowledge/healthKnowledge");
+      }
     },
-    addWord(){}, 
-    addImg(){}, 
-    addVideo(){}, 
-    handleAvatarSuccess(res, file) {
-      this.imageUrl = res.data;
-      // this.editForm.iconUrl = res.data;
+    // 修改
+    addWord() {
+      let objWord = {
+        textDescription: "",
+        type: 0
+      };
+      this.addInfoss.push(objWord);
     },
-    beforeAvatarUpload(file) {
+    // 單個刪除
+    infoDelete(info) {
+      var arr = this.addInfoss;
+      for (let i = 0; i < arr.length; i++) {
+        if (arr[i].id == info) {
+          arr[i].ImgUrl = "";
+          arr[i].VidUrl = "";
+          arr.splice(i, 1);
+        }
+      }
+    },
+    handleAvatarSuccessSM(res, file) {
+      this.editform.articleImagesUrl = res.data;
+    },
+    beforeAvatarUploadSM(file) {
       const isJPG = file.type === "image/jpeg";
       const isGIF = file.type === "image/gif";
       const isPNG = file.type === "image/png";
@@ -144,11 +176,66 @@ export default {
         this.common.errorTip("上传图片大小不能超过 2MB!");
       }
       return (isJPG || isBMP || isGIF || isPNG) && isLt2M;
+    },
+    handleAvatarSuccessImg(res, file) {
+      this.ImgUrl = res.data;
+      let objImg = {
+        imageUrl: this.ImgUrl,
+        type: 1
+      };
+      this.addInfoss.push(objImg);
+    },
+    beforeAvatarUploadImg(file) {
+      const isJPG = file.type === "image/jpeg";
+      const isGIF = file.type === "image/gif";
+      const isPNG = file.type === "image/png";
+      const isBMP = file.type === "image/bmp";
+      const isLt2M = file.size / 1024 / 1024 < 2;
+      if (!isJPG && !isGIF && !isPNG && !isBMP) {
+        this.common.errorTip("上传图片必须是JPG/GIF/PNG/BMP 格式!");
+      }
+      if (!isLt2M) {
+        this.common.errorTip("上传图片大小不能超过 2MB!");
+      }
+      return (isJPG || isBMP || isGIF || isPNG) && isLt2M;
+    },
+    handleAvatarSuccessVid(res, file) {
+      console.log(res);
+
+      this.VidUrl = res.data;
+      let objVideo = {
+        videoUrl: this.VidUrl,
+        type: 2
+      };
+      this.addInfoss.push(objVideo);
+    },
+    beforeAvatarUploadVid(file) {
+      const isLt10M = file.size / 1024 / 1024 < 10;
+      if (
+        [
+          "video/mp4",
+          "video/ogg",
+          "video/flv",
+          "video/avi",
+          "video/wmv",
+          "video/rmvb"
+        ].indexOf(file.type) == -1
+      ) {
+        this.$message.error("请上传正确的视频格式");
+        return false;
+      }
+      if (!isLt10M) {
+        this.$message.error("上传视频大小不能超过10MB哦!");
+        return false;
+      }
     }
   }
 };
 </script>
 <style lang='less' scoped>
+li {
+  list-style-type: none;
+}
 .avatar-uploader .el-upload {
   cursor: pointer;
   position: relative;
@@ -182,20 +269,61 @@ export default {
   margin-right: 30px;
 }
 .impImg {
-  width: 1000px;
+  width: 800px;
   height: 400px;
 }
 .addChild {
-  margin-top: 10px;
+  position: relative;
+  width: 800px;
+  height: 400px;
+  margin-top: 20px;
+  padding: 50px;
+  border: 1px solid #ccc;
 }
 .addBTN {
-  float: right;
+  float: left;
   margin-right: 10px;
   margin-top: 20px;
   margin-bottom: 20px;
 }
 .saveInfo {
-  float: right;
+  float: left;
   margin-top: 20px;
+}
+.txtClass {
+  position: relative;
+  width: 765px;
+  height: 365px;
+  border: 1px solid #e0e3e9;
+  border-radius: 3px;
+  resize: none;
+  padding: 15px;
+}
+video {
+  width: 100%;
+  height: 400px;
+}
+.closeTxt {
+  position: absolute;
+  right: -4px;
+  top: -4px;
+  cursor: pointer;
+}
+.closeImg {
+  position: absolute;
+  top: -4px;
+  z-index: 999;
+  right: -4px;
+  cursor: pointer;
+}
+.closeVideo {
+  position: absolute;
+  top: -4px;
+  right: -4px;
+  z-index: 999;
+  cursor: pointer;
+}
+.upImg {
+  margin-right: 30px;
 }
 </style>

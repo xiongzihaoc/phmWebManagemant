@@ -22,6 +22,7 @@
       <el-table
         :data="foodTypeList"
         ref="singleTable"
+        tooltip-effect="dark"
         highlight-current-row
         @current-change="handleCurrentChange"
         stripe
@@ -32,9 +33,9 @@
         <el-table-column align="center" type="index" label="序号" width="60"></el-table-column>
         <el-table-column align="center" prop="dsName" label="名称" width="200"></el-table-column>
         <el-table-column align="center" prop="dsTabooFood" label="禁忌食物" width="200"></el-table-column>
-        <el-table-column align="center" prop="dsTabooDescribe" label="禁忌食物描述"></el-table-column>
-        <el-table-column align="center" prop="dsDescribe" label="描述"></el-table-column>
-        <el-table-column align="center" prop="operate" label="操作" width="240">
+        <el-table-column align="center" prop="dsTabooDescribe" show-overflow-tooltip label="禁忌食物描述"></el-table-column>
+        <el-table-column align="center" prop="dsDescribe" show-overflow-tooltip label="描述"></el-table-column>
+        <el-table-column align="center" prop="operate" label="操作" width="300">
           <template slot-scope="scope">
             <!-- 修改按钮 -->
             <el-button
@@ -42,16 +43,21 @@
               @click="showEditdialog(scope.row)"
               type="primary"
               icon="el-icon-edit"
-            ></el-button>
+            >编辑</el-button>
             <!-- 元素列表按钮 -->
-            <el-button size="mini" @click="jumpElementList(scope.row)" type="success">元素列表</el-button>
+            <el-button
+              size="mini"
+              @click="jumpElementList(scope.row)"
+              type="success"
+              icon="el-icon-s-unfold"
+            >元素列表</el-button>
             <!-- 删除按钮 -->
             <el-button
               size="mini"
               @click="removeUserById(scope.row.id)"
               type="danger"
               icon="el-icon-delete"
-            ></el-button>
+            >删除</el-button>
           </template>
         </el-table-column>
       </el-table>

@@ -21,6 +21,7 @@
       <!-- 表格 -->
       <el-table
         :data="foodList"
+        tooltip-effect="dark"
         ref="singleTable"
         highlight-current-row
         @current-change="handleCurrentChange"
@@ -37,10 +38,10 @@
           </template>
         </el-table-column>
         <el-table-column align="center" prop="fdType" label="类型" width="160"></el-table-column>
-        <el-table-column align="center" prop="elementName" label="元素名称"></el-table-column>
+        <el-table-column align="center" prop="elementName" show-overflow-tooltip label="元素名称"></el-table-column>
         <el-table-column align="center" prop="fdState" label="是否常见 (1: 是 0: 否)"></el-table-column>
-        <el-table-column align="center" prop="fdDescribe" label="描述"></el-table-column>
-        <el-table-column align="center" prop="operate" label="操作" width="300">
+        <el-table-column align="center" prop="fdDescribe" show-overflow-tooltip label="描述"></el-table-column>
+        <el-table-column align="center" prop="operate" label="操作" width="400">
           <template slot-scope="scope">
             <!-- 修改按钮 -->
             <el-button
@@ -48,17 +49,17 @@
               @click="showEditdialog(scope.row)"
               type="primary"
               icon="el-icon-edit"
-            ></el-button>
+            >编辑</el-button>
             <!-- 微量元素 -->
-            <el-button size="mini" @click="jumpScruple(scope.row)" type="success">微量元素</el-button>
+            <el-button size="mini" @click="jumpScruple(scope.row)" type="success" icon="el-icon-s-unfold">微量元素</el-button>
             <!-- 食物单位 -->
-            <el-button size="mini" @click="jumpUnits(scope.row)" type="success">食物单位</el-button>
+            <el-button size="mini" @click="jumpUnits(scope.row)" type="success" icon="el-icon-s-unfold">食物单位</el-button>
             <el-button
               size="mini"
               @click="removeUserById(scope.row.id)"
               type="danger"
               icon="el-icon-delete"
-            ></el-button>
+            >删除</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -176,6 +177,8 @@ export default {
           pageNum: this.pageNum
         }
       );
+      console.log(res);
+
       this.foodTypeList = res.data;
     },
     // 分页
@@ -187,7 +190,6 @@ export default {
       this.pageNum = newPage;
       this.getFoodList();
     },
-    // 添加
     // 删除
     async removeUserById(info) {
       const confirmResult = await this.$confirm(
@@ -292,7 +294,7 @@ export default {
     },
     // 跳转到微量元素页面
     jumpScruple(info) {
-      this.$router.push({path:"/food/Microelement",query:{id:info.id}});
+      this.$router.push({ path: "/food/Microelement", query: { id: info.id } });
     },
     // 跳转到食物单位
     jumpUnits(info) {

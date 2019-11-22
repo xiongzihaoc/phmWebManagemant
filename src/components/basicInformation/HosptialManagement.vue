@@ -7,13 +7,6 @@
     </el-breadcrumb>
     <!-- 卡片视图 -->
     <el-card>
-      <el-row :gutter="20">
-        <el-col :span="7">
-          <el-input placeholder="请输入内容" v-model="input" @keyup.enter.native="hospSearch" clearable>
-            <el-button slot="append" icon="el-icon-search" @click="hospSearch"></el-button>
-          </el-input>
-        </el-col>
-      </el-row>
       <el-table
         :data="hosMenuList"
         :lazy="true"
@@ -57,14 +50,14 @@
               @click="showEditdialog(scope.row.acId)"
               type="primary"
               icon="el-icon-edit"
-            ></el-button>
+            >编辑</el-button>
             <!-- 新增按钮 -->
             <el-button
               size="mini"
               @click="addDictionarybtn(scope.row.acId)"
               type="success"
               icon="el-icon-circle-plus"
-            ></el-button>
+            >新增</el-button>
           </template>
         </el-table-column>
       </el-table>

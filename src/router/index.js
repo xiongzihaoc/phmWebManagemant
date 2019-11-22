@@ -25,6 +25,7 @@ import FoodType from '../components/dietaryManagement/FoodType.vue'
 import Microelement from '../components/microelement/Microelement.vue'
 import NursingInstruction from '../components/DiseaseKnowledge/NursingInstruction.vue'
 import EditNursingInstruction from '../components/DiseaseKnowledge/EditNursingInstruction.vue'
+import AddNursingInstruction from '../components/DiseaseKnowledge/AddNursingInstruction.vue'
 import HealthTips from '../components/DiseaseKnowledge/HealthTips.vue'
 import EditHealthTips from '../components/DiseaseKnowledge/EditHealthTips.vue'
 import AddHealthTips from '../components/DiseaseKnowledge/AddHealthTips.vue'
@@ -63,6 +64,7 @@ const routes = [{path: '/',redirect: '/login'},
     { path: '/illness/type',component: DiseaseType},
     { path: '/diseaseknowledge/nursingInstruction',component: NursingInstruction},
     { path: '/diseaseknowledge/EditNursingInstruction',component: EditNursingInstruction},
+    { path: '/diseaseknowledge/AddNursingInstruction',component: AddNursingInstruction},
     { path: '/diseaseknowledge/healthKnowledge',component: HealthTips},
     { path: '/diseaseknowledge/EditHealthTips',component: EditHealthTips},
     { path: '/diseaseknowledge/AddHealthTips',component: AddHealthTips},
@@ -70,8 +72,16 @@ const routes = [{path: '/',redirect: '/login'},
   ]
   },
 ]
-
 const router = new VueRouter({
   routes
+})
+
+router.beforeEach((to, from, next) => {
+  //如果用户访问的路由是/login直接放行
+  if (to.path == '/login') return next();
+  const tokenStr = window.sessionStorage.getItem('token');
+  //如果没有买票，让他去/login买票去
+  if (!tokenStr) return next('/login');
+  next();
 })
 export default router

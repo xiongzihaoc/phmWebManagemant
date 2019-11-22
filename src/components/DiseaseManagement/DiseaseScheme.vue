@@ -36,7 +36,7 @@
         <el-table-column align="center" prop="waterPlanName" label="饮水方案"></el-table-column>
         <el-table-column align="center" prop="sportPlanName" label="运动方案"></el-table-column>
         <el-table-column align="center" prop="description" label="描述"></el-table-column>
-        <el-table-column align="center" prop="operate" label="操作" width="160">
+        <el-table-column align="center" prop="operate" label="操作" width="180">
           <template slot-scope="scope">
 
             <!-- 修改按钮 -->
@@ -45,13 +45,13 @@
               @click="showEditdialog(scope.row)"
               type="primary"
               icon="el-icon-edit"
-            ></el-button>
+            >编辑</el-button>
             <el-button 
               size="mini"
               @click="removeUserById(scope.row.id)"
               type="danger"
               icon="el-icon-delete"
-            ></el-button>
+            >删除</el-button>
           </template>
         </el-table-column>
       </el-table>

@@ -52,7 +52,7 @@
               @click="showEditdialog(scope.row)"
               type="primary"
               icon="el-icon-edit"
-            ></el-button>
+            >编辑</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -97,7 +97,9 @@ export default {
   methods: {
     // 获取列表
     async getRoleList() {
-      const { data: res } = await this.$http.post("role/getSysRoleList.do", {});
+      const { data: res } = await this.$http.post("role/getSysRoleList.do", {
+        roleName: this.input
+      });
       if (res.code != 200) return this.$message.error("列表获取失败");
       this.RoleList = res.rows;
     },
@@ -139,7 +141,9 @@ export default {
       this.editAddDialogVisible = false;
     },
     // 搜索
-    Foodsearch() {},
+    Foodsearch() {
+      this.getRoleList();
+    },
     // 改变状态
     async userStateChanged(info) {
       const { data: res } = await this.$http.post("role/updateSysRole.do", {

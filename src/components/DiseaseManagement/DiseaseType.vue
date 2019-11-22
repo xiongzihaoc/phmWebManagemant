@@ -3,7 +3,7 @@
     <!-- 面包屑 -->
     <el-breadcrumb separator-class="el-icon-arrow-right">
       <el-breadcrumb-item :to="{ path: '/home' }">首页</el-breadcrumb-item>
-      <el-breadcrumb-item>疾病种类</el-breadcrumb-item>
+      <el-breadcrumb-item>疾病类型</el-breadcrumb-item>
     </el-breadcrumb>
     <!-- 卡片视图 -->
     <el-card>
@@ -41,13 +41,7 @@
               @click="showEditdialog(scope.row)"
               type="primary"
               icon="el-icon-edit"
-            ></el-button>
-            <!-- <el-button
-              size="mini"
-              @click="removeUserById(scope.row.id)"
-              type="danger"
-              icon="el-icon-delete"
-            ></el-button> -->
+            >编辑</el-button>
             <el-button
               size="mini"
               @click="statusClick(scope.row)"
@@ -143,11 +137,11 @@ export default {
     // 科室列表
     async getDictionaryOfficeList() {
       const { data: res } = await this.$http.post(
-        "sys/dict/getPreviewData.do",
-        { dictValue: "hosp-office" }
+        "disease/type/getOfficeList.do",
+        {}
       );
       console.log(res);
-      this.officeList = res.data;
+      this.officeList = res.rows;
     },
 
     // 分页

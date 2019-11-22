@@ -46,7 +46,7 @@
             ></el-switch>
           </template>
         </el-table-column>
-        <el-table-column align="center" prop="operate" label="操作" width="180">
+        <el-table-column align="center" prop="operate" label="操作" width="260">
           <template slot-scope="scope">
             <!-- 修改按钮 -->
             <el-button
@@ -54,21 +54,21 @@
               @click="showEditdialog(scope.row)"
               type="primary"
               icon="el-icon-edit"
-            ></el-button>
-            <!-- 删除按钮 -->
-            <el-button
-              size="mini"
-              @click="removeById(scope.row)"
-              type="danger"
-              icon="el-icon-delete"
-            ></el-button>
+            >编辑</el-button>
             <!-- 跳转按钮 -->
             <el-button
               size="mini"
               @click="jumpDictionarybtn(scope.row)"
               type="success"
               icon="el-icon-s-unfold"
-            ></el-button>
+            >详情</el-button>
+            <!-- 删除按钮 -->
+            <el-button
+              size="mini"
+              @click="removeById(scope.row)"
+              type="danger"
+              icon="el-icon-delete"
+            >删除</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -226,7 +226,7 @@ export default {
     // 添加按钮
     addDictionary() {
       this.dialogTitle = "新增";
-      this.disabled = false
+      this.disabled = false;
       this.addEditForm = {};
       this.DialogVisible = true;
     },

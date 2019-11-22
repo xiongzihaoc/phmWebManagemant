@@ -22,6 +22,7 @@
       <el-table
         :data="waterTypeList"
         ref="singleTable"
+        tooltip-effect="dark"
         highlight-current-row
         @current-change="handleCurrentChange"
         stripe
@@ -35,8 +36,8 @@
         <el-table-column align="center" prop="noWater" label="不推荐饮水种类"></el-table-column>
         <el-table-column align="center" prop="drinkWaterAmount" label="每日饮水量 (ml)"></el-table-column>
         <el-table-column align="center" prop="drinkWaterRange" label="饮水范围 (ml)"></el-table-column>
-        <el-table-column align="center" prop="description" label="描述"></el-table-column>
-        <el-table-column align="center" prop="operate" label="操作" width="160">
+        <el-table-column align="center" prop="description" show-overflow-tooltip label="描述"></el-table-column>
+        <el-table-column align="center" prop="operate" label="操作" width="200">
           <template slot-scope="scope">
             <!-- 修改按钮 -->
             <el-button
@@ -44,14 +45,14 @@
               @click="showEditdialog(scope.row)"
               type="primary"
               icon="el-icon-edit"
-            ></el-button>
+            >编辑</el-button>
             <!-- 删除按钮 -->
             <el-button
               size="mini"
               @click="removeUserById(scope.row.id)"
               type="danger"
               icon="el-icon-delete"
-            ></el-button>
+            >删除</el-button>
           </template>
         </el-table-column>
       </el-table>
