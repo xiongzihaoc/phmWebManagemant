@@ -51,9 +51,19 @@
               icon="el-icon-edit"
             >编辑</el-button>
             <!-- 微量元素 -->
-            <el-button size="mini" @click="jumpScruple(scope.row)" type="success" icon="el-icon-s-unfold">微量元素</el-button>
+            <el-button
+              size="mini"
+              @click="jumpScruple(scope.row)"
+              type="success"
+              icon="el-icon-s-unfold"
+            >微量元素</el-button>
             <!-- 食物单位 -->
-            <el-button size="mini" @click="jumpUnits(scope.row)" type="success" icon="el-icon-s-unfold">食物单位</el-button>
+            <el-button
+              size="mini"
+              @click="jumpUnits(scope.row)"
+              type="success"
+              icon="el-icon-s-unfold"
+            >食物单位</el-button>
             <el-button
               size="mini"
               @click="removeUserById(scope.row.id)"
@@ -228,34 +238,37 @@ export default {
       this.imageUrl = "";
     },
     async edit() {
-      let httpUrl = "";
-      let parm = {};
-      if (this.dialogTitle == "修改") {
-        httpUrl = "food/updatePFood.do";
-        parm = {
-          id: this.foodId,
-          fdName: this.editForm.fdName,
-          fdState: this.editForm.fdState,
-          fdDescribe: this.editForm.fdDescribe,
-          fdType: this.editForm.fdType,
-          fdPhotoPath: this.editForm.fdPhotoPath
-        };
-      } else {
-        httpUrl = "food/savePFood.do";
-        parm = {
-          fdName: this.editForm.fdName,
-          fdState: this.editForm.fdState,
-          fdDescribe: this.editForm.fdDescribe,
-          fdType: this.editForm.fdType,
-          fdPhotoPath: this.editForm.fdPhotoPath
-        };
-      }
-      const { data: res } = await this.$http.post(httpUrl, parm);
-      if (res.code != 200) return this.$message.error(res.msg);
-      this.$message.success(res.msg);
-      this.getFoodList();
-      this.imageUrl = "";
-      this.editDialogVisible = false;
+      this.$refs.editFormRef.validate(async valid => {
+        if (!valid) return this.$message.error("失败");
+        let httpUrl = "";
+        let parm = {};
+        if (this.dialogTitle == "修改") {
+          httpUrl = "food/updatePFood.do";
+          parm = {
+            id: this.foodId,
+            fdName: this.editForm.fdName,
+            fdState: this.editForm.fdState,
+            fdDescribe: this.editForm.fdDescribe,
+            fdType: this.editForm.fdType,
+            fdPhotoPath: this.editForm.fdPhotoPath
+          };
+        } else {
+          httpUrl = "food/savePFood.do";
+          parm = {
+            fdName: this.editForm.fdName,
+            fdState: this.editForm.fdState,
+            fdDescribe: this.editForm.fdDescribe,
+            fdType: this.editForm.fdType,
+            fdPhotoPath: this.editForm.fdPhotoPath
+          };
+        }
+        const { data: res } = await this.$http.post(httpUrl, parm);
+        if (res.code != 200) return this.$message.error(res.msg);
+        this.$message.success(res.msg);
+        this.getFoodList();
+        this.imageUrl = "";
+        this.editDialogVisible = false;
+      });
     },
     addFood() {
       this.dialogTitle = "新增";

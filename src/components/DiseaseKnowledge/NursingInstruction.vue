@@ -74,16 +74,16 @@ export default {
     async getHealthList() {
       const { data: res } = await this.$http.post(
         "healthKnowledge/getPHealthKnowledgeList.do",
-        { type: 2 ,name:this.input}
+        { type: 2, name: this.input }
       );
       console.log(res);
-      
+
       this.healthList = res.rows;
     },
     // 修改
     showEditdialog(info) {
       console.log(info);
-      
+
       this.$router.push({
         path: "/diseaseknowledge/EditNursingInstruction",
         query: { info }

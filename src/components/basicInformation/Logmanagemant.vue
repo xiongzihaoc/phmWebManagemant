@@ -29,7 +29,7 @@
         <el-table-column align="center" prop="title" label="系统模块" sortable></el-table-column>
         <el-table-column align="center" prop="operType" label="操作类型" sortable></el-table-column>
         <el-table-column align="center" prop="operName" label="操作人员" sortable></el-table-column>
-        <el-table-column align="center" prop="dictSort" label="部门名称"></el-table-column>
+        <el-table-column align="center" prop="deptName" label="部门名称"></el-table-column>
         <el-table-column align="center" prop="operIp" label="主机"></el-table-column>
         <el-table-column align="center" prop="operLocation" label="操作地点"></el-table-column>
         <el-table-column align="center" prop="operTime" label="操作时间">

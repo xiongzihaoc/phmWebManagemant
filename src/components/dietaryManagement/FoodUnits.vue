@@ -99,7 +99,7 @@ export default {
         { foodId: this.foodId }
       );
       console.log(res);
-      
+
       this.foodUnitList = res.rows;
       this.total = res.total;
     },
@@ -113,30 +113,33 @@ export default {
     editDialogClosed() {
       this.$refs.editFormRef.resetFields();
     },
-    async editEnter() {
-      let httpUrl = "";
-      let parm = {};
-      if (this.dialogTitle == "修改") {
-        httpUrl = "foodUnit/updatePFoodUnit.do";
-        parm = {
-          id: this.id,
-          foodId: this.foodId,
-          fuUnit: this.editForm.fuUnit,
-          fuWeight: this.editForm.fuWeight
-        };
-      } else {
-        httpUrl = "foodUnit/savePFoodUnit.do";
-        parm = {
-          foodId: this.foodId,
-          fuUnit: this.editForm.fuUnit,
-          fuWeight: this.editForm.fuWeight
-        };
-      }
-      const { data: res } = await this.$http.post(httpUrl, parm);
-      if (res.code != 200) return this.$message.error(res.msg);
-      this.$message.success(res.msg);
-      this.getFoodUnitList();
-      this.editDialogVisible = false;
+    editEnter() {
+      this.$refs.editFormRef.validate(async valid => {
+        if (!valid) return this.$message.error("失败");
+        let httpUrl = "";
+        let parm = {};
+        if (this.dialogTitle == "修改") {
+          httpUrl = "foodUnit/updatePFoodUnit.do";
+          parm = {
+            id: this.id,
+            foodId: this.foodId,
+            fuUnit: this.editForm.fuUnit,
+            fuWeight: this.editForm.fuWeight
+          };
+        } else {
+          httpUrl = "foodUnit/savePFoodUnit.do";
+          parm = {
+            foodId: this.foodId,
+            fuUnit: this.editForm.fuUnit,
+            fuWeight: this.editForm.fuWeight
+          };
+        }
+        const { data: res } = await this.$http.post(httpUrl, parm);
+        if (res.code != 200) return this.$message.error(res.msg);
+        this.$message.success(res.msg);
+        this.getFoodUnitList();
+        this.editDialogVisible = false;
+      });
     },
     // 搜索
     foodUnitSearch() {

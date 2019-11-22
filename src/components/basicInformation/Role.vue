@@ -120,25 +120,28 @@ export default {
       this.$refs.editFormRef.resetFields();
     },
     async AddEdit() {
-      let httpUrl = "";
-      let parm = {};
-      if (this.dialogTitle == "修改") {
-        httpUrl = "role/updateSysRole.do";
-        parm = {
-          roleId: this.id,
-          roleName: this.AddEditForm.roleName
-        };
-      } else {
-        httpUrl = "role/saveSysRole.do";
-        parm = {
-          roleName: this.AddEditForm.roleName
-        };
-      }
-      const { data: res } = await this.$http.post(httpUrl, parm);
-      if (res.code != 200) return this.$message.error(res.msg);
-      this.$message.success(res.msg);
-      this.getRoleList();
-      this.editAddDialogVisible = false;
+      this.$refs.editFormRef.validate(async valid => {
+        if (!valid) return this.$message.error("登录失败");
+        let httpUrl = "";
+        let parm = {};
+        if (this.dialogTitle == "修改") {
+          httpUrl = "role/updateSysRole.do";
+          parm = {
+            roleId: this.id,
+            roleName: this.AddEditForm.roleName
+          };
+        } else {
+          httpUrl = "role/saveSysRole.do";
+          parm = {
+            roleName: this.AddEditForm.roleName
+          };
+        }
+        const { data: res } = await this.$http.post(httpUrl, parm);
+        if (res.code != 200) return this.$message.error(res.msg);
+        this.$message.success(res.msg);
+        this.getRoleList();
+        this.editAddDialogVisible = false;
+      });
     },
     // 搜索
     Foodsearch() {

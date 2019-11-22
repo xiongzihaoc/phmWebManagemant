@@ -38,7 +38,6 @@
         <el-table-column align="center" prop="description" label="描述"></el-table-column>
         <el-table-column align="center" prop="operate" label="操作" width="180">
           <template slot-scope="scope">
-
             <!-- 修改按钮 -->
             <el-button
               size="mini"
@@ -46,7 +45,7 @@
               type="primary"
               icon="el-icon-edit"
             >编辑</el-button>
-            <el-button 
+            <el-button
               size="mini"
               @click="removeUserById(scope.row.id)"
               type="danger"
@@ -103,22 +102,22 @@
           </el-select>
         </el-form-item>
         <el-form-item label="运动方案" prop="addSportPlanIds">
-            <el-select
-              v-model="editForm.addSportPlanIds"
-              :reserve-keyword="true"
-              filterable
-              multiple
-              clearable
-              placeholder="请选择"
-            >
-              <el-option
-                v-for="item in sportsPlanList"
-                :key="item.id"
-                :label="item.name"
-                :value="item.id"
-              ></el-option>
-            </el-select>
-          </el-form-item>
+          <el-select
+            v-model="editForm.addSportPlanIds"
+            :reserve-keyword="true"
+            filterable
+            multiple
+            clearable
+            placeholder="请选择"
+          >
+            <el-option
+              v-for="item in sportsPlanList"
+              :key="item.id"
+              :label="item.name"
+              :value="item.id"
+            ></el-option>
+          </el-select>
+        </el-form-item>
         <el-form-item label="描述" prop="description">
           <el-input
             type="textarea"
@@ -150,9 +149,9 @@ export default {
         diseaseTypeId: "",
         foodPlanId: "",
         waterPlanId: "",
-        sportPlanIds:"",
+        sportPlanIds: "",
         addSportPlanIds: [],
-        description:""
+        description: ""
       },
       disPlanId: 0,
       value: "",
@@ -176,11 +175,14 @@ export default {
   methods: {
     // 获取疾病方案列表
     async getDisPlanList() {
-      const { data: res } = await this.$http.post("disease/getPDiseaseList.do", {
-        name: this.input,
-        pageSize: this.pageSize,
-        pageNum: this.pageNum
-      });
+      const { data: res } = await this.$http.post(
+        "disease/getPDiseaseList.do",
+        {
+          name: this.input,
+          pageSize: this.pageSize,
+          pageNum: this.pageNum
+        }
+      );
       if (res.code != 200) return this.$message.error("数获取失败");
       this.disPlanList = res.rows;
       this.total = res.total;
@@ -188,33 +190,36 @@ export default {
     // 获取疾病类型
     async getDisTypeList() {
       const { data: res } = await this.$http.post(
-        "disease/type/getPDiseaseTypeList.do",{}
+        "disease/type/getPDiseaseTypeList.do",
+        {}
       );
       this.disTypeList = res.rows;
     },
 
     async getFoodPlanList() {
       const { data: res } = await this.$http.post(
-        "foodPlan/getPFoodPlanList.do",{}
+        "foodPlan/getPFoodPlanList.do",
+        {}
       );
       this.foodPlanList = res.rows;
     },
 
     async getWaterPlanList() {
       const { data: res } = await this.$http.post(
-        "water/plan/getPWaterPlanList.do",{}
+        "water/plan/getPWaterPlanList.do",
+        {}
       );
       this.waterPlanList = res.rows;
     },
 
     async getSportsPlanList() {
       const { data: res } = await this.$http.post(
-        "sportPlan/getPSportPlanList.do",{}
+        "sportPlan/getPSportPlanList.do",
+        {}
       );
       this.sportsPlanList = res.rows;
     },
 
-    
     // 分页
     handleSizeChange(newSize) {
       this.pageSize = newSize;
@@ -267,38 +272,40 @@ export default {
     editDialogClosed() {
       this.$refs.editFormRef.resetFields();
     },
-    async edit() {
-      let httpUrl = "";
-      let parm = {};
-      let sportPlanIds = this.editForm.addSportPlanIds.join(",");
-      if (this.dialogTitle == "修改") {
-        httpUrl = "disease/updatePDisease.do";
-        parm = {
-          id: this.disPlanId,
-          name: this.editForm.name,
-          diseaseTypeId: this.editForm.diseaseTypeId,
-          foodPlanId: this.editForm.foodPlanId,
-          waterPlanId: this.editForm.waterPlanId,
-          description: this.editForm.description,
-          sportPlanIds: sportPlanIds
-        };
-      } else {
-        httpUrl = "disease/savePDisease.do";
-        parm = {
-          name: this.editForm.name,
-          diseaseTypeId: this.editForm.diseaseTypeId,
-          foodPlanId: this.editForm.foodPlanId,
-          waterPlanId: this.editForm.waterPlanId,
-          description: this.editForm.description,
-          sportPlanIds: sportPlanIds
-        };
-      }
-      console.log(parm);
-      const { data: res } = await this.$http.post(httpUrl, parm);
-      if (res.code != 200) return this.$message.error(res.msg);
-      this.$message.success(res.msg);
-      this.getDisPlanList();
-      this.editDialogVisible = false;
+    edit() {
+      this.$refs.editFormRef.validate(async valid => {
+        if (!valid) return this.$message.error("失败");
+        let httpUrl = "";
+        let parm = {};
+        let sportPlanIds = this.editForm.addSportPlanIds.join(",");
+        if (this.dialogTitle == "修改") {
+          httpUrl = "disease/updatePDisease.do";
+          parm = {
+            id: this.disPlanId,
+            name: this.editForm.name,
+            diseaseTypeId: this.editForm.diseaseTypeId,
+            foodPlanId: this.editForm.foodPlanId,
+            waterPlanId: this.editForm.waterPlanId,
+            description: this.editForm.description,
+            sportPlanIds: sportPlanIds
+          };
+        } else {
+          httpUrl = "disease/savePDisease.do";
+          parm = {
+            name: this.editForm.name,
+            diseaseTypeId: this.editForm.diseaseTypeId,
+            foodPlanId: this.editForm.foodPlanId,
+            waterPlanId: this.editForm.waterPlanId,
+            description: this.editForm.description,
+            sportPlanIds: sportPlanIds
+          };
+        }
+        const { data: res } = await this.$http.post(httpUrl, parm);
+        if (res.code != 200) return this.$message.error(res.msg);
+        this.$message.success(res.msg);
+        this.getDisPlanList();
+        this.editDialogVisible = false;
+      });
     },
     addFood() {
       this.dialogTitle = "新增";
@@ -315,7 +322,7 @@ export default {
     },
     handleCurrentChange(val) {
       this.currentRow = val;
-    },
+    }
   }
 };
 </script>
@@ -330,10 +337,10 @@ export default {
 
 .diseaseDes {
   display: block;
-  height: 100px; 
+  height: 100px;
 }
 
-.button_status{
-    margin-top: 10px;
+.button_status {
+  margin-top: 10px;
 }
 </style>

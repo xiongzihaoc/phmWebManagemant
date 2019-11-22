@@ -121,8 +121,7 @@ export default {
       dialogTitle: "",
       imageUrl: "",
       upLoad: "",
-      currentRow: null,
-      
+      currentRow: null
     };
   },
   created() {
@@ -157,30 +156,33 @@ export default {
       this.$refs.editFormRef.resetFields();
       this.imageUrl = "";
     },
-    async editEnter() {
-      let httpUrl = "";
-      let parm = {};
-      if (this.dialogTitle == "修改") {
-        httpUrl = "water/type/updatePWaterType.do";
-        parm = {
-          id: this.id,
-          name: this.editForm.name,
-          iconUrl: this.editForm.iconUrl,
-          description: this.editForm.description
-        };
-      } else {
-        httpUrl = "water/type/savePWaterType.do";
-        parm = {
-          name: this.editForm.name,
-          iconUrl: this.editForm.iconUrl,
-          description: this.editForm.description
-        };
-      }
-      const { data: res } = await this.$http.post(httpUrl, parm);
-      if (res.code != 200) return this.$message.error(res.msg);
-      this.$message.success(res.msg);
-      this.getWaterList();
-      this.editDialogVisible = false;
+    editEnter() {
+      this.$refs.editFormRef.validate(async valid => {
+        if (!valid) return this.$message.error("失败");
+        let httpUrl = "";
+        let parm = {};
+        if (this.dialogTitle == "修改") {
+          httpUrl = "water/type/updatePWaterType.do";
+          parm = {
+            id: this.id,
+            name: this.editForm.name,
+            iconUrl: this.editForm.iconUrl,
+            description: this.editForm.description
+          };
+        } else {
+          httpUrl = "water/type/savePWaterType.do";
+          parm = {
+            name: this.editForm.name,
+            iconUrl: this.editForm.iconUrl,
+            description: this.editForm.description
+          };
+        }
+        const { data: res } = await this.$http.post(httpUrl, parm);
+        if (res.code != 200) return this.$message.error(res.msg);
+        this.$message.success(res.msg);
+        this.getWaterList();
+        this.editDialogVisible = false;
+      });
     },
     // 搜索
     WaterSearch() {

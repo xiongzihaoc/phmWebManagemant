@@ -135,28 +135,31 @@ export default {
     editDialogClosed() {
       this.$refs.editFormRef.resetFields();
     },
-    async editEnter() {
-      let httpUrl = "";
-      let parm = {};
-      if (this.dialogTitle == "修改") {
-        httpUrl = "foodType/updatePFoodType.do";
-        parm = {
-          id: this.id,
-          ftName: this.editForm.ftName,
-          ftIntroduce: this.editForm.ftIntroduce
-        };
-      } else {
-        httpUrl = "foodType/savePFoodType.do";
-        parm = {
-          ftName: this.editForm.ftName,
-          ftIntroduce: this.editForm.ftIntroduce
-        };
-      }
-      const { data: res } = await this.$http.post(httpUrl, parm);
-      if (res.code != 200) return this.$message.error(res.msg);
-      this.$message.success(res.msg);
-      this.getEstimateFoodList();
-      this.editDialogVisible = false;
+    editEnter() {
+      this.$refs.editFormRef.validate(async valid => {
+        if (!valid) return this.$message.error("失败");
+        let httpUrl = "";
+        let parm = {};
+        if (this.dialogTitle == "修改") {
+          httpUrl = "foodType/updatePFoodType.do";
+          parm = {
+            id: this.id,
+            ftName: this.editForm.ftName,
+            ftIntroduce: this.editForm.ftIntroduce
+          };
+        } else {
+          httpUrl = "foodType/savePFoodType.do";
+          parm = {
+            ftName: this.editForm.ftName,
+            ftIntroduce: this.editForm.ftIntroduce
+          };
+        }
+        const { data: res } = await this.$http.post(httpUrl, parm);
+        if (res.code != 200) return this.$message.error(res.msg);
+        this.$message.success(res.msg);
+        this.getEstimateFoodList();
+        this.editDialogVisible = false;
+      });
     },
     // 搜索
     WaterSearch() {

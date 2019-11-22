@@ -255,39 +255,41 @@ export default {
       this.DialogVisible = true;
     },
     // 确定修改或添加
-    async editAddEnter() {
-      console.log(this.editAddForm);
-      let stringIds = this.editAddForm.addAllowWaterIds.join(",");
-      let stringIds1 = this.editAddForm.addNoWaterIds.join(",");
-      let httpUrl = "";
-      let parm = {};
-      if (this.dialogTitle == "修改") {
-        httpUrl = "water/plan/updatePWaterPlan.do";
-        parm = {
-          id: this.id,
-          name: this.editAddForm.name,
-          allowWaterIds: stringIds,
-          noWaterIds: stringIds1,
-          drinkWaterAmount: this.editAddForm.drinkWaterAmount,
-          drinkWaterRange: this.editAddForm.drinkWaterRange,
-          description: this.editAddForm.description
-        };
-      } else {
-        httpUrl = "water/plan/savePWaterPlan.do";
-        parm = {
-          name: this.editAddForm.name,
-          allowWaterIds: stringIds,
-          noWaterIds: stringIds1,
-          drinkWaterAmount: this.editAddForm.drinkWaterAmount,
-          drinkWaterRange: this.editAddForm.drinkWaterRange,
-          description: this.editAddForm.description
-        };
-      }
-      const { data: res } = await this.$http.post(httpUrl, parm);
-      if (res.code != 200) return this.$message.error(res.msg);
-      this.$message.success(res.msg);
-      this.getWaterTypeList();
-      this.DialogVisible = false;
+    editAddEnter() {
+      this.$refs.editAddFormRef.validate(async valid => {
+        if (!valid) return this.$message.error("失败");
+        let stringIds = this.editAddForm.addAllowWaterIds.join(",");
+        let stringIds1 = this.editAddForm.addNoWaterIds.join(",");
+        let httpUrl = "";
+        let parm = {};
+        if (this.dialogTitle == "修改") {
+          httpUrl = "water/plan/updatePWaterPlan.do";
+          parm = {
+            id: this.id,
+            name: this.editAddForm.name,
+            allowWaterIds: stringIds,
+            noWaterIds: stringIds1,
+            drinkWaterAmount: this.editAddForm.drinkWaterAmount,
+            drinkWaterRange: this.editAddForm.drinkWaterRange,
+            description: this.editAddForm.description
+          };
+        } else {
+          httpUrl = "water/plan/savePWaterPlan.do";
+          parm = {
+            name: this.editAddForm.name,
+            allowWaterIds: stringIds,
+            noWaterIds: stringIds1,
+            drinkWaterAmount: this.editAddForm.drinkWaterAmount,
+            drinkWaterRange: this.editAddForm.drinkWaterRange,
+            description: this.editAddForm.description
+          };
+        }
+        const { data: res } = await this.$http.post(httpUrl, parm);
+        if (res.code != 200) return this.$message.error(res.msg);
+        this.$message.success(res.msg);
+        this.getWaterTypeList();
+        this.DialogVisible = false;
+      });
     },
     // 实现表格单行选择高亮
     setCurrent(row) {

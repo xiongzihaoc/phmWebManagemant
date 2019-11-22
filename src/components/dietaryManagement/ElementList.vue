@@ -162,7 +162,7 @@ export default {
     },
     // 弹框
     showEditdialog(info) {
-      this.AddEditForm = info
+      this.AddEditForm = info;
       this.dialogTitle = "修改";
       this.id = info.id;
       this.editAddDialogVisible = true;
@@ -177,35 +177,38 @@ export default {
       this.$refs.editFormRef.resetFields();
     },
     async AddEdit() {
-      let httpUrl = "";
-      let parm = {};
-      if (this.dialogTitle == "修改") {
-        httpUrl = "foodPlanElement/updatePFoodPlanElement.do";
-        parm = {
-          id: this.id,
-          foodPlanId: this.foodPlanId,
-          elementName: this.AddEditForm.elementName,
-          elementUnit: this.AddEditForm.elementUnit,
-          elementMinValue: this.AddEditForm.elementMinValue,
-          elementMaxValue: this.AddEditForm.elementMaxValue,
-          description: this.AddEditForm.description
-        };
-      } else {
-        httpUrl = "foodPlanElement/savePFoodPlanElement.do";
-        parm = {
-          foodPlanId: this.foodPlanId,
-          elementName: this.AddEditForm.elementName,
-          elementUnit: this.AddEditForm.elementUnit,
-          elementMinValue: this.AddEditForm.elementMinValue,
-          elementMaxValue: this.AddEditForm.elementMaxValue,
-          description: this.AddEditForm.description
-        };
-      }
-      const { data: res } = await this.$http.post(httpUrl, parm);
-      if (res.code != 200) return this.$message.error(res.msg);
-      this.$message.success(res.msg);
-      this.getElementList();
-      this.editAddDialogVisible = false;
+      this.$refs.editFormRef.validate(async valid => {
+        if (!valid) return this.$message.error("失败");
+        let httpUrl = "";
+        let parm = {};
+        if (this.dialogTitle == "修改") {
+          httpUrl = "foodPlanElement/updatePFoodPlanElement.do";
+          parm = {
+            id: this.id,
+            foodPlanId: this.foodPlanId,
+            elementName: this.AddEditForm.elementName,
+            elementUnit: this.AddEditForm.elementUnit,
+            elementMinValue: this.AddEditForm.elementMinValue,
+            elementMaxValue: this.AddEditForm.elementMaxValue,
+            description: this.AddEditForm.description
+          };
+        } else {
+          httpUrl = "foodPlanElement/savePFoodPlanElement.do";
+          parm = {
+            foodPlanId: this.foodPlanId,
+            elementName: this.AddEditForm.elementName,
+            elementUnit: this.AddEditForm.elementUnit,
+            elementMinValue: this.AddEditForm.elementMinValue,
+            elementMaxValue: this.AddEditForm.elementMaxValue,
+            description: this.AddEditForm.description
+          };
+        }
+        const { data: res } = await this.$http.post(httpUrl, parm);
+        if (res.code != 200) return this.$message.error(res.msg);
+        this.$message.success(res.msg);
+        this.getElementList();
+        this.editAddDialogVisible = false;
+      });
     },
     // 刪除
     async removeUserById(id) {

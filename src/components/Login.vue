@@ -1,7 +1,7 @@
 <template>
   <div class="login-container">
     <el-form
-      ref="loginForm"
+      ref="loginFormRef"
       :model="loginForm"
       :rules="loginRules"
       class="login-form"
@@ -76,14 +76,13 @@ export default {
   },
   methods: {
     handleLogin() {
-      this.$refs.loginForm.validate(async valid => {
+      this.$refs.loginFormRef.validate(async valid => {
         if (!valid) return;
         var { data: res } = await this.$http.post(
           "user/userLogin.do",
           this.loginForm
         );
         if (res.code != 200) return this.$message.error("用户名或者密码错误");
-        console.log(res);
         this.$message.success("登录成功");
         // token 存入 sessionstorage
         window.sessionStorage.setItem("token", res.data.token);

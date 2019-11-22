@@ -8,7 +8,7 @@
     </el-breadcrumb>
     <!-- 卡片视图 -->
     <el-card>
-      <el-form ref="form" :model="editform" label-width="80px">
+      <el-form ref="editFormRef" :model="editform" label-width="80px">
         <el-form-item label="文章名称">
           <el-input v-model="editform.name"></el-input>
         </el-form-item>
@@ -115,30 +115,33 @@ export default {
       );
       if (res.code != 200) return this.$message.error("数获取失败");
       console.log(res);
-      
+
       this.foodList = res.rows;
       this.total = res.total;
       this.healthList = res.rows;
     },
-    async saveInfo() {
-      const { data: res } = await this.$http.post(
-        "healthKnowledge/savePHealthKnowledge.do",
-        {
-          name: this.editform.name,
-          diseaseTypeId: this.editform.diseaseTypeId,
-          description: this.editform.description,
-          type: 2,
-          resourcesList: this.addInfoss,
-          articleImagesUrl: this.editform.articleImagesUrl
+    saveInfo() {
+      this.$refs.editFormRef.validate(async valid => {
+        if (!valid) return this.$message.error("失败");
+        const { data: res } = await this.$http.post(
+          "healthKnowledge/savePHealthKnowledge.do",
+          {
+            name: this.editform.name,
+            diseaseTypeId: this.editform.diseaseTypeId,
+            description: this.editform.description,
+            type: 2,
+            resourcesList: this.addInfoss,
+            articleImagesUrl: this.editform.articleImagesUrl
+          }
+        );
+        if (res.code != 200) {
+          this.$message.error("保存失败");
+          return;
+        } else {
+          this.$message.success("保存成功");
+          this.$router.push("/diseaseknowledge/nursingInstruction");
         }
-      );
-      if (res.code != 200) {
-        this.$message.error("保存失败");
-        return;
-      } else {
-        this.$message.success("保存成功");
-        this.$router.push("/diseaseknowledge/nursingInstruction");
-      }
+      });
     },
     // 修改
     addWord() {

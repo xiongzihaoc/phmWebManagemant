@@ -157,34 +157,37 @@ export default {
     editDialogClosed() {
       this.$refs.editFormRef.resetFields();
     },
-    async editEnter() {
-      let httpUrl = "";
-      let parm = {};
-      if (this.dialogTitle == "修改") {
-        httpUrl = "foodElement/updatePFoodElement.do";
-        parm = {
-          id: this.id,
-          foodId: this.foodId,
-          miName: this.editForm.miName,
-          miValue: this.editForm.miValue,
-          miUnit: this.editForm.miUnit,
-          miDescribe: this.editForm.miDescribe
-        };
-      } else {
-        httpUrl = "foodElement/savePFoodElement.do";
-        parm = {
-          foodId: this.foodId,
-          miName: this.editForm.miName,
-          miValue: this.editForm.miValue,
-          miUnit: this.editForm.miUnit,
-          miDescribe: this.editForm.miDescribe
-        };
-      }
-      const { data: res } = await this.$http.post(httpUrl, parm);
-      if (res.code != 200) return this.$message.error(res.msg);
-      this.$message.success(res.msg);
-      this.getMicroList();
-      this.editDialogVisible = false;
+    editEnter() {
+      this.$refs.editFormRef.validate(async valid => {
+        if (!valid) return this.$message.error("失败");
+        let httpUrl = "";
+        let parm = {};
+        if (this.dialogTitle == "修改") {
+          httpUrl = "foodElement/updatePFoodElement.do";
+          parm = {
+            id: this.id,
+            foodId: this.foodId,
+            miName: this.editForm.miName,
+            miValue: this.editForm.miValue,
+            miUnit: this.editForm.miUnit,
+            miDescribe: this.editForm.miDescribe
+          };
+        } else {
+          httpUrl = "foodElement/savePFoodElement.do";
+          parm = {
+            foodId: this.foodId,
+            miName: this.editForm.miName,
+            miValue: this.editForm.miValue,
+            miUnit: this.editForm.miUnit,
+            miDescribe: this.editForm.miDescribe
+          };
+        }
+        const { data: res } = await this.$http.post(httpUrl, parm);
+        if (res.code != 200) return this.$message.error(res.msg);
+        this.$message.success(res.msg);
+        this.getMicroList();
+        this.editDialogVisible = false;
+      });
     },
     // 搜索
     microSearch() {

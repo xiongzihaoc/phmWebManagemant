@@ -74,7 +74,7 @@ export default {
     async getHealthList() {
       const { data: res } = await this.$http.post(
         "healthKnowledge/getPHealthKnowledgeList.do",
-        { type: 1 ,name:this.input}
+        { type: 1, name: this.input }
       );
       this.healthList = res.rows;
     },

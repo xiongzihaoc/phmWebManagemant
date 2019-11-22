@@ -183,33 +183,36 @@ export default {
       this.imageUrl = "";
     },
     async editEnter() {
-      let httpUrl = "";
-      let parm = {};
-      if (this.dialogTitle == "修改") {
-        httpUrl = "foodMeasure/updatePFoodMeasure.do";
-        parm = {
-          id: this.id,
-          fmName: this.editForm.fmName,
-          fmType: this.editForm.fmType,
-          fmWeight: this.editForm.fmWeight,
-          fmPhotoPath: this.editForm.fmPhotoPath,
-          fmDescribe: this.editForm.fmDescribe
-        };
-      } else {
-        httpUrl = "foodMeasure/savePFoodMeasure.do";
-        parm = {
-          fmName: this.editForm.fmName,
-          fmType: this.editForm.fmType,
-          fmWeight: this.editForm.fmWeight,
-          fmPhotoPath: this.editForm.fmPhotoPath,
-          fmDescribe: this.editForm.fmDescribe
-        };
-      }
-      const { data: res } = await this.$http.post(httpUrl, parm);
-      if (res.code != 200) return this.$message.error(res.msg);
-      this.$message.success(res.msg);
-      this.getEstimateFoodList();
-      this.editDialogVisible = false;
+      this.$refs.editFormRef.validate(async valid => {
+        if (!valid) return this.$message.error("失败");
+        let httpUrl = "";
+        let parm = {};
+        if (this.dialogTitle == "修改") {
+          httpUrl = "foodMeasure/updatePFoodMeasure.do";
+          parm = {
+            id: this.id,
+            fmName: this.editForm.fmName,
+            fmType: this.editForm.fmType,
+            fmWeight: this.editForm.fmWeight,
+            fmPhotoPath: this.editForm.fmPhotoPath,
+            fmDescribe: this.editForm.fmDescribe
+          };
+        } else {
+          httpUrl = "foodMeasure/savePFoodMeasure.do";
+          parm = {
+            fmName: this.editForm.fmName,
+            fmType: this.editForm.fmType,
+            fmWeight: this.editForm.fmWeight,
+            fmPhotoPath: this.editForm.fmPhotoPath,
+            fmDescribe: this.editForm.fmDescribe
+          };
+        }
+        const { data: res } = await this.$http.post(httpUrl, parm);
+        if (res.code != 200) return this.$message.error(res.msg);
+        this.$message.success(res.msg);
+        this.getEstimateFoodList();
+        this.editDialogVisible = false;
+      });
     },
     // 搜索
     WaterSearch() {

@@ -20,7 +20,7 @@
         </el-col>
         <!-- 添加用户按钮 -->
         <el-col :span="4">
-          <el-button type="primary" @click="addWater">添加运动方案</el-button>
+          <el-button type="primary" @click="addSportType">添加运动方案</el-button>
         </el-col>
       </el-row>
       <!-- 表格 -->
@@ -151,31 +151,34 @@ export default {
       this.$refs.editFormRef.resetFields();
     },
     async editEnter() {
-      let httpUrl = "";
-      let parm = {};
-      if (this.dialogTitle == "修改") {
-        httpUrl = "sportPlan/updatePSportPlan.do";
-        parm = {
-          id: this.id,
-          name: this.editForm.name,
-          sportGroupNum: this.editForm.sportGroupNum,
-          sportGroupRange: this.editForm.sportGroupRange,
-          sportDescribe: this.editForm.sportDescribe
-        };
-      } else {
-        httpUrl = "sportPlan/savePSportPlan.do";
-        parm = {
-          name: this.editForm.name,
-          sportGroupNum: this.editForm.sportGroupNum,
-          sportGroupRange: this.editForm.sportGroupRange,
-          sportDescribe: this.editForm.sportDescribe
-        };
-      }
-      const { data: res } = await this.$http.post(httpUrl, parm);
-      if (res.code != 200) return this.$message.error(res.msg);
-      this.$message.success(res.msg);
-      this.getMovemenPlanList();
-      this.editDialogVisible = false;
+      this.$refs.editFormRef.validate(async valid => {
+        if (!valid) return this.$message.error("失败");
+        let httpUrl = "";
+        let parm = {};
+        if (this.dialogTitle == "修改") {
+          httpUrl = "sportPlan/updatePSportPlan.do";
+          parm = {
+            id: this.id,
+            name: this.editForm.name,
+            sportGroupNum: this.editForm.sportGroupNum,
+            sportGroupRange: this.editForm.sportGroupRange,
+            sportDescribe: this.editForm.sportDescribe
+          };
+        } else {
+          httpUrl = "sportPlan/savePSportPlan.do";
+          parm = {
+            name: this.editForm.name,
+            sportGroupNum: this.editForm.sportGroupNum,
+            sportGroupRange: this.editForm.sportGroupRange,
+            sportDescribe: this.editForm.sportDescribe
+          };
+        }
+        const { data: res } = await this.$http.post(httpUrl, parm);
+        if (res.code != 200) return this.$message.error(res.msg);
+        this.$message.success(res.msg);
+        this.getMovemenPlanList();
+        this.editDialogVisible = false;
+      });
     },
     // 搜索
     movemenPlanSearch() {
@@ -209,7 +212,7 @@ export default {
         return;
       }
     },
-    addWater() {
+    addSportType() {
       this.dialogTitle = "新增";
       this.editForm = {};
       this.editDialogVisible = true;

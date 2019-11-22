@@ -130,7 +130,7 @@ export default {
         url: ""
       },
       editId: 0,
-      goBack:"",
+      goBack: ""
     };
   },
   created() {
@@ -154,17 +154,20 @@ export default {
     },
     // 确定修改
     async editEnter() {
-      const { data: res } = await this.$http.post("menu/updateSysMenu.do", {
-        menuId: this.editId,
-        menuName: this.editForm.menuName,
-        menuType: this.editForm.menuType,
-        url: this.editForm.url,
-        icon: this.editForm.icon
+      this.$refs.addFormRef.validate(async valid => {
+        if (!valid) return this.$message.error("登录失败");
+        const { data: res } = await this.$http.post("menu/updateSysMenu.do", {
+          menuId: this.editId,
+          menuName: this.editForm.menuName,
+          menuType: this.editForm.menuType,
+          url: this.editForm.url,
+          icon: this.editForm.icon
+        });
+        if (res.code != 200) return this.$message.error("操作失败");
+        this.editDialogVisible = false;
+        this.$message.success("操作成功");
+        this.getMenuList();
       });
-      if (res.code != 200) return this.$message.error("操作失败");
-      this.editDialogVisible = false;
-      this.$message.success("操作成功");
-      this.getMenuList();
     },
     // 改变状态按钮
     async userStateChanged(userinfo) {
@@ -176,12 +179,12 @@ export default {
         userinfo.status = !userinfo.status;
         return this.$message.error("更新用户状态失败");
       }
-      this.getMenuList()
+      this.getMenuList();
       this.$message.success("更新用户状态成功");
     },
     // 增加菜单弹框
     addDialog(val) {
-      this.goBack = val.menuName
+      this.goBack = val.menuName;
       this.addId = val.menuId;
       this.addDialogVisible = true;
     },

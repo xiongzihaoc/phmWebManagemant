@@ -105,11 +105,11 @@ export default {
       dialogTitle: "",
       editDialogVisible: false,
       editForm: {
-        name:"",
-        officeTagId:"",
-        description:"",
+        name: "",
+        officeTagId: "",
+        description: ""
       },
-      statusTitle:"",
+      statusTitle: "",
       disTypeId: 0,
       value: "",
       officeList: [],
@@ -125,11 +125,14 @@ export default {
   methods: {
     // 获取疾病种类列表
     async getdisTypeList() {
-      const { data: res } = await this.$http.post("disease/type/getPDiseaseTypeList.do", {
-        name: this.input,
-        pageSize: this.pageSize,
-        pageNum: this.pageNum
-      });
+      const { data: res } = await this.$http.post(
+        "disease/type/getPDiseaseTypeList.do",
+        {
+          name: this.input,
+          pageSize: this.pageSize,
+          pageNum: this.pageNum
+        }
+      );
       if (res.code != 200) return this.$message.error("数获取失败");
       this.foodList = res.rows;
       this.total = res.total;
@@ -168,11 +171,14 @@ export default {
       if (confirmResult != "confirm") {
         return this.$message.info("取消");
       }
-      const { data: res } = await this.$http.post("disease/type/updatePDiseaseType.do", {
-        id: info.id,
-        status: info.status == 1 ? 0 : 1,
-        name: info.name
-      });
+      const { data: res } = await this.$http.post(
+        "disease/type/updatePDiseaseType.do",
+        {
+          id: info.id,
+          status: info.status == 1 ? 0 : 1,
+          name: info.name
+        }
+      );
       if (res.code == 200) {
         this.$message.success("修改成功");
         this.getdisTypeList();
@@ -187,37 +193,40 @@ export default {
       this.dialogTitle = "修改";
       this.disTypeId = info.id;
       this.editForm = JSON.parse(JSON.stringify(info));
-      console.log(this.editForm)
+      console.log(this.editForm);
       this.editDialogVisible = true;
     },
     editDialogClosed() {
       this.$refs.editFormRef.resetFields();
     },
     async edit() {
-      let httpUrl = "";
-      let parm = {};
-      if (this.dialogTitle == "修改") {
-        httpUrl = "disease/type/updatePDiseaseType.do";
-        parm = {
-          id: this.disTypeId,
-          name: this.editForm.name,
-          officeTagId: this.editForm.officeTagId,
-          description: this.editForm.description,
-        };
-      } else {
-        httpUrl = "disease/type/savePDiseaseType.do";
-        parm = {
-          name: this.editForm.name,
-          officeTagId: this.editForm.officeTagId,
-          description: this.editForm.description,
-        };
-      }
-      console.log(parm)
-      const { data: res } = await this.$http.post(httpUrl, parm);
-      if (res.code != 200) return this.$message.error(res.msg);
-      this.$message.success(res.msg);
-      this.getdisTypeList();
-      this.editDialogVisible = false;
+      this.$refs.editFormRef.validate(async valid => {
+        if (!valid) return this.$message.error("失败");
+        let httpUrl = "";
+        let parm = {};
+        if (this.dialogTitle == "修改") {
+          httpUrl = "disease/type/updatePDiseaseType.do";
+          parm = {
+            id: this.disTypeId,
+            name: this.editForm.name,
+            officeTagId: this.editForm.officeTagId,
+            description: this.editForm.description
+          };
+        } else {
+          httpUrl = "disease/type/savePDiseaseType.do";
+          parm = {
+            name: this.editForm.name,
+            officeTagId: this.editForm.officeTagId,
+            description: this.editForm.description
+          };
+        }
+        console.log(parm);
+        const { data: res } = await this.$http.post(httpUrl, parm);
+        if (res.code != 200) return this.$message.error(res.msg);
+        this.$message.success(res.msg);
+        this.getdisTypeList();
+        this.editDialogVisible = false;
+      });
     },
     addFood() {
       this.dialogTitle = "新增";
@@ -234,7 +243,7 @@ export default {
     },
     handleCurrentChange(val) {
       this.currentRow = val;
-    },
+    }
   }
 };
 </script>
@@ -249,6 +258,6 @@ export default {
 
 .diseaseDes {
   display: block;
-  height: 100px; 
+  height: 100px;
 }
 </style>

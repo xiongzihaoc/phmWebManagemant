@@ -204,31 +204,34 @@ export default {
       this.$refs.editFormRef.resetFields();
     },
     async AddEdit() {
-      let httpUrl = "";
-      let parm = {};
-      if (this.dialogTitle == "修改") {
-        httpUrl = "foodPlan/updatePFoodPlan.do";
-        parm = {
-          id: this.id,
-          dsName: this.AddEditForm.dsName,
-          dsTabooFoodId: this.AddEditForm.addFoodIds.toString(),
-          dsTabooDescribe: this.AddEditForm.dsTabooDescribe,
-          dsDescribe: this.AddEditForm.dsDescribe
-        };
-      } else {
-        httpUrl = "foodPlan/savePFoodPlan.do";
-        parm = {
-          dsName: this.AddEditForm.dsName,
-          dsTabooFoodId: this.AddEditForm.addFoodIds.toString(),
-          dsTabooDescribe: this.AddEditForm.dsTabooDescribe,
-          dsDescribe: this.AddEditForm.dsDescribe
-        };
-      }
-      const { data: res } = await this.$http.post(httpUrl, parm);
-      if (res.code != 200) return this.$message.error(res.msg);
-      this.$message.success(res.msg);
-      this.getFoodTypeList();
-      this.editAddDialogVisible = false;
+      this.$refs.editFormRef.validate(async valid => {
+        if (!valid) return this.$message.error("失败");
+        let httpUrl = "";
+        let parm = {};
+        if (this.dialogTitle == "修改") {
+          httpUrl = "foodPlan/updatePFoodPlan.do";
+          parm = {
+            id: this.id,
+            dsName: this.AddEditForm.dsName,
+            dsTabooFoodId: this.AddEditForm.addFoodIds.toString(),
+            dsTabooDescribe: this.AddEditForm.dsTabooDescribe,
+            dsDescribe: this.AddEditForm.dsDescribe
+          };
+        } else {
+          httpUrl = "foodPlan/savePFoodPlan.do";
+          parm = {
+            dsName: this.AddEditForm.dsName,
+            dsTabooFoodId: this.AddEditForm.addFoodIds.toString(),
+            dsTabooDescribe: this.AddEditForm.dsTabooDescribe,
+            dsDescribe: this.AddEditForm.dsDescribe
+          };
+        }
+        const { data: res } = await this.$http.post(httpUrl, parm);
+        if (res.code != 200) return this.$message.error(res.msg);
+        this.$message.success(res.msg);
+        this.getFoodTypeList();
+        this.editAddDialogVisible = false;
+      });
     },
     // 刪除
     async removeUserById(id) {

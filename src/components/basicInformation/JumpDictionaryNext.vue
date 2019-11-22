@@ -133,29 +133,32 @@ export default {
       this.$refs.addFormRef.resetFields();
     },
     async addEditEnter() {
-      let httpUrl = "";
-      let parm = {};
-      if (this.dialogTitle == "修改") {
-        httpUrl = "sys/dict/updateSysDict.do";
-        parm = {
-          id: this.selfId,
-          name: this.addEditForm.name,
-          remark: this.addEditForm.remark
-        };
-      } else {
-        httpUrl = "sys/dict/saveSysDict.do";
-        parm = {
-          parentId: this.id,
-          name: this.addEditForm.name,
-          dictValue: this.addEditForm.dictValue,
-          remark: this.addEditForm.remark
-        };
-      }
-      const { data: res } = await this.$http.post(httpUrl, parm);
-      if (res.code != 200) return this.$message.error(res.msg);
-      this.$message.success(res.msg);
-      this.getDictionaryList();
-      this.DialogVisible = false;
+      this.$refs.addFormRef.validate(async valid => {
+        if (!valid) return this.$message.error("登录失败");
+        let httpUrl = "";
+        let parm = {};
+        if (this.dialogTitle == "修改") {
+          httpUrl = "sys/dict/updateSysDict.do";
+          parm = {
+            id: this.selfId,
+            name: this.addEditForm.name,
+            remark: this.addEditForm.remark
+          };
+        } else {
+          httpUrl = "sys/dict/saveSysDict.do";
+          parm = {
+            parentId: this.id,
+            name: this.addEditForm.name,
+            dictValue: this.addEditForm.dictValue,
+            remark: this.addEditForm.remark
+          };
+        }
+        const { data: res } = await this.$http.post(httpUrl, parm);
+        if (res.code != 200) return this.$message.error(res.msg);
+        this.$message.success(res.msg);
+        this.getDictionaryList();
+        this.DialogVisible = false;
+      });
     },
     // 改变状态
     async userStateChanged(userinfo) {
