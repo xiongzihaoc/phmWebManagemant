@@ -127,7 +127,6 @@ export default {
         "sportPlan/getPSportPlanList.do",
         { pageSize: this.pageSize, pageNum: this.pageNum, name: this.input }
       );
-      console.log(res);
       this.movemenPlanList = res.rows;
       this.total = res.total;
     },

@@ -38,6 +38,16 @@
           </template>
         </el-table-column>
       </el-table>
+      <!-- 分页 -->
+      <el-pagination
+        @size-change="handleSizeChange"
+        @current-change="handleCurrentChangev"
+        :current-page="pageNum"
+        :page-sizes="[10, 20,50]"
+        :page-size="pageSize"
+        layout="total, sizes, prev, pager, next, jumper"
+        :total="total"
+      ></el-pagination>
     </el-card>
   </div>
 </template>
@@ -47,6 +57,9 @@ export default {
     return {
       input: "",
       menuList: [],
+      pageSize: 10,
+      pageNum: 1,
+      total: 0,
       currentRow: null
     };
   },
@@ -55,16 +68,25 @@ export default {
   },
   methods: {
     async getLogList() {
-      const { data: res } = await this.$http.post(
-        "oper/log/getSysOperLogList.do",
-        { operName: this.input }
+      const { data: res } = await this.$http.post("oper/log/getSysOperLogList.do",
+        { pageSize: this.pageSize, pageNum: this.pageNum, operName: this.input }
       );
       if (res.code != 200) return this.$message.error("数据获取失败");
       this.menuList = res.rows;
       console.log(res);
+      this.total = res.total;
     },
     // 搜索
     dicSearch() {
+      this.getLogList();
+    },
+    // 分页
+    handleSizeChange(newSize) {
+      this.pageSize = newSize;
+      this.getLogList();
+    },
+    handleCurrentChangev(newPage) {
+      this.pageNum = newPage;
       this.getLogList();
     },
     // 转换时间格式
