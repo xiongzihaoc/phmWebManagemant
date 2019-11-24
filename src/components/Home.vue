@@ -41,9 +41,18 @@
           <i @click="toggleCollapse()" class="el-icon-s-fold" id="toggle"></i>
           <i class="el-icon-s-home" @click="jumpIndex" id="index"></i>
         </div>
-        <div class="header_right" @click="logout()">
-          <img src="../assets/images/header.gif" alt="退出" />
-        </div>
+        <el-dropdown @command="handleCommand">
+          <span class="el-dropdown-link">
+            {{loginName}}
+            <i class="el-icon-arrow-down el-icon--right"></i>
+          </span>
+          <el-dropdown-menu slot="dropdown">
+            <el-dropdown-item >修改密码</el-dropdown-item>
+            <el-dropdown-item @click.native="logout()">退出</el-dropdown-item>
+          </el-dropdown-menu>
+        </el-dropdown>
+
+        <!-- </div> -->
       </el-header>
       <!-- 主体内容区域 -->
       <el-main>
@@ -53,18 +62,20 @@
   </el-container>
 </template>
 <script>
-import { get } from 'http';
+import { get } from "http";
 export default {
   data() {
     return {
       menuList: [],
       isCollapse: false,
-      activePath:""
+      activePath: "",
+      loginName:"",
     };
   },
   created() {
+    this.loginName = this.$route.query.loginName
     this.getMenuList();
-    this.activePath = window.sessionStorage.getItem('activePath')
+    this.activePath = window.sessionStorage.getItem("activePath");
   },
   methods: {
     logout() {
@@ -73,7 +84,7 @@ export default {
     },
     // 获取菜单栏数据
     async getMenuList() {
-      const { data: res } = await this.$http.post("menu/getMenuList.do",{});
+      const { data: res } = await this.$http.post("menu/getMenuList.do", {});
       if (res.code != 200) return this.$message.error(res.msg);
       this.menuList = res.data;
     },
@@ -83,10 +94,13 @@ export default {
     },
     // 保持连接的激活状态
     saveNavState(activePath) {
-      window.sessionStorage.setItem('activePath',activePath)
+      window.sessionStorage.setItem("activePath", activePath);
     },
     jumpIndex() {
-      this.$router.push('/index')
+      this.$router.push("/index");
+    },
+    handleCommand(command) {
+     
     }
   }
 };
@@ -117,11 +131,17 @@ export default {
 .header_right:hover {
   cursor: pointer;
 }
-.header_right img {
-  float: left;
-  width: 100%;
-  height: 100%;
-  border-radius: 10px;
+.el-dropdown {
+  float: right;
+  margin-top: 25px;
+}
+.el-dropdown-link {
+  cursor: pointer;
+  color: #2C3E50;
+}
+.el-icon-arrow-down {
+  font-size: 12px;
+  color: #2C3E50;
 }
 .el-menu {
   border-right: none;

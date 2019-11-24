@@ -43,6 +43,7 @@
       <el-button
         :loading="loading"
         type="primary"
+        :disabled="isDisabled"
         style="width:100%;margin-bottom:30px;"
         @click.native.prevent="handleLogin"
       >登录</el-button>
@@ -71,14 +72,19 @@ export default {
       },
       loading: false,
       passwordType: "password",
-      redirect: undefined
+      redirect: undefined,
+      isDisabled: false
     };
   },
   methods: {
     handleLogin() {
+      this.isDisable = true;
+      setTimeout(() => {
+        this.isDisable = false; //点击一次时隔两秒后才能再次点击
+      }, 2000);
       this.$refs.loginFormRef.validate(async valid => {
         if (!valid) return;
-        var { data: res } = await this.$http.post(
+        const { data: res } = await this.$http.post(
           "user/userLogin.do",
           this.loginForm
         );
@@ -87,7 +93,10 @@ export default {
         // token 存入 sessionstorage
         window.sessionStorage.setItem("token", res.data.token);
         // 跳转
-        this.$router.push("/home");
+        this.$router.push({
+          path: "/home",
+          query: { loginName: this.loginForm.loginName }
+        });
       });
     }
   }

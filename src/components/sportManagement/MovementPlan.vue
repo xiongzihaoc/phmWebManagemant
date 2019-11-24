@@ -29,6 +29,7 @@
         :data="movemenPlanList"
         ref="singleTable"
         highlight-current-row
+        :header-cell-style="{background:'#f5f5f5'}"
         @current-change="handleCurrentChange"
         stripe
         style="width: 100%"
