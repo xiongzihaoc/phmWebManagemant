@@ -56,7 +56,7 @@
           <span @click="infoDelete(item.id)" class="el-icon-error closeImg"></span>
         </li>
         <li class="addChild" v-if="item.type==2">
-          <video :src="item.videoUrl" controls :poster="item.imageUrl"></video>
+          <video :src="item.videoUrl" controls :poster="item.imageUrl" id="upvideo"></video>
           <span @click="infoDelete(item.id)" class="el-icon-error closeVideo"></span>
         </li>
       </ul>
@@ -175,6 +175,28 @@ export default {
         }
       }
     },
+    findvideocover() {
+      let _this = this;
+      this.$nextTick(() => {
+        let video = document.getElementById("upvideo");
+        let source = document.createElement("source");
+        // source.src = require("../../assets/5b086751dbb7af1ea8fa8d05e66fe5c3.mp4");this.formLabelAlign.video
+        source.src = this.VidUrl;
+        source.type = "video/mp4";
+        video.appendChild(source);
+        video.addEventListener("loadeddata", function() {
+          var canvas = document.createElement("canvas");
+          canvas.width = "320";
+          canvas.height = "320";
+          canvas
+            .getContext("2d")
+            .drawImage(video, 0, 0, canvas.width, canvas.width);
+          var img = document.createElement("img");
+          let imgsrc = canvas.toDataURL("image/png");
+          _this.Videoframehandle(imgsrc.split(",")[1]);
+        });
+      });
+    },
     handleAvatarSuccessSM(res, file) {
       this.editform.articleImagesUrl = res.data;
     },
@@ -216,15 +238,15 @@ export default {
       return (isJPG || isBMP || isGIF || isPNG) && isLt2M;
     },
     handleAvatarSuccessVid(res, file) {
-      console.log(res);
-
-      this.VidUrl = res.data;
+	  this.VidUrl = res.data;
+	  this.findvideocover()
       let objVideo = {
         videoUrl: this.VidUrl,
         type: 2
       };
       this.addInfos.push(objVideo);
     },
+
     beforeAvatarUploadVid(file) {
       const isLt10M = file.size / 1024 / 1024 < 10;
       if (

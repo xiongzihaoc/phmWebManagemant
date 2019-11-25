@@ -84,10 +84,10 @@ export default {
       }, 2000);
       this.$refs.loginFormRef.validate(async valid => {
         if (!valid) return;
-        const { data: res } = await this.$http.post(
-          "user/userLogin.do",
-          this.loginForm
-        );
+        const { data: res } = await this.$http.post("user/userLogin.do", {
+          loginName: this.loginForm.loginName,
+          userPassword: this.$md5(this.loginForm.userPassword)
+        });
         if (res.code != 200) return this.$message.error("用户名或者密码错误");
         this.$message.success("登录成功");
         // token 存入 sessionstorage

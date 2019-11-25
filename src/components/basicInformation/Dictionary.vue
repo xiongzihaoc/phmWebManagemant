@@ -142,7 +142,7 @@ export default {
     // 确定修改或添加
     addEditEnter() {
       this.$refs.addFormRef.validate(async valid => {
-        if (!valid) return this.$message.error("登录失败");
+        if (!valid) return this.$message.error("失败");
         let httpUrl = "";
         let parm = {};
         if (this.dialogTitle == "修改") {

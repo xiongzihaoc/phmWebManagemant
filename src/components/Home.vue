@@ -43,7 +43,7 @@
         </div>
         <el-dropdown @command="handleCommand">
           <span class="el-dropdown-link">
-            {{loginName}}
+            admin
             <i class="el-icon-arrow-down el-icon--right"></i>
           </span>
           <el-dropdown-menu slot="dropdown">

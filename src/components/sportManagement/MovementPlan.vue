@@ -150,7 +150,7 @@ export default {
     editDialogClosed() {
       this.$refs.editFormRef.resetFields();
     },
-    async editEnter() {
+    editEnter() {
       this.$refs.editFormRef.validate(async valid => {
         if (!valid) return this.$message.error("失败");
         let httpUrl = "";
@@ -175,6 +175,8 @@ export default {
         }
         const { data: res } = await this.$http.post(httpUrl, parm);
         if (res.code != 200) return this.$message.error(res.msg);
+        console.log(res);
+        
         this.$message.success(res.msg);
         this.getMovemenPlanList();
         this.editDialogVisible = false;

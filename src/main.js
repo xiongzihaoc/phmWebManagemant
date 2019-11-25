@@ -8,6 +8,9 @@ import Nprogress from 'nprogress'
 import 'nprogress/nprogress.css'
 // 导入字体图表图标
 import './assets/iconfont/iconfont.css'
+// 引入md5加密
+import md5 from 'js-md5';
+Vue.prototype.$md5 = md5;
 // 解决路由跳转两次相同报错问题
 import Router from 'vue-router'
 Vue.use(Router)
