@@ -56,7 +56,7 @@
           <span @click="infoDelete(item.id)" class="el-icon-error closeImg"></span>
         </li>
         <li class="addChild" v-if="item.type==2">
-          <video controls id="upvideo">
+          <video controls id="upvideo" autoplay crossorigin="anonymous">
             <!-- <source :src="item.videoUrl" /> -->
           </video>
           <span @click="infoDelete(item.id)" class="el-icon-error closeVideo"></span>
@@ -194,12 +194,14 @@ export default {
           canvas.height = "320";
           canvas
             .getContext("2d")
-            .drawImage(video, 0, 0, canvas.width, canvas.width);
-          // var img = document.createElement("img");
-          let imgsrc = canvas.toDataURL("image/png");
+            .drawImage(video, 0, 0, canvas.width, canvas.height);
+          // let img = document.createElement("img");
+          var img = new Image();
+          // img.onload = myLoader;
+          img.crossOrigin = "anonymous";
+          img.src = canvas.toDataURL("image/png");
           // let aa = _this.Videoframehandle(imgsrc.split(",")[1])
-          console.log(imgsrc);
-          
+          console.log(img.src);
         });
       });
     },
@@ -243,10 +245,9 @@ export default {
       }
       return (isJPG || isBMP || isGIF || isPNG) && isLt2M;
     },
-    handleAvatarSuccessVid(res, file,fileList) {
+    handleAvatarSuccessVid(res, file, fileList) {
       console.log(fileList);
       console.log(res);
-      
       this.VidUrl = res.data;
       let objVideo = {
         videoUrl: this.VidUrl,
