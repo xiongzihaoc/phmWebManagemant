@@ -109,10 +109,10 @@ export default {
   methods: {
     async getEstimateFoodList() {
       const { data: res } = await this.$http.post(
-        "foodType/getPFoodTypeList.do",
+        "foodType/getPFoodTypeListPage.do",
         { pageSize: this.pageSize, pageNum: this.pageNum, ftName: this.input }
       );
-      this.EstimateFoodTypeList = res.data;
+      this.EstimateFoodTypeList = res.rows;
       this.total = res.total;
       console.log(res);
     },

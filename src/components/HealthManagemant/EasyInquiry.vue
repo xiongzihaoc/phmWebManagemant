@@ -30,18 +30,18 @@
         <el-table-column align="center" prop="memberName" label="用户名称"></el-table-column>
         <el-table-column align="center" prop="doctorName" label="医生名称"></el-table-column>
         <el-table-column align="center" prop="status" label="状态">
-            <template slot-scope="scope">
-              <div>{{healthPackageStatus(scope.row)}}</div>
+          <template slot-scope="scope">
+            <div>{{healthPackageStatus(scope.row)}}</div>
           </template>
         </el-table-column>
         <el-table-column align="center" prop="begin" label="开始时间">
           <template slot-scope="scope">
-              <div>{{timesChangeDate(scope.row.beginTime)}}</div>
+            <div>{{timesChangeDate(scope.row.beginTime)}}</div>
           </template>
         </el-table-column>
         <el-table-column align="center" prop="end" label="结束时间">
-            <template slot-scope="scope">
-              <div>{{timesChangeDate(scope.row.endTime)}}</div>
+          <template slot-scope="scope">
+            <div>{{timesChangeDate(scope.row.endTime)}}</div>
           </template>
         </el-table-column>
       </el-table>
@@ -67,7 +67,7 @@ export default {
       pageNum: 1,
       total: 0,
       currentRow: null,
-      healthPackageList:[]
+      healthPackageList: []
     };
   },
 
@@ -78,11 +78,14 @@ export default {
   methods: {
     // 获取疾病种类列表
     async getHealthPackageList() {
-      const { data: res } = await this.$http.post("member/disease/getPMemberDiseaseList.do", {
-        memberName: this.input,
-        pageSize: this.pageSize,
-        pageNum: this.pageNum
-      });
+      const { data: res } = await this.$http.post(
+        "member/disease/getPMemberDiseaseList.do",
+        {
+          memberName: this.input,
+          pageSize: this.pageSize,
+          pageNum: this.pageNum
+        }
+      );
       if (res.code != 200) return this.$message.error("数获取失败");
       this.healthPackageList = res.rows;
       this.total = res.total;
@@ -108,27 +111,27 @@ export default {
       this.currentRow = val;
     },
     timesChangeDate(times) {
-        var da = new Date(times);
-        var year = da.getFullYear();
-        var month = da.getMonth()+1;
-        var date = da.getDate();
-        return [year,month,date].join('/');
+      var da = new Date(times);
+      var year = da.getFullYear();
+      var month = da.getMonth() + 1;
+      var date = da.getDate();
+      return [year, month, date].join("/");
     },
     healthPackageStatus(item) {
-        var now = Date.now()
-        if (item.beginTime == 'null') {
-            if (item.endTime < now) {
-                return '已失效'
-            }else {
-                return '未开始'
-            }
-        }else {
-            if (item.endTime < now) {
-                return '已失效'
-            }else {
-                return '已开始'
-            }
+      var now = Date.now();
+      if (item.beginTime == "null") {
+        if (item.endTime < now) {
+          return "已失效";
+        } else {
+          return "未开始";
         }
+      } else {
+        if (item.endTime < now) {
+          return "已失效";
+        } else {
+          return "已开始";
+        }
+      }
     }
   }
 };
@@ -144,6 +147,6 @@ export default {
 
 .diseaseDes {
   display: block;
-  height: 100px; 
+  height: 100px;
 }
 </style>

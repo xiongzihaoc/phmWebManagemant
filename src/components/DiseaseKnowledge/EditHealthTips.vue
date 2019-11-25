@@ -56,7 +56,9 @@
           <span @click="infoDelete(item.id)" class="el-icon-error closeImg"></span>
         </li>
         <li class="addChild" v-if="item.type==2">
-          <video :src="item.videoUrl" controls :poster="item.imageUrl" id="upvideo"></video>
+          <video controls id="upvideo">
+            <!-- <source :src="item.videoUrl" /> -->
+          </video>
           <span @click="infoDelete(item.id)" class="el-icon-error closeVideo"></span>
         </li>
       </ul>
@@ -176,11 +178,13 @@ export default {
       }
     },
     findvideocover() {
-      let _this = this;
+      // let _this = this;
       this.$nextTick(() => {
         let video = document.getElementById("upvideo");
         let source = document.createElement("source");
         // source.src = require("../../assets/5b086751dbb7af1ea8fa8d05e66fe5c3.mp4");this.formLabelAlign.video
+        // console.log(this.VidUrl);
+
         source.src = this.VidUrl;
         source.type = "video/mp4";
         video.appendChild(source);
@@ -191,9 +195,11 @@ export default {
           canvas
             .getContext("2d")
             .drawImage(video, 0, 0, canvas.width, canvas.width);
-          var img = document.createElement("img");
+          // var img = document.createElement("img");
           let imgsrc = canvas.toDataURL("image/png");
-          _this.Videoframehandle(imgsrc.split(",")[1]);
+          // let aa = _this.Videoframehandle(imgsrc.split(",")[1])
+          console.log(imgsrc);
+          
         });
       });
     },
@@ -237,14 +243,17 @@ export default {
       }
       return (isJPG || isBMP || isGIF || isPNG) && isLt2M;
     },
-    handleAvatarSuccessVid(res, file) {
-	  this.VidUrl = res.data;
-	  this.findvideocover()
+    handleAvatarSuccessVid(res, file,fileList) {
+      console.log(fileList);
+      console.log(res);
+      
+      this.VidUrl = res.data;
       let objVideo = {
         videoUrl: this.VidUrl,
         type: 2
       };
       this.addInfos.push(objVideo);
+      this.findvideocover();
     },
 
     beforeAvatarUploadVid(file) {

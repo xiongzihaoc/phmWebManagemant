@@ -10,7 +10,6 @@
     >
       <div class="title-container">
         <h3 class="title">卓亚科技</h3>
-        <h6 class="title">Talk For Less Do More</h6>
       </div>
 
       <el-form-item prop="loginName">

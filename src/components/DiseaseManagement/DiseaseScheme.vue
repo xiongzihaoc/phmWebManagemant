@@ -183,6 +183,8 @@ export default {
           pageNum: this.pageNum
         }
       );
+      console.log(res);
+      
       if (res.code != 200) return this.$message.error("数获取失败");
       this.disPlanList = res.rows;
       this.total = res.total;
@@ -217,6 +219,8 @@ export default {
         "sportPlan/getPSportPlanList.do",
         {}
       );
+      console.log(res);
+      
       this.sportsPlanList = res.rows;
     },
 
