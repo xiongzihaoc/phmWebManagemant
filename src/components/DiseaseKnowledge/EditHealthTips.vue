@@ -56,9 +56,11 @@
           <span @click="infoDelete(item.id)" class="el-icon-error closeImg"></span>
         </li>
         <li class="addChild" v-if="item.type==2">
-          <video controls id="upvideo" autoplay crossorigin="anonymous">
-            <!-- <source :src="item.videoUrl" /> -->
-          </video>
+          <canvas id="canvas">
+            <video controls id="upvideo">
+              <!-- <source :src="item.videoUrl" /> -->
+            </video>
+          </canvas>
           <span @click="infoDelete(item.id)" class="el-icon-error closeVideo"></span>
         </li>
       </ul>
@@ -178,30 +180,26 @@ export default {
       }
     },
     findvideocover() {
-      // let _this = this;
       this.$nextTick(() => {
         let video = document.getElementById("upvideo");
         let source = document.createElement("source");
-        // source.src = require("../../assets/5b086751dbb7af1ea8fa8d05e66fe5c3.mp4");this.formLabelAlign.video
-        // console.log(this.VidUrl);
 
         source.src = this.VidUrl;
         source.type = "video/mp4";
         video.appendChild(source);
         video.addEventListener("loadeddata", function() {
-          var canvas = document.createElement("canvas");
+          var canvas = document.getElementById("canvas");
           canvas.width = "320";
           canvas.height = "320";
           canvas
             .getContext("2d")
             .drawImage(video, 0, 0, canvas.width, canvas.height);
-          // let img = document.createElement("img");
-          var img = new Image();
-          // img.onload = myLoader;
-          img.crossOrigin = "anonymous";
+
+          let img = document.createElement("img");
+          // img.crossOrigin = "anonymous";
+          // img.setAttribute("crossOrigin", "Anonymous");
           img.src = canvas.toDataURL("image/png");
-          // let aa = _this.Videoframehandle(imgsrc.split(",")[1])
-          console.log(img.src);
+          console.log(img);
         });
       });
     },

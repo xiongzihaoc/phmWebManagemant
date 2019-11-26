@@ -23,7 +23,7 @@
         <el-table-column align="center" prop="phone" label="联系方式" sortable></el-table-column>
         <el-table-column align="center" prop="logo" label="图标" sortable>
           <template slot-scope="scope">
-            <img id="img" :src="scope.row.logo" />
+            <img id="img" v-if="scope.row.logo != '#'" :src="scope.row.logo" />
           </template>
         </el-table-column>
         <el-table-column align="center" prop="deptType" label="组织类型" sortable></el-table-column>
@@ -81,7 +81,6 @@ export default {
     async getHosMenuList() {
       const { data: res } = await this.$http.post("dept/getDeptList.do", {});
       console.log(res);
-
       this.hosMenuList = res.data;
     },
     // 增加

@@ -45,7 +45,7 @@
             <el-button
               size="mini"
               @click="statusClick(scope.row)"
-              :type="scope.row.status === 1 ? 'success' : 'danger'"
+              :type="scope.row.status === 1 ? 'warning' : 'danger'"
             >{{ scope.row.status === 1 ? '禁用' : '启用' }}</el-button>
           </template>
         </el-table-column>
