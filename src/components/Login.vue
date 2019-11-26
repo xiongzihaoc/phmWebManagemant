@@ -88,7 +88,7 @@ export default {
           userPassword: this.$md5(this.loginForm.userPassword)
         });
         if (res.code != 200) return this.$message.error("用户名或者密码错误");
-        this.$message.success("登录成功");
+        // this.$message.success("登录成功");
         // token 存入 sessionstorage
         window.sessionStorage.setItem("token", res.data.token);
         // 跳转

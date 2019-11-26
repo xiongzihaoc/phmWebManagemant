@@ -35,44 +35,209 @@ import DiseaseType from '../components/DiseaseManagement/DiseaseType.vue'
 import EasyInquiry from '../components/HealthManagemant/EasyInquiry.vue'
 Vue.use(VueRouter)
 
-const routes = [{path: '/',redirect: '/login'},
-  {path: '/login',component: Login},
-  {path: '/home',component: Home,redirect: '/index',children: [
-    { path: '/index',component: Index},
-    { path: '/system/menu',component: MenuManagemant},
-    { path: '/system/user',component: SystemAccount},
-    { path: '/system/UserList',component: UserManagemant},
-    { path: '/system/doctor',component: DoctorManagement},
-    { path: '/system/hosptial',component: HosptialManagement},
-    { path: '/system/dict',component: Dictionary},
-    { path: '/system/patient',component: PatientManagement},
-    { path: '/system/role',component: Role},
-    { path: '/system/log',component: Logmanagemant},
-    { path: '/JumpDictionaryNext',component: JumpDictionaryNext},
-    { path: '/food/foodManagemant',component: FoodManagement},
-    { path: '/food/DietPlan',component: DietPlan},
-    { path: '/food/measure',component: EstimateFood},
-    { path: '/food/measuretype',component: EstimateFoodManagemant},
-    { path: '/food/foodType',component: FoodType},
-    { path: '/food/Microelement',component: Microelement},
-    { path: '/food/Units',component: FoodUnits},
-    { path: '/food/ElementList',component: ElementList},
-    { path: '/sport/MovementPlan',component: MovementPlan},
-    { path: '/water/WaterSolution',component: WaterSolution},
-    { path: '/water/WaterType',component: WaterType},
-    { path: '/illness/case',component: DiseaseScheme},
-    { path: '/illness/type',component: DiseaseType},
-    { path: '/diseaseknowledge/nursingInstruction',component: NursingInstruction},
-    { path: '/diseaseknowledge/EditNursingInstruction',component: EditNursingInstruction},
-    { path: '/diseaseknowledge/AddNursingInstruction',component: AddNursingInstruction},
-    { path: '/diseaseknowledge/healthKnowledge',component: HealthTips},
-    { path: '/diseaseknowledge/EditHealthTips',component: EditHealthTips},
-    { path: '/diseaseknowledge/AddHealthTips',component: AddHealthTips},
-    { path: '/Health/inquiry',component: EasyInquiry},
-  ]
+const routes = [{
+    path: '/',
+    redirect: '/login'
+  },
+  {
+    path: '/login',
+    component: Login
+  },
+  {
+    path: '/home',
+    component: Home,
+    redirect: '/index',
+    children: [{
+        path: '/index',
+        name:"首页",
+        component: Index,
+        meta: { title: '首页' }
+      },
+      {
+        path: '/system/menu',
+        name:"菜单管理",
+        component: MenuManagemant,
+        meta: { title: '菜单管理' }
+      },
+      {
+        path: '/system/user',
+        name:"系统账户",
+        component: SystemAccount,
+        meta: { title: '系统账户' }
+      },
+      {
+        path: '/system/UserList',
+        name:"用户管理",
+        component: UserManagemant,
+        meta: { title: '用户管理' }
+      },
+      {
+        path: '/system/doctor',
+        name:"医生管理",
+        component: DoctorManagement,
+        meta: { title: '医生管理' }
+      },
+      {
+        path: '/system/hosptial',
+        name:"医院管理",
+        component: HosptialManagement,
+        meta: { title: '医院管理' }
+      },
+      {
+        path: '/system/dict',
+        name:"数据字典",
+        component: Dictionary,
+        meta: { title: '数据字典' }
+      },
+      {
+        path: '/system/patient',
+        name:"患者管理",
+        component: PatientManagement,
+        meta: { title: '患者管理' }
+      },
+      {
+        path: '/system/role',
+        name:"角色管理",
+        component: Role,
+        meta: { title: '角色管理' }
+      },
+      {
+        path: '/system/log',
+        name:"日志管理",
+        component: Logmanagemant,
+        meta: { title: '日志管理' }
+      },
+      {
+        path: '/JumpDictionaryNext',
+        name:"字典数据",
+        component: JumpDictionaryNext,
+        meta: { title: '字典数据' }
+      },
+      {
+        path: '/food/foodManagemant',
+        name:"食物管理",
+        component: FoodManagement,
+        meta: { title: '食物管理' }
+      },
+      {
+        path: '/food/DietPlan',
+        name:"饮食方案",
+        component: DietPlan,
+        meta: { title: '饮食方案' }
+      },
+      {
+        path: '/food/measure',
+        name:"估量食物管理",
+        component: EstimateFood,
+        meta: { title: '估量食物管理' }
+      },
+      {
+        path: '/food/measuretype',
+        name:"估量食物类型管理",
+        component: EstimateFoodManagemant,
+        meta: { title: '估量食物类型管理' }
+      },
+      {
+        path: '/food/foodType',
+        name:"食物类型管理",
+        component: FoodType,
+        meta: { title: '食物类型管理' }
+      },
+      {
+        path: '/food/Microelement',
+        name:"微量元素",
+        component: Microelement,
+        meta: { title: '微量元素' }
+      },
+      {
+        path: '/food/Units',
+        name:"食物单位",
+        component: FoodUnits,
+        meta: { title: '食物单位' }
+      },
+      {
+        path: '/food/ElementList',
+        name:"元素列表",
+        component: ElementList,
+        meta: { title: '元素列表' }
+      },
+      {
+        path: '/sport/MovementPlan',
+        name:"运动方案",
+        component: MovementPlan,
+        meta: { title: '运动方案' }
+      },
+      {
+        path: '/water/WaterSolution',
+        name:"饮水方案",
+        component: WaterSolution,
+        meta: { title: '饮水方案' }
+      },
+      {
+        path: '/water/WaterType',
+        name:"饮水种类",
+        component: WaterType,
+        meta: { title: '饮水种类' }
+      },
+      {
+        path: '/illness/case',
+        name:"疾病方案",
+        component: DiseaseScheme,
+        meta: { title: '疾病方案' }
+      },
+      {
+        path: '/illness/type',
+        name:"疾病类型",
+        component: DiseaseType,
+        meta: { title: '疾病类型' }
+      },
+      {
+        path: '/diseaseknowledge/nursingInstruction',
+        name:"护理指导",
+        component: NursingInstruction,
+        meta: { title: '护理指导' }
+      },
+      {
+        path: '/diseaseknowledge/EditNursingInstruction',
+        name:"护理指导修改",
+        component: EditNursingInstruction,
+        meta: { title: '护理指导修改' }
+      },
+      {
+        path: '/diseaseknowledge/AddNursingInstruction',
+        name:"护理指导增加",
+        component: AddNursingInstruction,
+        meta: { title: '护理指导增加' }
+      },
+      {
+        path: '/diseaseknowledge/healthKnowledge',
+        name:"健康小知识",
+        component: HealthTips,
+        meta: { title: '健康小知识' }
+      },
+      {
+        path: '/diseaseknowledge/EditHealthTips',
+        name:"健康小知识修改",
+        component: EditHealthTips,
+        meta: { title: '健康小知识修改' }
+      },
+      {
+        path: '/diseaseknowledge/AddHealthTips',
+        name:"健康小知识增加",
+        component: AddHealthTips,
+        meta: { title: '健康小知识增加' }
+      },
+      {
+        path: '/Health/inquiry',
+        name:"轻问诊记录",
+        component: EasyInquiry,
+        meta: { title: '轻问诊记录' }
+      },
+    ]
   },
 ]
 const router = new VueRouter({
+  mode: 'history',
   routes
 })
 

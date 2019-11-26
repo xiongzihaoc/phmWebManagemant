@@ -153,8 +153,8 @@ export default {
       this.$refs.editFormRef.resetFields();
     },
     // 确定修改
-    async editEnter() {
-      this.$refs.addFormRef.validate(async valid => {
+    editEnter() {
+      this.$refs.editFormRef.validate(async valid => {
         if (!valid) return this.$message.error("登录失败");
         const { data: res } = await this.$http.post("menu/updateSysMenu.do", {
           menuId: this.editId,
@@ -190,14 +190,17 @@ export default {
     },
     // 确定增加
     async addEnter() {
-      const { data: res } = await this.$http.post("menu/saveSysMenu.do", {
-        parentId: this.addId,
-        menuName: this.addForm.menuName,
-        menuType: this.addForm.menuType,
-        url: this.addForm.url,
-        icon: this.addForm.icon
+      this.$refs.editFormRef.validate(async valid => {
+        if (!valid) return this.$message.error("操作失败");
+        const { data: res } = await this.$http.post("menu/saveSysMenu.do", {
+          parentId: this.addId,
+          menuName: this.addForm.menuName,
+          menuType: this.addForm.menuType,
+          url: this.addForm.url,
+          icon: this.addForm.icon
+        });
+        this.addDialogVisible = false;
       });
-      this.addDialogVisible = false;
     },
     // 实现表格单行选择高亮
     setCurrent(row) {

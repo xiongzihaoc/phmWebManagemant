@@ -38,21 +38,31 @@
       <!-- 头部区域 -->
       <el-header>
         <div class="header_left">
-          <i @click="toggleCollapse()" class="el-icon-s-fold" id="toggle"></i>
-          <i class="el-icon-s-home" @click="jumpIndex" id="index"></i>
+          <i
+            @click="toggleCollapse()"
+            :class="isClass?'el-icon-s-unfold':'el-icon-s-fold'"
+            id="toggle"
+          ></i>
         </div>
+
+        <el-breadcrumb separator="/">
+          <!-- <el-breadcrumb-item :to="{ path: '/home' }">首页</el-breadcrumb-item> -->
+          <el-breadcrumb-item
+            v-for="(item,index) in breadList"
+            :key="index"
+            :to="item.path"
+          >{{item.name}}</el-breadcrumb-item>
+        </el-breadcrumb>
         <el-dropdown @command="handleCommand">
           <span class="el-dropdown-link">
             admin
             <i class="el-icon-arrow-down el-icon--right"></i>
           </span>
           <el-dropdown-menu slot="dropdown">
-            <el-dropdown-item >修改密码</el-dropdown-item>
+            <el-dropdown-item>修改密码</el-dropdown-item>
             <el-dropdown-item @click.native="logout()">退出</el-dropdown-item>
           </el-dropdown-menu>
         </el-dropdown>
-
-        <!-- </div> -->
       </el-header>
       <!-- 主体内容区域 -->
       <el-main>
@@ -69,13 +79,21 @@ export default {
       menuList: [],
       isCollapse: false,
       activePath: "",
-      loginName:"",
+      loginName: "",
+      isClass: false,
+      breadList: [] // 路由集合
     };
   },
   created() {
-    this.loginName = this.$route.query.loginName
+    this.loginName = this.$route.query.loginName;
     this.getMenuList();
     this.activePath = window.sessionStorage.getItem("activePath");
+    this.getBreadcrumb();
+  },
+  watch: {
+    $route() {
+      this.getBreadcrumb();
+    }
   },
   methods: {
     logout() {
@@ -90,17 +108,28 @@ export default {
     },
     // 是否折叠展架侧边栏
     toggleCollapse() {
+      this.isClass = !this.isClass;
       this.isCollapse = !this.isCollapse;
     },
     // 保持连接的激活状态
     saveNavState(activePath) {
       window.sessionStorage.setItem("activePath", activePath);
     },
-    jumpIndex() {
-      this.$router.push("/index");
+    handleCommand(command) {},
+
+    isHome(route) {
+      return route.name === "home";
     },
-    handleCommand(command) {
-     
+    getBreadcrumb() {
+      let matched = this.$route.matched;
+      //如果不是首页
+      console.log(matched);
+
+      // if (!this.isHome(matched[0])) {
+      //   matched = [{ path: "/home", meta: { title: "首页" } }].concat(matched);
+      // }
+      this.breadList = matched;
+      console.log(this.breadList);
     }
   }
 };
@@ -137,11 +166,11 @@ export default {
 }
 .el-dropdown-link {
   cursor: pointer;
-  color: #2C3E50;
+  color: #2c3e50;
 }
 .el-icon-arrow-down {
   font-size: 12px;
-  color: #2C3E50;
+  color: #2c3e50;
 }
 .el-menu {
   border-right: none;
@@ -152,5 +181,10 @@ export default {
 #index {
   float: left;
   margin-left: 10px;
+}
+.el-breadcrumb {
+  float: left;
+  margin-left: 20px;
+  margin-top: 26px;
 }
 </style>
