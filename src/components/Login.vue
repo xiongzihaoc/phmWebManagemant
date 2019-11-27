@@ -92,9 +92,9 @@ export default {
         // token 存入 sessionstorage
         window.sessionStorage.setItem("token", res.data.token);
         // 跳转
+        window.localStorage.setItem('loginName',this.loginForm.loginName)
         this.$router.push({
-          path: "/home",
-          query: { loginName: this.loginForm.loginName }
+          path: "/home"
         });
       });
     }

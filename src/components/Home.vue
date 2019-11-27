@@ -4,6 +4,17 @@
     <!-- 侧边栏 -->
     <el-aside :width="isCollapse?'62px':'200px'">
       <!-- 侧边栏菜单区域 -->
+
+      <div class="logoDiv">
+        <img
+          :width="iswidth?'30px':'50px'"
+          :height="isheight?'30px':'50px'"
+          class="logoImg"
+          src="../assets/images/logo.png"
+          alt
+        />
+        <!-- <div class="logoTitle">卓亚科技</div> -->
+      </div>
       <el-menu
         background-color="#304156"
         text-color="#BFCBD9"
@@ -36,7 +47,7 @@
     </el-aside>
     <el-container>
       <!-- 头部区域 -->
-      <el-header>
+      <el-header class="top">
         <div class="header_left">
           <i
             @click="toggleCollapse()"
@@ -44,25 +55,19 @@
             id="toggle"
           ></i>
         </div>
-
-        <el-breadcrumb separator="/">
-          <!-- <el-breadcrumb-item :to="{ path: '/home' }">首页</el-breadcrumb-item> -->
-          <el-breadcrumb-item
-            v-for="(item,index) in breadList"
-            :key="index"
-            :to="item.path"
-          >{{item.name}}</el-breadcrumb-item>
-        </el-breadcrumb>
-        <el-dropdown @command="handleCommand">
-          <span class="el-dropdown-link">
-            admin
-            <i class="el-icon-arrow-down el-icon--right"></i>
-          </span>
-          <el-dropdown-menu slot="dropdown">
-            <el-dropdown-item>修改密码</el-dropdown-item>
-            <el-dropdown-item @click.native="logout()">退出</el-dropdown-item>
-          </el-dropdown-menu>
-        </el-dropdown>
+        <div class="header_right">
+          <img class="logoutImg" src="../assets/images/header.gif" alt />
+          <el-dropdown @command="handleCommand">
+            <span class="el-dropdown-link">
+              admin
+              <i class="el-icon-arrow-down el-icon--right"></i>
+            </span>
+            <el-dropdown-menu slot="dropdown">
+              <el-dropdown-item>修改密码</el-dropdown-item>
+              <el-dropdown-item @click.native="logout()">退出</el-dropdown-item>
+            </el-dropdown-menu>
+          </el-dropdown>
+        </div>
       </el-header>
       <!-- 主体内容区域 -->
       <el-main>
@@ -81,19 +86,14 @@ export default {
       activePath: "",
       loginName: "",
       isClass: false,
-      breadList: [] // 路由集合
+      iswidth:false,
+      isheight:false,
     };
   },
   created() {
-    this.loginName = this.$route.query.loginName;
     this.getMenuList();
     this.activePath = window.sessionStorage.getItem("activePath");
-    this.getBreadcrumb();
-  },
-  watch: {
-    $route() {
-      this.getBreadcrumb();
-    }
+    this.loginName = window.sessionStorage.getItem("loginName");
   },
   methods: {
     logout() {
@@ -110,27 +110,14 @@ export default {
     toggleCollapse() {
       this.isClass = !this.isClass;
       this.isCollapse = !this.isCollapse;
+      this.iswidth = !this.iswidth
+      this.isheight = !this.isheight
     },
     // 保持连接的激活状态
     saveNavState(activePath) {
       window.sessionStorage.setItem("activePath", activePath);
     },
-    handleCommand(command) {},
-
-    isHome(route) {
-      return route.name === "home";
-    },
-    getBreadcrumb() {
-      let matched = this.$route.matched;
-      //如果不是首页
-      console.log(matched);
-
-      // if (!this.isHome(matched[0])) {
-      //   matched = [{ path: "/home", meta: { title: "首页" } }].concat(matched);
-      // }
-      this.breadList = matched;
-      console.log(this.breadList);
-    }
+    handleCommand(command) {}
   }
 };
 </script>
@@ -142,7 +129,7 @@ export default {
   background: #304156;
 }
 .el-header {
-  box-shadow: 0 1px 4px rgba(0, 21, 41, 0.08);
+  box-shadow: 0 4px 4px rgba(0, 21, 41, 0.08);
 }
 .header_left {
   float: left;
@@ -153,12 +140,8 @@ export default {
 }
 .header_right {
   float: right;
-  width: 40px;
-  height: 40px;
-  margin-top: 10px;
-}
-.header_right:hover {
-  cursor: pointer;
+  width: 500px;
+  height: 60px;
 }
 .el-dropdown {
   float: right;
@@ -174,6 +157,7 @@ export default {
 }
 .el-menu {
   border-right: none;
+  transition: 0s linear;
 }
 #toggle {
   float: left;
@@ -186,5 +170,37 @@ export default {
   float: left;
   margin-left: 20px;
   margin-top: 26px;
+}
+.logoImg {
+  float: left;
+  border-radius: 10%;
+  padding-left: 16px;
+  margin-left: 50%;
+  transform: translate(-50%);
+}
+.logoDiv {
+  overflow: hidden;
+  width: 100%;
+  height: 50px;
+  text-align: center;
+  font-size: 30px;
+  padding-top: 10px;
+  color: #409eff;
+  font-weight: 700;
+}
+.el-dropdown {
+  display: block;
+  float: right;
+}
+.logoutImg {
+  float: left;
+  margin-left: 390px;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  margin-top: 10px;
+}
+.logoTitle {
+  float: left;
 }
 </style>
