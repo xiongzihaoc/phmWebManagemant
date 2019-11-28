@@ -144,12 +144,10 @@ export default {
             diseaseTypeId: this.editform.diseaseTypeId,
             description: this.editform.description,
             articleImagesUrl: this.editform.articleImagesUrl,
-            type: 1,
+            type: 2,
             resourcesList: this.addInfos
           }
         );
-        console.log(res);
-
         if (res.code != 200) {
           this.$message.error("保存失败");
           return;

@@ -1,39 +1,5 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
-import Login from '../components/Login.vue'
-import Home from '../components/Home.vue'
-import Index from '../components/Index.vue'
-import MenuManagemant from '../components/basicInformation/MenuManagemant.vue'
-import DoctorManagement from '../components/basicInformation/DoctorManagement.vue'
-import SystemAccount from '../components/basicInformation/SystemAccount.vue'
-import HosptialManagement from '../components/basicInformation/HosptialManagement.vue'
-import Dictionary from '../components/basicInformation/Dictionary.vue'
-import UserManagemant from '../components/basicInformation/UserManagemant.vue'
-import PatientManagement from '../components/basicInformation/PatientManagement.vue'
-import Role from '../components/basicInformation/Role.vue'
-import Logmanagemant from '../components/basicInformation/Logmanagemant.vue'
-import ServerMonitoring from '../components/basicInformation/ServerMonitoring.vue'
-import FoodManagement from '../components/dietaryManagement/FoodManagement.vue'
-import DietPlan from '../components/dietaryManagement/DietPlan.vue'
-import EstimateFood from '../components/dietaryManagement/EstimateFood.vue'
-import EstimateFoodManagemant from '../components/dietaryManagement/EstimateFoodManagemant.vue'
-import FoodUnits from '../components/dietaryManagement/FoodUnits.vue'
-import MovementPlan from '../components/sportManagement/MovementPlan.vue'
-import WaterSolution from '../components/waterManagement/WaterSolution.vue'
-import WaterType from '../components/waterManagement/WaterType.vue'
-import DiseaseScheme from '../components/DiseaseManagement/DiseaseScheme.vue'
-import FoodType from '../components/dietaryManagement/FoodType.vue'
-import Microelement from '../components/microelement/Microelement.vue'
-import NursingInstruction from '../components/DiseaseKnowledge/NursingInstruction.vue'
-import EditNursingInstruction from '../components/DiseaseKnowledge/EditNursingInstruction.vue'
-import AddNursingInstruction from '../components/DiseaseKnowledge/AddNursingInstruction.vue'
-import HealthTips from '../components/DiseaseKnowledge/HealthTips.vue'
-import EditHealthTips from '../components/DiseaseKnowledge/EditHealthTips.vue'
-import AddHealthTips from '../components/DiseaseKnowledge/AddHealthTips.vue'
-import JumpDictionaryNext from '../components/basicInformation/JumpDictionaryNext.vue'
-import ElementList from '../components/dietaryManagement/ElementList.vue'
-import DiseaseType from '../components/DiseaseManagement/DiseaseType.vue'
-import EasyInquiry from '../components/HealthManagemant/EasyInquiry.vue'
 Vue.use(VueRouter)
 
 const routes = [{
@@ -42,16 +8,16 @@ const routes = [{
   },
   {
     path: '/login',
-    component: Login
+    component: () => import('@/components/Login.vue')
   },
   {
     path: '/home',
-    component: Home,
+    component: () => import('@/components/Home.vue'),
     redirect: '/index',
     children: [{
         path: '/index',
         name: "首页",
-        component: Index,
+        component: () => import('@/components/Index.vue'),
         meta: {
           title: '首页'
         }
@@ -59,7 +25,7 @@ const routes = [{
       {
         path: '/system/menu',
         name: "菜单管理",
-        component: MenuManagemant,
+        component: () => import('@/components/basicInformation/MenuManagemant.vue'),
         meta: {
           title: '菜单管理'
         }
@@ -67,7 +33,7 @@ const routes = [{
       {
         path: '/system/user',
         name: "系统账户",
-        component: SystemAccount,
+        component: () => import('@/components/basicInformation/SystemAccount.vue'),
         meta: {
           title: '系统账户'
         }
@@ -75,7 +41,7 @@ const routes = [{
       {
         path: '/system/UserList',
         name: "用户管理",
-        component: UserManagemant,
+        component: () => import('@/components/basicInformation/UserManagemant.vue'),
         meta: {
           title: '用户管理'
         }
@@ -83,7 +49,7 @@ const routes = [{
       {
         path: '/system/doctor',
         name: "医生管理",
-        component: DoctorManagement,
+        component: () => import('@/components/basicInformation/DoctorManagement.vue'),
         meta: {
           title: '医生管理'
         }
@@ -91,7 +57,7 @@ const routes = [{
       {
         path: '/system/hosptial',
         name: "医院管理",
-        component: HosptialManagement,
+        component: () => import('@/components/basicInformation/HosptialManagement.vue'),
         meta: {
           title: '医院管理'
         }
@@ -99,7 +65,7 @@ const routes = [{
       {
         path: '/system/dict',
         name: "数据字典",
-        component: Dictionary,
+        component: () => import('@/components/basicInformation/Dictionary.vue'),
         meta: {
           title: '数据字典'
         }
@@ -107,7 +73,7 @@ const routes = [{
       {
         path: '/system/patient',
         name: "患者管理",
-        component: PatientManagement,
+        component: () => import('@/components/basicInformation/PatientManagement.vue'),
         meta: {
           title: '患者管理'
         }
@@ -115,7 +81,7 @@ const routes = [{
       {
         path: '/system/role',
         name: "角色管理",
-        component: Role,
+        component: () => import('@/components/basicInformation/Role.vue'),
         meta: {
           title: '角色管理'
         }
@@ -123,7 +89,7 @@ const routes = [{
       {
         path: '/system/log',
         name: "日志管理",
-        component: Logmanagemant,
+        component: () => import('@/components/basicInformation/Logmanagemant.vue'),
         meta: {
           title: '日志管理'
         }
@@ -131,7 +97,7 @@ const routes = [{
       {
         path: '/JumpDictionaryNext',
         name: "字典数据",
-        component: JumpDictionaryNext,
+        component: () => import('@/components/basicInformation/JumpDictionaryNext.vue'),
         meta: {
           title: '字典数据'
         }
@@ -139,7 +105,7 @@ const routes = [{
       {
         path: '/system/server',
         name: "服务器监控",
-        component: ServerMonitoring,
+        component: () => import('@/components/basicInformation/ServerMonitoring.vue'),
         meta: {
           title: '服务器监控'
         }
@@ -147,7 +113,7 @@ const routes = [{
       {
         path: '/food/foodManagemant',
         name: "食物管理",
-        component: FoodManagement,
+        component: () => import('@/components/dietaryManagement/FoodManagement.vue'),
         meta: {
           title: '食物管理'
         }
@@ -155,7 +121,7 @@ const routes = [{
       {
         path: '/food/DietPlan',
         name: "饮食方案",
-        component: DietPlan,
+        component: () => import('@/components/dietaryManagement/DietPlan.vue'),
         meta: {
           title: '饮食方案'
         }
@@ -163,7 +129,7 @@ const routes = [{
       {
         path: '/food/measure',
         name: "估量食物管理",
-        component: EstimateFood,
+        component: () => import('@/components/dietaryManagement/EstimateFood.vue'),
         meta: {
           title: '估量食物管理'
         }
@@ -171,7 +137,7 @@ const routes = [{
       {
         path: '/food/measuretype',
         name: "估量食物类型管理",
-        component: EstimateFoodManagemant,
+        component: () => import('@/components/dietaryManagement/EstimateFoodManagemant.vue'),
         meta: {
           title: '估量食物类型管理'
         }
@@ -179,7 +145,7 @@ const routes = [{
       {
         path: '/food/foodType',
         name: "食物类型管理",
-        component: FoodType,
+        component: () => import('@/components/dietaryManagement/FoodType.vue'),
         meta: {
           title: '食物类型管理'
         }
@@ -187,7 +153,7 @@ const routes = [{
       {
         path: '/food/Microelement',
         name: "微量元素",
-        component: Microelement,
+        component: () => import('@/components/microelement/Microelement.vue'),
         meta: {
           title: '微量元素'
         }
@@ -195,7 +161,7 @@ const routes = [{
       {
         path: '/food/Units',
         name: "食物单位",
-        component: FoodUnits,
+        component: () => import('@/components/dietaryManagement/FoodUnits.vue'),
         meta: {
           title: '食物单位'
         }
@@ -203,7 +169,7 @@ const routes = [{
       {
         path: '/food/ElementList',
         name: "元素列表",
-        component: ElementList,
+        component: () => import('@/components/dietaryManagement/ElementList.vue'),
         meta: {
           title: '元素列表'
         }
@@ -211,7 +177,7 @@ const routes = [{
       {
         path: '/sport/MovementPlan',
         name: "运动方案",
-        component: MovementPlan,
+        component: () => import('@/components/sportManagement/MovementPlan.vue'),
         meta: {
           title: '运动方案'
         }
@@ -219,7 +185,7 @@ const routes = [{
       {
         path: '/water/WaterSolution',
         name: "饮水方案",
-        component: WaterSolution,
+        component: () => import('@/components/waterManagement/WaterSolution.vue'),
         meta: {
           title: '饮水方案'
         }
@@ -227,7 +193,7 @@ const routes = [{
       {
         path: '/water/WaterType',
         name: "饮水种类",
-        component: WaterType,
+        component: () => import('@/components/waterManagement/WaterType.vue'),
         meta: {
           title: '饮水种类'
         }
@@ -235,7 +201,7 @@ const routes = [{
       {
         path: '/illness/case',
         name: "疾病方案",
-        component: DiseaseScheme,
+        component: () => import('@/components/DiseaseManagement/DiseaseScheme.vue'),
         meta: {
           title: '疾病方案'
         }
@@ -243,15 +209,16 @@ const routes = [{
       {
         path: '/illness/type',
         name: "疾病类型",
-        component: DiseaseType,
+        component: () => import('@/components/DiseaseManagement/DiseaseType.vue'),
         meta: {
           title: '疾病类型'
         }
       },
       {
+
         path: '/diseaseknowledge/nursingInstruction',
         name: "护理指导",
-        component: NursingInstruction,
+        component: () => import('@/components/DiseaseKnowledge/NursingInstruction.vue'),
         meta: {
           title: '护理指导'
         }
@@ -259,7 +226,7 @@ const routes = [{
       {
         path: '/diseaseknowledge/EditNursingInstruction',
         name: "护理指导修改",
-        component: EditNursingInstruction,
+        component: () => import('@/components/DiseaseKnowledge/EditNursingInstruction.vue'),
         meta: {
           title: '护理指导修改'
         }
@@ -267,7 +234,7 @@ const routes = [{
       {
         path: '/diseaseknowledge/AddNursingInstruction',
         name: "护理指导增加",
-        component: AddNursingInstruction,
+        component: () => import('@/components/DiseaseKnowledge/AddNursingInstruction.vue'),
         meta: {
           title: '护理指导增加'
         }
@@ -275,7 +242,7 @@ const routes = [{
       {
         path: '/diseaseknowledge/healthKnowledge',
         name: "健康小知识",
-        component: HealthTips,
+        component: () => import('@/components/DiseaseKnowledge/HealthTips.vue'),
         meta: {
           title: '健康小知识'
         }
@@ -283,7 +250,7 @@ const routes = [{
       {
         path: '/diseaseknowledge/EditHealthTips',
         name: "健康小知识修改",
-        component: EditHealthTips,
+        component: () => import('@/components/DiseaseKnowledge/EditHealthTips.vue'),
         meta: {
           title: '健康小知识修改'
         }
@@ -291,7 +258,7 @@ const routes = [{
       {
         path: '/diseaseknowledge/AddHealthTips',
         name: "健康小知识增加",
-        component: AddHealthTips,
+        component: () => import('@/components/DiseaseKnowledge/AddHealthTips.vue'),
         meta: {
           title: '健康小知识增加'
         }
@@ -299,7 +266,7 @@ const routes = [{
       {
         path: '/Health/inquiry',
         name: "轻问诊记录",
-        component: EasyInquiry,
+        component: () => import('@/components/HealthManagemant/EasyInquiry.vue'),
         meta: {
           title: '轻问诊记录'
         }
@@ -307,8 +274,10 @@ const routes = [{
     ]
   },
 ]
+
 const router = new VueRouter({
-  mode: 'history',
+  // baseL: "/history",
+  // mode: 'history',
   routes
 })
 

@@ -37,7 +37,7 @@
             <img id="img" :src="scope.row.fdPhotoPath" />
           </template>
         </el-table-column>
-        <el-table-column align="center" prop="fdType" label="类型" width="160"></el-table-column>
+        <el-table-column align="center" prop="fdTypeValue" label="类型" width="160"></el-table-column>
         <el-table-column align="center" prop="elementName" show-overflow-tooltip label="元素名称"></el-table-column>
         <el-table-column align="center" prop="fdState" label="是否常见 (1: 是 0: 否)"></el-table-column>
         <el-table-column align="center" prop="fdDescribe" show-overflow-tooltip label="描述"></el-table-column>
@@ -91,7 +91,7 @@
           <el-input v-model="editForm.fdName"></el-input>
         </el-form-item>
         <el-form-item label="食物类型" prop="fdType">
-          <el-select v-model="editForm.fdType" placeholder="请选择">
+          <el-select v-model="editForm.fdTypeValue" placeholder="请选择">
             <el-option
               v-for="item in foodTypeList"
               :key="item.id"
@@ -174,6 +174,8 @@ export default {
         pageSize: this.pageSize,
         pageNum: this.pageNum
       });
+      console.log(res);
+      
       if (res.code != 200) return this.$message.error("数获取失败");
       this.foodList = res.rows;
       this.total = res.total;
@@ -188,7 +190,6 @@ export default {
         }
       );
       console.log(res);
-
       this.foodTypeList = res.data;
     },
     // 分页

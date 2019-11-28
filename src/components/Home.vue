@@ -86,8 +86,8 @@ export default {
       activePath: "",
       loginName: "",
       isClass: false,
-      iswidth:false,
-      isheight:false,
+      iswidth: false,
+      isheight: false
     };
   },
   created() {
@@ -96,7 +96,9 @@ export default {
     this.loginName = window.sessionStorage.getItem("loginName");
   },
   methods: {
-    logout() {
+    async logout() {
+      const { data: res } = await this.$http.post("user/userSignOut.do", {});
+      if (res.code != 200) return this.$message.error("退出失败");
       window.sessionStorage.clear();
       this.$router.push("/login");
     },
@@ -110,8 +112,8 @@ export default {
     toggleCollapse() {
       this.isClass = !this.isClass;
       this.isCollapse = !this.isCollapse;
-      this.iswidth = !this.iswidth
-      this.isheight = !this.isheight
+      this.iswidth = !this.iswidth;
+      this.isheight = !this.isheight;
     },
     // 保持连接的激活状态
     saveNavState(activePath) {

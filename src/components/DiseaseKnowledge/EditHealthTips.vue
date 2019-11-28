@@ -174,30 +174,6 @@ export default {
         }
       }
     },
-    // findvideocover() {
-    //   this.$nextTick(() => {
-    //     let video = document.getElementById("upvideo");
-    //     let source = document.createElement("source");
-
-    //     source.src = this.VidUrl;
-    //     source.type = "video/mp4";
-    //     video.appendChild(source);
-    //     video.addEventListener("loadeddata", function() {
-    //       var canvas = document.getElementById("canvas");
-    //       canvas.width = "320";
-    //       canvas.height = "320";
-    //       canvas
-    //         .getContext("2d")
-    //         .drawImage(video, 0, 0, canvas.width, canvas.height);
-
-    //       let img = document.createElement("img");
-    //       // img.crossOrigin = "anonymous";
-    //       // img.setAttribute("crossOrigin", "Anonymous");
-    //       img.src = canvas.toDataURL("image/png");
-    //       console.log(img);
-    //     });
-    //   });
-    // },
     handleAvatarSuccessSM(res, file) {
       this.editform.articleImagesUrl = res.data;
     },
