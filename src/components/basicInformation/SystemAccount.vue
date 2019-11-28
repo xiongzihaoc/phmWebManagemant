@@ -3,7 +3,7 @@
     <!-- 面包屑 -->
     <el-breadcrumb separator-class="el-icon-arrow-right">
       <el-breadcrumb-item :to="{ path: '/home' }">首页</el-breadcrumb-item>
-      <el-breadcrumb-item>系统用户</el-breadcrumb-item>
+      <el-breadcrumb-item>系统帐户</el-breadcrumb-item>
     </el-breadcrumb>
     <!-- 卡片视图 -->
     <el-card>
@@ -15,7 +15,7 @@
         </el-col>
         <!-- 添加用户按钮 -->
         <el-col :span="4">
-          <el-button type="primary">添加用户</el-button>
+          <el-button type="primary" @click="addUsers">新增用户</el-button>
         </el-col>
       </el-row>
       <!-- 表格 -->
@@ -65,8 +65,6 @@
         :total="total"
       ></el-pagination>
     </el-card>
-    <!-- 添加用户输入界面 -->
-
     <!-- 修改页面 -->
     <el-dialog title="修改信息" :visible.sync="editDialogVisible" width="40%">
       <el-form
@@ -89,6 +87,30 @@
       <span slot="footer" class="dialog-footer">
         <el-button @click="editDialogVisible = false">取 消</el-button>
         <el-button type="primary" @click="edit">确 定</el-button>
+      </span>
+    </el-dialog>
+    <!-- 添加页面 -->
+    <el-dialog title="新增用戶" :visible.sync="addDialogVisible" width="40%">
+      <el-form
+        :rules="addFormRules"
+        ref="addFormRef"
+        :model="addForm"
+        label-width="80px"
+        @closed="addDialogClosed"
+      >
+        <el-form-item label="用户名" prop="userName">
+          <el-input v-model="addForm.userName"></el-input>
+        </el-form-item>
+        <el-form-item label="邮箱" prop="userEmail">
+          <el-input v-model="addForm.userEmail"></el-input>
+        </el-form-item>
+        <el-form-item label="手机号" prop="userPhone">
+          <el-input v-model="addForm.userPhone"></el-input>
+        </el-form-item>
+      </el-form>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="addDialogVisible = false">取 消</el-button>
+        <el-button type="primary" @click="addEnter">确 定</el-button>
       </span>
     </el-dialog>
   </div>
@@ -120,6 +142,12 @@ export default {
       currentRow: null,
       editDialogVisible: false,
       editForm: {
+        userName: "",
+        userEmail: "",
+        userPhone: ""
+      },
+      addDialogVisible: false,
+      addForm: {
         userName: "",
         userEmail: "",
         userPhone: ""
@@ -167,7 +195,6 @@ export default {
       this.pageNum = newPage;
       this.getUserList();
     },
-    // 添加
     // 修改
     showEditdialog(info) {
       console.log(info);
@@ -220,6 +247,17 @@ export default {
         return;
       }
     },
+    // 添加用户
+    addUsers() {
+      this.addDialogVisible = true;
+      this.addForm = {};
+    },
+    async addEnter() {
+      const {data:res} = this.$http.post('user/saveSysUser.do',{
+        
+      })
+    },
+    addDialogClosed() {},
     // 实现表格单行选择高亮
     setCurrent(row) {
       this.$refs.singleTable.setCurrentRow(row);

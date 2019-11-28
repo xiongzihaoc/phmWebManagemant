@@ -228,4 +228,7 @@ export default {
   float: left;
   width: 14%;
 }
+.clearfix span {
+  font-size: 20px;
+}
 </style>
