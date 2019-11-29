@@ -13,7 +13,6 @@
           src="../assets/images/logo.png"
           alt
         />
-        <!-- <div class="logoTitle">卓亚科技</div> -->
       </div>
       <el-menu
         background-color="#304156"
@@ -59,7 +58,7 @@
           <img class="logoutImg" src="../assets/images/header.gif" alt />
           <el-dropdown @command="handleCommand">
             <span class="el-dropdown-link">
-              admin
+              {{loginName}}
               <i class="el-icon-arrow-down el-icon--right"></i>
             </span>
             <el-dropdown-menu slot="dropdown">
@@ -93,7 +92,7 @@ export default {
   created() {
     this.getMenuList();
     this.activePath = window.sessionStorage.getItem("activePath");
-    this.loginName = window.sessionStorage.getItem("loginName");
+    this.loginName = window.localStorage.getItem("loginName");
   },
   methods: {
     async logout() {
@@ -131,6 +130,7 @@ export default {
   background: #304156;
 }
 .el-header {
+  overflow: hidden;
   box-shadow: 0 4px 4px rgba(0, 21, 41, 0.08);
 }
 .header_left {
@@ -141,8 +141,8 @@ export default {
   cursor: pointer;
 }
 .header_right {
+  overflow: hidden;
   float: right;
-  width: 500px;
   height: 60px;
 }
 .el-dropdown {
@@ -191,18 +191,14 @@ export default {
   font-weight: 700;
 }
 .el-dropdown {
-  display: block;
   float: right;
+  margin-left: 5px;
 }
 .logoutImg {
   float: left;
-  margin-left: 390px;
   width: 40px;
   height: 40px;
   border-radius: 50%;
   margin-top: 10px;
-}
-.logoTitle {
-  float: left;
 }
 </style>

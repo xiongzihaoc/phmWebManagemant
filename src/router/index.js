@@ -111,6 +111,14 @@ const routes = [{
         }
       },
       {
+        path: '/system/test',
+        name: "测试页面",
+        component: () => import('@/components/basicInformation/Test.vue'),
+        meta: {
+          title: '测试页面'
+        }
+      },
+      {
         path: '/food/foodManagemant',
         name: "食物管理",
         component: () => import('@/components/dietaryManagement/FoodManagement.vue'),

@@ -57,7 +57,7 @@
     </el-card>
     <!-- 添加提示框 -->
     <el-dialog title="添加选项" :visible.sync="addDialogVisible" width="40%">
-      <el-form ref="addFormRef" :model="addForm" label-width="80px">
+      <el-form ref="editFormRef" :model="addForm" label-width="80px">
         <el-form-item label="上一级">
           <el-input v-model="goBack" disabled></el-input>
         </el-form-item>
@@ -189,7 +189,7 @@ export default {
       this.addDialogVisible = true;
     },
     // 确定增加
-    async addEnter() {
+    addEnter() {
       this.$refs.editFormRef.validate(async valid => {
         if (!valid) return this.$message.error("操作失败");
         const { data: res } = await this.$http.post("menu/saveSysMenu.do", {

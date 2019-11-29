@@ -79,6 +79,9 @@
         <el-form-item label="用户名" prop="userName">
           <el-input v-model="editForm.userName"></el-input>
         </el-form-item>
+        <el-form-item label="登录名" prop="loginName">
+          <el-input v-model="editForm.loginName" disabled></el-input>
+        </el-form-item>
         <el-form-item label="邮箱" prop="userEmail">
           <el-input v-model="editForm.userEmail"></el-input>
         </el-form-item>
@@ -86,24 +89,24 @@
           <el-input v-model="editForm.userPhone"></el-input>
         </el-form-item>
         <el-form-item label="角色" prop="roleName">
-          <el-select v-model="editForm.roleName" placeholder="请选择">
+          <el-select v-model="editForm.roleId" placeholder="请选择">
             <el-option
-              v-for="item in userInfo"
-              :key="item.id"
-              :label="item.ftName"
-              :value="item.id"
+              v-for="item in RoleList"
+              :key="item.roleId"
+              :label="item.roleName"
+              :value="item.roleId"
             ></el-option>
           </el-select>
         </el-form-item>
         <el-form-item label="部门" prop="deptName">
-          <el-select v-model="editForm.deptName" placeholder="请选择">
-            <el-option
-              v-for="item in userInfo"
-              :key="item.id"
-              :label="item.ftName"
-              :value="item.id"
-            ></el-option>
-          </el-select>
+          <el-tree
+            :data="hosMenuList"
+            highlight-current
+            icon-class="el-icon-caret-right"
+            :props="defaultProps"
+            @node-click="handleNodeClick"
+            default-expand-all
+          ></el-tree>
         </el-form-item>
       </el-form>
       <span slot="footer" class="dialog-footer">
@@ -123,6 +126,12 @@
         <el-form-item label="用户名" prop="userName">
           <el-input v-model="addForm.userName"></el-input>
         </el-form-item>
+        <el-form-item label="密码" prop="userPassword">
+          <el-input v-model="addForm.userPassword"></el-input>
+        </el-form-item>
+        <el-form-item label="登录名" prop="loginName">
+          <el-input v-model="addForm.loginName"></el-input>
+        </el-form-item>
         <el-form-item label="邮箱" prop="userEmail">
           <el-input v-model="addForm.userEmail"></el-input>
         </el-form-item>
@@ -130,22 +139,22 @@
           <el-input v-model="addForm.userPhone"></el-input>
         </el-form-item>
         <el-form-item label="角色" prop="roleName">
-          <el-select v-model="addForm.roleName" placeholder="请选择">
+          <el-select v-model="addForm.roleId" placeholder="请选择">
             <el-option
-              v-for="item in userInfo"
-              :key="item.id"
-              :label="item.ftName"
-              :value="item.id"
+              v-for="item in RoleList"
+              :key="item.roleId"
+              :label="item.roleName"
+              :value="item.roleId"
             ></el-option>
           </el-select>
         </el-form-item>
         <el-form-item label="部门" prop="deptName">
-          <el-select v-model="addForm.deptName" placeholder="请选择">
+          <el-select v-model="addForm.deptId" placeholder="请选择">
             <el-option
-              v-for="item in userInfo"
-              :key="item.id"
-              :label="item.ftName"
-              :value="item.id"
+              v-for="item in hosMenuList"
+              :key="item.deptId"
+              :label="item.deptName"
+              :value="item.deptId"
             ></el-option>
           </el-select>
         </el-form-item>
@@ -187,24 +196,38 @@ export default {
         userName: "",
         userEmail: "",
         userPhone: "",
-        roleName: "",
-        deptName: ""
+        roleId: null,
+        deptId: null
       },
       addDialogVisible: false,
       addForm: {
         userName: "",
         userEmail: "",
         userPhone: "",
-        roleName: "",
-        deptName: ""
+        loginName: "",
+        userPassword: "",
+        roleId: null,
+        deptId: null
       },
-      deptId: null,
-      roleId: null,
       editId: 0,
-      userInfo: [],
+      RoleList: [],
+      hosMenuList: [],
+      defaultProps: {
+        children: "child",
+        label: "deptName"
+      },
       addFormRules: {
         userName: [
-          { required: true, message: "用户名不能为空", trigger: "blur" }
+          { required: true, message: "请输入用户", trigger: "blur" },
+          { min: 2, max: 10, message: "长度在 2 到 10 个字符", trigger: "blur" }
+        ],
+        loginName: [
+          { required: true, message: "请输入登录名", trigger: "blur" },
+          { min: 2, max: 10, message: "长度在 2 到 10 个字符", trigger: "blur" }
+        ],
+        userPassword: [
+          { required: true, message: "请输入密码", trigger: "blur" },
+          { min: 5, max: 16, message: "长度在 5 到 16 个字符", trigger: "blur" }
         ],
         userEmail: [
           { required: true, message: "邮箱不能为空", trigger: "blur" },
@@ -219,8 +242,8 @@ export default {
   },
   created() {
     this.getUserList();
-    this.getRoleList()
-    this.getHosMenuList()
+    this.getRoleList();
+    this.getHosMenuList();
   },
   methods: {
     // 获取用户列表
@@ -230,21 +253,17 @@ export default {
         pageNum: this.pageNum,
         userName: this.input
       });
-      // console.log(res);
       if (res.code != 200) return this.$message.error("数获取失败");
       this.userList = res.rows;
       this.total = res.total;
     },
     // 获取角色列表
     async getRoleList() {
-      const { data: res } = await this.$http.post("role/getSysRoleList.do", {
-        roleName: this.input
-      });
+      const { data: res } = await this.$http.post("role/getSysRoleList.do", {});
       console.log(res);
       if (res.code != 200) return this.$message.error("列表获取失败");
       this.RoleList = res.rows;
     },
-
     // 获取部门列表
     async getHosMenuList() {
       const { data: res } = await this.$http.post("dept/getDeptList.do", {});
@@ -262,11 +281,8 @@ export default {
     },
     // 修改
     showEditdialog(info) {
-      console.log(info);
-      this.deptId = info.deptId;
-      this.roleId = info.roleId;
       this.editId = info.acId;
-      this.editForm = info;
+      this.editForm = JSON.parse(JSON.stringify(info));
       this.editDialogVisible = true;
     },
     editDialogClosed() {
@@ -275,19 +291,21 @@ export default {
     edit() {
       this.$refs.editFormRef.validate(async valid => {
         if (!valid) return this.$message.error("失败");
-        const { data: res } = await this.$http.post("users/updateSysUser.do", {
+        const { data: res } = await this.$http.post("user/updateSysUser.do", {
           acId: this.editId,
-          roleId: this.editForm.roleName,
-          deptId: this.editForm.deptName,
-          email: this.editForm.email,
-          mobile: this.editForm.mobile
+          roleId: this.editForm.roleId,
+          deptId: this.editForm.deptId,
+          userName: this.editForm.userName,
+          userEmail: this.editForm.userEmail,
+          userPhone: this.editForm.userPhone,
+          userPassword: this.$md5(this.editForm.userPassword)
         });
-        if (res.meta.code != 200) {
+        if (res.code != 200) {
           return this.$message.error("修改用户信息失败");
         } else {
           this.$message.success("修改用户成功");
-          this.getUserList();
           this.editDialogVisible = false;
+          this.getUserList();
         }
       });
     },
@@ -326,7 +344,21 @@ export default {
       this.addForm = {};
     },
     async addEnter() {
-      const { data: res } = this.$http.post("user/saveSysUser.do", {});
+      const { data: res } = this.$http.post("user/saveSysUser.do", {
+        userName: this.addForm.userName,
+        userEmail: this.addForm.userEmail,
+        loginName: this.addForm.loginName,
+        userPhone: this.addForm.userPhone,
+        userPassword: this.$md5(this.addForm.userPassword),
+        roleId: this.addForm.roleId,
+        deptId: this.addForm.deptId
+      });
+      this.addDialogVisible = false;
+      this.getUserList();
+    },
+    // 树形结构
+    handleNodeClick(data) {
+      console.log(data);
     },
     addDialogClosed() {},
     // 实现表格单行选择高亮
