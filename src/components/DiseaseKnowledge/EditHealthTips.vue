@@ -43,10 +43,33 @@
             <i v-else class="el-icon-plus avatar-uploader-icon"></i>
           </el-upload>
         </el-form-item>
-        <el-form-item></el-form-item>
       </el-form>
-
-      <ul class="addImgVid" v-for="item in addInfos" :key="item.id">
+      <!-- 拖拽区域 -->
+      <el-card class="draggableCard" v-show="addInfos.length>0">
+        <div id="changePositionBox">
+          <span class="PosTit" style="font-weight:700">调整顺序</span>
+          <p class="PosDes">可以让您快速的对文字、图片、视频进行排序</p>
+          <div class="draggableCon">
+            <draggable v-model="addInfos">
+              <transition-group name="iconList">
+                <li v-for="item in addInfos" :key="item.id">
+                  <div
+                    class="draggableDiv draggableDivFirst"
+                    v-if="item.type==0"
+                  >{{item.textDescription}}</div>
+                  <div class="draggableDiv" v-if="item.type==1">
+                    <img :src="item.imageUrl" alt width="140" height="140" />
+                  </div>
+                  <div class="draggableDiv" v-if="item.type==2">
+                    <video :src="item.videoUrl"></video>
+                  </div>
+                </li>
+              </transition-group>
+            </draggable>
+          </div>
+        </div>
+      </el-card>
+      <ul class="addImgVid" v-for="item in addInfos" :key="item.id" style="width:800px;">
         <li class="addChild" v-if="item.type==0">
           <textarea class="txtClass" placeholder="请输入内容" v-model="item.textDescription"></textarea>
           <span @click="infoDelete(item.id)" class="el-icon-error closeTxt"></span>
@@ -56,8 +79,7 @@
           <span @click="infoDelete(item.id)" class="el-icon-error closeImg"></span>
         </li>
         <li class="addChild" v-if="item.type==2">
-            <video :src="item.videoUrl" controls :poster="item.imageUrl">
-            </video>
+          <video :src="item.videoUrl" controls :poster="item.imageUrl"></video>
           <span @click="infoDelete(item.id)" class="el-icon-error closeVideo"></span>
         </li>
       </ul>
@@ -87,7 +109,13 @@
   </div>
 </template>
 <script>
+import draggable from "vuedraggable";
 export default {
+  name: "EditHealthTips",
+  components: {
+    draggable
+  },
+  props: {},
   data() {
     return {
       editform: {
@@ -106,6 +134,9 @@ export default {
       VidUrl: ""
     };
   },
+  updated() {
+    console.log(this.addInfos);
+  },
   created() {
     this.infoId = this.$route.query.info.id;
     this.getEditHealthTipsList();
@@ -120,6 +151,7 @@ export default {
       this.editform = res.data;
       this.illnessId = res.data.id;
       this.addInfos = res.data.resourcesList;
+      console.log(this.addInfos);
     },
     // 获取疾病类型
     async getHealthList() {
@@ -339,5 +371,36 @@ video {
 }
 .upImg {
   margin-right: 30px;
+}
+.PosDes {
+  color: #ccc;
+  font-size: 14px;
+  padding-bottom: 5px;
+  border-bottom: 1px solid #ccc;
+}
+.draggableCard {
+  width: 340px;
+  overflow: hidden;
+  float: right;
+  margin-right: 300px;
+  padding-bottom: 20px;
+}
+.draggableDiv {
+  float: left;
+  width: 140px;
+  height: 140px;
+  margin: 7px 0 0 0;
+  margin-right: 7px;
+  background: url("../../assets/images/txt.png") no-repeat;
+  background-size: 100%;
+  cursor: move;
+}
+.draggableDivFirst {
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
+}
+.iconList-move {
+  transition: transform 0.5s;
 }
 </style>
