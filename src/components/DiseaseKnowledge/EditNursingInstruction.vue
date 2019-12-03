@@ -45,7 +45,30 @@
         </el-form-item>
         <el-form-item></el-form-item>
       </el-form>
-
+      <!-- 拖拽区域 -->
+      <el-card class="draggableCard" v-show="addInfos.length>0">
+        <div id="changePositionBox">
+          <span class="PosTit" style="font-weight:700">调整顺序</span>
+          <div class="draggableCon">
+            <vuedraggable v-model="addInfos" element="ul">
+              <transition-group>
+                <div v-for="item in addInfos" :key="item.id">
+                  <div
+                    class="draggableDiv draggableDivFirst"
+                    v-if="item.type==0"
+                  >{{item.textDescription}}</div>
+                  <div class="draggableDiv" v-if="item.type==1">
+                    <img :src="item.imageUrl" alt width="140" height="140" />
+                  </div>
+                  <div class="draggableDiv" v-if="item.type==2">
+                    <video :src="item.videoUrl" width="140" height="140" controls></video>
+                  </div>
+                </div>
+              </transition-group>
+            </vuedraggable>
+          </div>
+        </div>
+      </el-card>
       <ul class="addImgVid" v-for="item in addInfos" :key="item.id">
         <li class="addChild" v-if="item.type==0">
           <textarea class="txtClass" placeholder="请输入内容" v-model="item.textDescription"></textarea>
@@ -56,7 +79,7 @@
           <span @click="infoDelete(item.id)" class="el-icon-error closeImg"></span>
         </li>
         <li class="addChild" v-if="item.type==2">
-          <video :src="item.videoUrl" controls :poster="item.imageUrl"></video>
+          <video class="addVideo" :src="item.videoUrl" controls :poster="item.imageUrl"></video>
           <span @click="infoDelete(item.id)" class="el-icon-error closeVideo"></span>
         </li>
       </ul>
@@ -86,7 +109,10 @@
   </div>
 </template>
 <script>
+import vuedraggable from "vuedraggable";
 export default {
+  name: "EditNursingInstruction",
+  components: { vuedraggable },
   data() {
     return {
       editform: {
@@ -315,7 +341,7 @@ li {
   resize: none;
   padding: 15px;
 }
-video {
+.addVideo {
   width: 100%;
   height: 400px;
 }
@@ -341,5 +367,38 @@ video {
 }
 .upImg {
   margin-right: 30px;
+}
+.PosDes {
+  color: #ccc;
+  font-size: 14px;
+  padding-bottom: 5px;
+  border-bottom: 1px solid #ccc;
+}
+.PosTit {
+  padding-bottom: 5px;
+}
+.draggableCard {
+  width: 180px;
+  overflow: hidden;
+  float: right;
+  margin-right: 300px;
+  padding-bottom: 20px;
+}
+.draggableDiv {
+  width: 140px;
+  height: 140px;
+  margin: 7px 0 0 0;
+  margin-right: 7px;
+  background: url("../../assets/images/txt.png") no-repeat;
+  background-size: 100%;
+  cursor: move;
+}
+.draggableDivFirst {
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
+}
+.iconList-move {
+  transition: transform 0.5s;
 }
 </style>

@@ -83,10 +83,6 @@ export default {
     secretKey() {
       this.getRandomCode();
     },
-    // 生成rsa
-    rsaKey() {
-      this.rsaDecode();
-    },
     // 加密按鈕
     encryptionBtn() {
       this.encrypt();
@@ -98,31 +94,32 @@ export default {
     // 加密方法
     encrypt() {
       var plaintText = this.content;
-      const CRYPTOJSKEY = this.RsaValue;
       var options = {
         mode: CryptoJS.mode.ECB,
         padding: CryptoJS.pad.Pkcs7
       };
-      var key = CryptoJS.enc.Utf8.parse(CRYPTOJSKEY);
+      var key = CryptoJS.enc.Utf8.parse(this.AESKEYValue);
       var encryptedData = CryptoJS.AES.encrypt(plaintText, key, options);
       var encryptedBase64Str = encryptedData.toString().replace(/\//g, "_");
-      encryptedBase64Str = encryptedBase64Str.replace(/\+/g, "-");
-      this.encryption = encryptedBase64Str;
+      this.encryption = encryptedBase64Str.replace(/\+/g, "-");
       return encryptedBase64Str;
     },
     // 解密方法
     decrypt() {
-      var plaintText = this.encryption;
-      var vals = plaintText.replace(/\-/g, "+").replace(/_/g, "/");
+      var vals = this.encryption.replace(/\-/g, "+").replace(/_/g, "/");
       var options = {
         mode: CryptoJS.mode.ECB,
         padding: CryptoJS.pad.Pkcs7
       };
-      var key = CryptoJS.enc.Utf8.parse(this.RsaValue);
+      var key = CryptoJS.enc.Utf8.parse(this.AESKEYValue);
       var decryptedData = CryptoJS.AES.decrypt(vals, key, options);
       var decryptedStr = CryptoJS.enc.Utf8.stringify(decryptedData);
       this.decode = decryptedStr;
       return decryptedStr;
+    },
+    // 生成rsa
+    rsaKey() {
+      this.rsaDecode();
     },
     // 随机码生成
     getRandomCode() {
@@ -148,13 +145,15 @@ export default {
       return str;
     },
     rsaDecode() {
-      const value = this.AESKEYValue;
-      // 生成公钥
-      const PUBLIC_KEY =
-        "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCwqXT4hT94AWReoqp3lPY6wMoVsE3vdCu4A6NAaGRpatLzlWcsUCF6zN+nbXOsUslj6qOrgHPJFcnNTZxqBnmQBYwFMeyFygUxf+/KRVwlNs189jshsTRBr5vYuQXvqlHujF03rmpGquSfZutVz9Ls/HgocTxgYjVFZwYdOru3swIDAQAB";
-      const encrypt = new JSEncrypt();
-      const encrypted = encrypt.encrypt(value);
-      this.RsaValue = encrypted
+      var encrypt = new JSEncrypt();
+      var publicKey = 'MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQDKjl56ysmgXEbrsuIfYRqEpw8WPw/kmD0nhXBfAkLn9qvVkBBM0rze3b44jbRmXBJv2sYShLFEWeDUARgw4/JKyLKHu5IC8gXuKWSLjNsVwzpp36I7pvC9NFj3KXDSV9wrPabnpvGJxMF5jnXBs1YJGuKCtsixbop5RVqB/3ckawIDAQAB'
+      encrypt.setPublicKey(
+        `
+  -----BEGIN PUBLIC KEY----- ${publicKey} -----END PUBLIC KEY-----
+        `
+      );
+      var data = encrypt.encrypt(this.AESKEYValue);
+      this.RsaValue = data
     }
   }
 };

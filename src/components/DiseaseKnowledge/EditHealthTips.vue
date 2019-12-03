@@ -48,11 +48,10 @@
       <el-card class="draggableCard" v-show="addInfos.length>0">
         <div id="changePositionBox">
           <span class="PosTit" style="font-weight:700">调整顺序</span>
-          <p class="PosDes">可以让您快速的对文字、图片、视频进行排序</p>
           <div class="draggableCon">
-            <draggable v-model="addInfos">
-              <transition-group name="iconList">
-                <li v-for="item in addInfos" :key="item.id">
+            <vuedraggable v-model="addInfos" element="ul">
+              <transition-group>
+                <div v-for="item in addInfos" :key="item.id">
                   <div
                     class="draggableDiv draggableDivFirst"
                     v-if="item.type==0"
@@ -61,11 +60,11 @@
                     <img :src="item.imageUrl" alt width="140" height="140" />
                   </div>
                   <div class="draggableDiv" v-if="item.type==2">
-                    <video :src="item.videoUrl"></video>
+                    <video :src="item.videoUrl" width="140" height="140" controls></video>
                   </div>
-                </li>
+                </div>
               </transition-group>
-            </draggable>
+            </vuedraggable>
           </div>
         </div>
       </el-card>
@@ -79,7 +78,7 @@
           <span @click="infoDelete(item.id)" class="el-icon-error closeImg"></span>
         </li>
         <li class="addChild" v-if="item.type==2">
-          <video :src="item.videoUrl" controls :poster="item.imageUrl"></video>
+          <video class="addVideo" :src="item.videoUrl" controls :poster="item.imageUrl"></video>
           <span @click="infoDelete(item.id)" class="el-icon-error closeVideo"></span>
         </li>
       </ul>
@@ -109,13 +108,10 @@
   </div>
 </template>
 <script>
-import draggable from "vuedraggable";
+import vuedraggable from "vuedraggable";
 export default {
   name: "EditHealthTips",
-  components: {
-    draggable
-  },
-  props: {},
+  components: { vuedraggable },
   data() {
     return {
       editform: {
@@ -345,7 +341,7 @@ li {
   resize: none;
   padding: 15px;
 }
-video {
+.addVideo {
   width: 100%;
   height: 400px;
 }
@@ -378,15 +374,17 @@ video {
   padding-bottom: 5px;
   border-bottom: 1px solid #ccc;
 }
+.PosTit {
+  padding-bottom: 5px;
+}
 .draggableCard {
-  width: 340px;
+  width: 180px;
   overflow: hidden;
   float: right;
   margin-right: 300px;
   padding-bottom: 20px;
 }
 .draggableDiv {
-  float: left;
   width: 140px;
   height: 140px;
   margin: 7px 0 0 0;
