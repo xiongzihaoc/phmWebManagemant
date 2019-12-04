@@ -238,7 +238,7 @@ export default {
       this.$refs.editFormRef.resetFields();
       this.imageUrl = "";
     },
-    async edit() {
+    edit() {
       this.$refs.editFormRef.validate(async valid => {
         if (!valid) return this.$message.error("失败");
         let httpUrl = "";

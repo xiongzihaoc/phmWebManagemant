@@ -88,6 +88,9 @@
         <el-form-item label="手机号" prop="userPhone">
           <el-input v-model="editForm.userPhone"></el-input>
         </el-form-item>
+        <el-form-item label="部门" prop="deptName">
+          <el-input v-model="EditValue" @click.native="deptEdit"></el-input>
+        </el-form-item>
         <el-form-item label="角色" prop="roleName">
           <el-select v-model="editForm.roleId" placeholder="请选择">
             <el-option
@@ -97,9 +100,6 @@
               :value="item.roleId"
             ></el-option>
           </el-select>
-        </el-form-item>
-        <el-form-item label="部门" prop="deptName">
-          <el-input v-model="Value" @click.native="demoInput"></el-input>
         </el-form-item>
       </el-form>
       <span slot="footer" class="dialog-footer">
@@ -132,7 +132,7 @@
           <el-input v-model="addForm.userPhone"></el-input>
         </el-form-item>
         <el-form-item label="部门" prop="deptName">
-          <el-input v-model="Value" @click.native="demoInput"></el-input>
+          <el-input v-model="addValue" @click.native="deptAdd"></el-input>
         </el-form-item>
         <el-form-item label="角色" prop="roleName">
           <el-select v-model="addForm.roleId" placeholder="请选择">
@@ -160,7 +160,12 @@
         @closed="addDeptDialogClosed"
       >
         <el-form-item prop="deptName">
-          <el-tree :data="hosMenuList" :props="defaultProps" @node-click="handleNodeClick"></el-tree>
+          <el-tree
+            :default-expand-all="true"
+            :data="hosMenuList"
+            :props="defaultProps"
+            @node-click="handleNodeAddClick"
+          ></el-tree>
         </el-form-item>
       </el-form>
       <span slot="footer" class="dialog-footer">
@@ -169,21 +174,26 @@
       </span>
     </el-dialog>
     <!-- 部门修改页面 -->
-    <el-dialog title="选择部门" :visible.sync="addDeptDialogVisible" width="40%">
+    <el-dialog title="选择部门" :visible.sync="DeptEditDialogVisible" width="40%">
       <el-form
         :rules="addFormRules"
         ref="addFormRef"
-        :model="addDeptForm"
+        :model="DeptEditForm"
         label-width="80px"
-        @closed="addDeptDialogClosed"
+        @closed="editDeptDialogClosed"
       >
         <el-form-item prop="deptName">
-          <el-tree :data="hosMenuList" :props="defaultProps" @node-click="handleNodeClick"></el-tree>
+          <el-tree
+            :default-expand-all="true"
+            :data="hosMenuList"
+            :props="defaultProps"
+            @node-click="handleNodeEditClick"
+          ></el-tree>
         </el-form-item>
       </el-form>
       <span slot="footer" class="dialog-footer">
-        <el-button @click="addDeptDialogVisible = false">取 消</el-button>
-        <el-button type="primary" @click="addDeptEnter">确 定</el-button>
+        <el-button @click="DeptEditDialogVisible = false">取 消</el-button>
+        <el-button type="primary" @click="DeptEditEnter">确 定</el-button>
       </span>
     </el-dialog>
   </div>
@@ -209,11 +219,12 @@ export default {
       input: "",
       userList: [],
       // 获取用户列表的参数对象
-      pageSize: 9,
+      pageSize: 10,
       pageNum: 1,
       total: 0,
       currentRow: null,
       editDialogVisible: false,
+      // 修改
       editForm: {
         userName: "",
         userEmail: "",
@@ -222,6 +233,7 @@ export default {
         deptId: null
       },
       addDialogVisible: false,
+      // 新增
       addForm: {
         userName: "",
         userEmail: "",
@@ -232,8 +244,9 @@ export default {
         deptId: null
       },
       editId: 0,
-      transit: "",
-      Value: "",
+      addTransit: "",
+      addValue: "",
+      // 部门增加
       addDeptForm: {},
       addDeptDialogVisible: false,
       defaultProps: {
@@ -241,6 +254,11 @@ export default {
         children: "child",
         value: "id"
       },
+      // 部门修改
+      editTransit: "",
+      EditValue: "",
+      DeptEditForm: {},
+      DeptEditDialogVisible: false,
       RoleList: [],
       hosMenuList: [],
       addFormRules: {
@@ -313,6 +331,7 @@ export default {
       this.editId = info.acId;
       this.editForm = JSON.parse(JSON.stringify(info));
       this.editDialogVisible = true;
+      this.EditValue = info.deptName
     },
     editDialogClosed() {
       this.$refs.editFormRef.resetFields();
@@ -387,18 +406,37 @@ export default {
     addDialogClosed() {
       this.$refs.addFormRef.resetFields();
     },
-    // 选择器
-    demoInput() {
+    // 部门新增
+    deptAdd() {
+      console.log(111);
+
       this.addDeptDialogVisible = true;
     },
-    addDeptDialogClosed() {},
+    addDeptDialogClosed() {
+      this.$refs.addFormRef.resetFields();
+    },
     addDeptEnter() {
       this.addDeptDialogVisible = false;
-      this.Value = this.transit;
+      this.addValue = this.addTransit;
     },
-    handleNodeClick(val) {
-      this.transit = val.deptName;
+    handleNodeAddClick(val) {
+      this.addTransit = val.deptName;
       this.addForm.deptId = val.id;
+    },
+    // 部门修改
+    deptEdit() {
+      this.DeptEditDialogVisible = true;
+    },
+    DeptEditEnter() {
+      this.DeptEditDialogVisible = false;
+      this.EditValue = this.editTransit;
+    },
+    editDeptDialogClosed() {
+      this.$refs.addFormRef.resetFields();
+    },
+    handleNodeEditClick(val) {
+      this.editTransit = val.deptName;
+      this.editForm.deptId = val.id;
     },
     // 实现表格单行选择高亮
     setCurrent(row) {

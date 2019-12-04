@@ -20,6 +20,7 @@
       </el-row>
       <!-- 表格 -->
       <el-table
+        tooltip-effect="dark"
         :data="disPlanList"
         ref="singleTable"
         highlight-current-row
@@ -35,7 +36,7 @@
         <el-table-column align="center" prop="foodPlanName" label="饮食方案"></el-table-column>
         <el-table-column align="center" prop="waterPlanName" label="饮水方案"></el-table-column>
         <el-table-column align="center" prop="sportPlanName" label="运动方案"></el-table-column>
-        <el-table-column align="center" prop="description" label="描述"></el-table-column>
+        <el-table-column align="center" prop="description" show-overflow-tooltip label="描述"></el-table-column>
         <el-table-column align="center" prop="operate" label="操作" width="180">
           <template slot-scope="scope">
             <!-- 修改按钮 -->
@@ -184,7 +185,7 @@ export default {
         }
       );
       console.log(res);
-      
+
       if (res.code != 200) return this.$message.error("数获取失败");
       this.disPlanList = res.rows;
       this.total = res.total;
@@ -220,7 +221,7 @@ export default {
         {}
       );
       console.log(res);
-      
+
       this.sportsPlanList = res.rows;
     },
 

@@ -20,6 +20,7 @@
       </el-row>
       <!-- 表格 -->
       <el-table
+        tooltip-effect="dark"
         :data="EstimateFoodList"
         ref="singleTable"
         highlight-current-row
@@ -38,7 +39,7 @@
         </el-table-column>
         <el-table-column align="center" prop="fmTypeValue" label="类型"></el-table-column>
         <el-table-column align="center" prop="fmWeight" label="重量(g)"></el-table-column>
-        <el-table-column align="center" prop="fmDescribe" label="描述"></el-table-column>
+        <el-table-column align="center" prop="fmDescribe" show-overflow-tooltip label="描述"></el-table-column>
         <el-table-column align="center" prop="operate" label="操作" width="200">
           <template slot-scope="scope">
             <!-- 修改按钮 -->
