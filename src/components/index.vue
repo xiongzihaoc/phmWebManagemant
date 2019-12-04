@@ -16,13 +16,13 @@ export default {
 img {
   display: block;
   margin-left: 40%;
-  margin-top: 10%;
 }
 h3 {
   font-weight: 700;
   font-size: 80px;
   color: #eee;
   text-align: center;
+  margin: 50px 180px 0 0;
 }
 h3:hover {
   color: #000;

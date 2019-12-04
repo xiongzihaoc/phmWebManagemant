@@ -161,6 +161,7 @@
       >
         <el-form-item prop="deptName">
           <el-tree
+            icon-class="el-icon-sunny"
             :default-expand-all="true"
             :data="hosMenuList"
             :props="defaultProps"
@@ -331,7 +332,7 @@ export default {
       this.editId = info.acId;
       this.editForm = JSON.parse(JSON.stringify(info));
       this.editDialogVisible = true;
-      this.EditValue = info.deptName
+      this.EditValue = info.deptName;
     },
     editDialogClosed() {
       this.$refs.editFormRef.resetFields();
