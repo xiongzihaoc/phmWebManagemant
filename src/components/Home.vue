@@ -2,7 +2,7 @@
   <!-- 容器 -->
   <el-container>
     <!-- 侧边栏 -->
-    <el-aside :width="isCollapse?'62px':'200px'">
+    <el-aside :width="isCollapse?'64px':'200px'">
       <!-- 侧边栏菜单区域 -->
 
       <div class="logoDiv">
@@ -11,12 +11,13 @@
           :height="isheight?'30px':'50px'"
           class="logoImg"
           src="../assets/images/logo.png"
-          alt
+          @click="JumpIndex"
         />
       </div>
       <el-menu
         background-color="#304156"
         text-color="#BFCBD9"
+        active-text-color="orange"
         :unique-opened="true"
         :collapse="isCollapse"
         :collapse-transition="false"
@@ -43,6 +44,46 @@
           </el-menu-item>
         </el-submenu>
       </el-menu>
+
+      <!-- <el-menu
+        background-color="#304156"
+        text-color="#BFCBD9"
+        active-text-color="orange"
+        :unique-opened="true"
+        :collapse="isCollapse"
+        :collapse-transition="false"
+        router
+        :default-active="this.$route.path"
+      >
+      <div v-for="item in menuList" :key="item.id">-->
+      <!-- 一级菜单 -->
+      <!-- <el-submenu :index="item.id + ''" :key="item.id" v-if="item.child.length > 1">
+            <template slot="title">
+              <i :class="item.icon" height="24px"></i>
+              <span>{{item.menuName}}</span>
+      </template>-->
+      <!-- 二级菜单 -->
+      <!-- <el-menu-item
+              :index="'/' + subItem.url"
+              v-for="subItem in item.child"
+              :key="subItem.id"
+              @click="saveNavState('/' + subItem.url)"
+            >
+              <template slot="title">
+                <i class="el-icon-menu"></i>
+                <span>{{subItem.menuName}}</span>
+              </template>
+            </el-menu-item>
+          </el-submenu>
+
+          <el-menu-item :index="'/' + item.child[0].url" :key="item.child[0].id" v-else>
+            <template slot="title">
+              <i :class="item.icon" height="24px"></i>
+              <span>{{item.child[0].menuName}}</span>
+            </template>
+          </el-menu-item>
+        </div>
+      </el-menu>-->
     </el-aside>
     <el-container>
       <!-- 头部区域 -->
@@ -95,6 +136,7 @@ export default {
     this.loginName = window.localStorage.getItem("loginName");
   },
   methods: {
+    // 退出
     async logout() {
       const { data: res } = await this.$http.post("user/userSignOut.do", {});
       if (res.code != 200) return this.$message.error("退出失败");
@@ -105,6 +147,7 @@ export default {
     async getMenuList() {
       const { data: res } = await this.$http.post("menu/getMenuList.do", {});
       if (res.code != 200) return this.$message.error(res.msg);
+
       this.menuList = res.data;
     },
     // 是否折叠展架侧边栏
@@ -113,6 +156,10 @@ export default {
       this.isCollapse = !this.isCollapse;
       this.iswidth = !this.iswidth;
       this.isheight = !this.isheight;
+    },
+    // 点击logo跳转首页
+    JumpIndex() {
+      this.$router.push({ path: "/index" });
     },
     // 保持连接的激活状态
     saveNavState(activePath) {
@@ -179,6 +226,9 @@ export default {
   padding-left: 16px;
   margin-left: 50%;
   transform: translate(-50%);
+}
+.logoImg:hover {
+  cursor: pointer;
 }
 .logoDiv {
   overflow: hidden;

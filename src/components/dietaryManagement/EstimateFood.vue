@@ -182,7 +182,7 @@ export default {
       this.$refs.editFormRef.resetFields();
       this.imageUrl = "";
     },
-    async editEnter() {
+    editEnter() {
       this.$refs.editFormRef.validate(async valid => {
         if (!valid) return this.$message.error("失败");
         let httpUrl = "";
@@ -257,19 +257,20 @@ export default {
       this.editForm.fmPhotoPath = res.data;
     },
     beforeAvatarUpload(file) {
+      console.log(file);
       const isJPG = file.type === "image/jpeg";
       const isGIF = file.type === "image/gif";
       const isPNG = file.type === "image/png";
       const isBMP = file.type === "image/bmp";
-      const isLt2M = file.size / 1024 / 1024 < 2;
+      const isLt10M = file.size / 1024 / 1024 < 10;
 
       if (!isJPG && !isGIF && !isPNG && !isBMP) {
-        this.common.errorTip("上传图片必须是JPG/GIF/PNG/BMP 格式!");
+        this.$message.error("上传图片必须是JPG/GIF/PNG/BMP 格式!");
       }
-      if (!isLt2M) {
-        this.common.errorTip("上传图片大小不能超过 2MB!");
+      if (!isLt10M) {
+        this.$message.error("上传图片大小不能超过 10MB!");
       }
-      return (isJPG || isBMP || isGIF || isPNG) && isLt2M;
+      return (isJPG || isBMP || isGIF || isPNG) && isLt10M;
     },
     // 实现表格单行选择高亮
     setCurrent(row) {

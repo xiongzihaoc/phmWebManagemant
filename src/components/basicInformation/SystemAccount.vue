@@ -99,14 +99,7 @@
           </el-select>
         </el-form-item>
         <el-form-item label="部门" prop="deptName">
-          <el-tree
-            :data="hosMenuList"
-            highlight-current
-            icon-class="el-icon-caret-right"
-            :props="defaultProps"
-            @node-click="handleNodeClick"
-            default-expand-all
-          ></el-tree>
+          <el-input v-model="Value" @click.native="demoInput"></el-input>
         </el-form-item>
       </el-form>
       <span slot="footer" class="dialog-footer">
@@ -138,6 +131,9 @@
         <el-form-item label="手机号" prop="userPhone">
           <el-input v-model="addForm.userPhone"></el-input>
         </el-form-item>
+        <el-form-item label="部门" prop="deptName">
+          <el-input v-model="Value" @click.native="demoInput"></el-input>
+        </el-form-item>
         <el-form-item label="角色" prop="roleName">
           <el-select v-model="addForm.roleId" placeholder="请选择">
             <el-option
@@ -148,20 +144,46 @@
             ></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="部门" prop="deptName">
-          <el-select v-model="addForm.deptId" placeholder="请选择">
-            <el-option
-              v-for="item in hosMenuList"
-              :key="item.deptId"
-              :label="item.deptName"
-              :value="item.deptId"
-            ></el-option>
-          </el-select>
-        </el-form-item>
       </el-form>
       <span slot="footer" class="dialog-footer">
         <el-button @click="addDialogVisible = false">取 消</el-button>
         <el-button type="primary" @click="addEnter">确 定</el-button>
+      </span>
+    </el-dialog>
+    <!-- 部门新增页面 -->
+    <el-dialog title="选择部门" :visible.sync="addDeptDialogVisible" width="40%">
+      <el-form
+        :rules="addFormRules"
+        ref="addFormRef"
+        :model="addDeptForm"
+        label-width="80px"
+        @closed="addDeptDialogClosed"
+      >
+        <el-form-item prop="deptName">
+          <el-tree :data="hosMenuList" :props="defaultProps" @node-click="handleNodeClick"></el-tree>
+        </el-form-item>
+      </el-form>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="addDeptDialogVisible = false">取 消</el-button>
+        <el-button type="primary" @click="addDeptEnter">确 定</el-button>
+      </span>
+    </el-dialog>
+    <!-- 部门修改页面 -->
+    <el-dialog title="选择部门" :visible.sync="addDeptDialogVisible" width="40%">
+      <el-form
+        :rules="addFormRules"
+        ref="addFormRef"
+        :model="addDeptForm"
+        label-width="80px"
+        @closed="addDeptDialogClosed"
+      >
+        <el-form-item prop="deptName">
+          <el-tree :data="hosMenuList" :props="defaultProps" @node-click="handleNodeClick"></el-tree>
+        </el-form-item>
+      </el-form>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="addDeptDialogVisible = false">取 消</el-button>
+        <el-button type="primary" @click="addDeptEnter">确 定</el-button>
       </span>
     </el-dialog>
   </div>
@@ -186,7 +208,7 @@ export default {
     return {
       input: "",
       userList: [],
-      //获取用户列表的参数对象
+      // 获取用户列表的参数对象
       pageSize: 9,
       pageNum: 1,
       total: 0,
@@ -210,12 +232,17 @@ export default {
         deptId: null
       },
       editId: 0,
+      transit: "",
+      Value: "",
+      addDeptForm: {},
+      addDeptDialogVisible: false,
+      defaultProps: {
+        label: "deptName",
+        children: "child",
+        value: "id"
+      },
       RoleList: [],
       hosMenuList: [],
-      defaultProps: {
-        children: "child",
-        label: "deptName"
-      },
       addFormRules: {
         userName: [
           { required: true, message: "请输入用户", trigger: "blur" },
@@ -245,6 +272,7 @@ export default {
     this.getRoleList();
     this.getHosMenuList();
   },
+
   methods: {
     // 获取用户列表
     async getUserList() {
@@ -256,13 +284,14 @@ export default {
       if (res.code != 200) return this.$message.error("数获取失败");
       this.userList = res.rows;
       this.total = res.total;
+      // console.log(res);
     },
     // 获取角色列表
     async getRoleList() {
       const { data: res } = await this.$http.post("role/getSysRoleList.do", {});
-      console.log(res);
       if (res.code != 200) return this.$message.error("列表获取失败");
       this.RoleList = res.rows;
+      console.log(res);
     },
     // 获取部门列表
     async getHosMenuList() {
@@ -326,13 +355,9 @@ export default {
       const { data: res } = await this.$http.get(
         "user/delSysUser.do?acId=" + id
       );
-      if (res.code == 200) {
-        this.$message.success("删除成功");
-        this.getUserList();
-      } else {
-        this.$message.error("删除失败");
-        return;
-      }
+      if (res.code != 200) return this.$message.error("删除失败");
+      this.$message.success("删除成功");
+      this.getUserList();
     },
     // 搜索
     systemSearch() {
@@ -343,24 +368,38 @@ export default {
       this.addDialogVisible = true;
       this.addForm = {};
     },
-    async addEnter() {
-      const { data: res } = this.$http.post("user/saveSysUser.do", {
-        userName: this.addForm.userName,
-        userEmail: this.addForm.userEmail,
-        loginName: this.addForm.loginName,
-        userPhone: this.addForm.userPhone,
-        userPassword: this.$md5(this.addForm.userPassword),
-        roleId: this.addForm.roleId,
-        deptId: this.addForm.deptId
+    addEnter() {
+      this.$refs.addFormRef.validate(async valid => {
+        if (!valid) return this.$message.error("失败");
+        const { data: res } = await this.$http.post("user/saveSysUser.do", {
+          userName: this.addForm.userName,
+          userEmail: this.addForm.userEmail,
+          loginName: this.addForm.loginName,
+          userPhone: this.addForm.userPhone,
+          userPassword: this.$md5(this.addForm.userPassword),
+          roleId: this.addForm.roleId,
+          deptId: this.addForm.deptId
+        });
+        this.addDialogVisible = false;
+        this.getUserList();
       });
-      this.addDialogVisible = false;
-      this.getUserList();
     },
-    // 树形结构
-    handleNodeClick(data) {
-      console.log(data);
+    addDialogClosed() {
+      this.$refs.addFormRef.resetFields();
     },
-    addDialogClosed() {},
+    // 选择器
+    demoInput() {
+      this.addDeptDialogVisible = true;
+    },
+    addDeptDialogClosed() {},
+    addDeptEnter() {
+      this.addDeptDialogVisible = false;
+      this.Value = this.transit;
+    },
+    handleNodeClick(val) {
+      this.transit = val.deptName;
+      this.addForm.deptId = val.id;
+    },
     // 实现表格单行选择高亮
     setCurrent(row) {
       this.$refs.singleTable.setCurrentRow(row);
