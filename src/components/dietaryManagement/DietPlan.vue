@@ -161,6 +161,11 @@ export default {
     async getFoodManagemant() {
       const { data: res } = await this.$http.post("food/getPFoodList.do", {});
       this.foodList = res.rows;
+      console.log(res.rows);
+      
+      this.list = this.foodList.map(item => {
+        return { value: item.id, label: item.fdName };
+      });
     },
     // 获取列表
     async getFoodTypeList() {
@@ -282,7 +287,7 @@ export default {
     },
     remoteMethod(query) {
       console.log(query);
-      
+
       if (query !== "") {
         this.loading = true;
         setTimeout(() => {
@@ -298,9 +303,6 @@ export default {
   },
   mounted() {
     this.getFoodManagemant();
-    this.list = this.foodList.map(item => {
-      return { value: item.id, label: item.fdName };
-    });
   }
 };
 </script>
