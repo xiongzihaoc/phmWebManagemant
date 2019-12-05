@@ -86,13 +86,16 @@
             <el-select
               v-model="AddEditForm.addFoodIds"
               clearable
-              :reserve-keyword="true"
-              filterable
+              reserve-keyword
               multiple
+              filterable
+              remote
+              :remote-method="remoteMethod"
+              :loading="loading"
               placeholder="请选择"
             >
               <el-option
-                v-for="item in foodList"
+                v-for="item in options"
                 :key="item.id"
                 :label="item.fdName"
                 :value="item.id"
@@ -144,15 +147,17 @@ export default {
       },
       id: "",
       foodList: [],
+      list: [],
+      options: [],
+      loading: false,
       currentRow: null
     };
   },
   created() {
-    this.getFoodManagemant();
     this.getFoodTypeList();
   },
   methods: {
-    // 获取食物管理列表
+    // 获取食物列表
     async getFoodManagemant() {
       const { data: res } = await this.$http.post("food/getPFoodList.do", {});
       this.foodList = res.rows;
@@ -259,7 +264,7 @@ export default {
       }
     },
     // 搜索
-    async Foodsearch() {
+    Foodsearch() {
       this.getFoodTypeList();
     },
     // 跳转到元素列表
@@ -274,7 +279,28 @@ export default {
     },
     handleCurrentChange(val) {
       this.currentRow = val;
+    },
+    remoteMethod(query) {
+      console.log(query);
+      
+      if (query !== "") {
+        this.loading = true;
+        setTimeout(() => {
+          this.loading = false;
+          this.options = this.list.filter(item => {
+            return item.label.toLowerCase().indexOf(query.toLowerCase()) > -1;
+          });
+        }, 200);
+      } else {
+        this.options = [];
+      }
     }
+  },
+  mounted() {
+    this.getFoodManagemant();
+    this.list = this.foodList.map(item => {
+      return { value: item.id, label: item.fdName };
+    });
   }
 };
 </script>
