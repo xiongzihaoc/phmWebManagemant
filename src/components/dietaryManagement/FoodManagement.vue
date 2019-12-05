@@ -120,11 +120,13 @@
             :action="this.UPLOAD_IMG"
             :show-file-list="false"
             :on-success="handleAvatarSuccess"
+            :on-progress="uploadVideoProcess"
             :before-upload="beforeAvatarUpload"
           >
             <img v-if="editForm.fdPhotoPath" :src="editForm.fdPhotoPath" class="avatar" />
             <i v-else class="el-icon-plus avatar-uploader-icon"></i>
           </el-upload>
+          <el-progress v-if="videoFlag == true" :percentage="percentageFile" style="margin-top:20px;"></el-progress>
         </el-form-item>
       </el-form>
       <span slot="footer" class="dialog-footer">
@@ -157,6 +159,8 @@ export default {
       foodId: 0,
       value: "",
       foodTypeList: [],
+      videoFlag: false,
+      percentageFile: 0,
       currentRow: null
     };
   },
@@ -175,8 +179,8 @@ export default {
         pageNum: this.pageNum
       });
       console.log(res);
-      
-      if (res.code != 200) return this.$message.error("数获取失败");
+
+      if (res.code != 200) return this.$message.error("获取食物列表失败");
       this.foodList = res.rows;
       this.total = res.total;
     },
@@ -277,15 +281,22 @@ export default {
       this.editDialogVisible = true;
     },
     handleAvatarSuccess(res, file) {
+      if (res.code != 200) return this.$message.error("上传失败");
+      this.percentageFile = 0;
+      this.videoFlag = false;
       this.imageUrl = res.data;
       this.editForm.fdPhotoPath = res.data;
+    },
+    uploadVideoProcess(event, file, fileList) {
+      this.videoFlag = true;
+      this.percentageFile = parseInt(file.percentage);
     },
     beforeAvatarUpload(file) {
       const isJPG = file.type === "image/jpeg";
       const isGIF = file.type === "image/gif";
       const isPNG = file.type === "image/png";
       const isBMP = file.type === "image/bmp";
-       const isLt10M = file.size / 1024 / 1024 < 10;
+      const isLt10M = file.size / 1024 / 1024 < 10;
 
       if (!isJPG && !isGIF && !isPNG && !isBMP) {
         this.$message.error("上传图片必须是JPG/GIF/PNG/BMP 格式!");
@@ -293,7 +304,7 @@ export default {
       if (!isLt10M) {
         this.$message.error("上传图片大小不能超过 10MB!");
       }
-      return (isJPG || isBMP || isGIF || isPNG) && isLt2M;
+      return (isJPG || isBMP || isGIF || isPNG) && isLt10M;
     },
     // 搜索
     foodSearch() {

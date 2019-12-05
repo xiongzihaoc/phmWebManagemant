@@ -50,8 +50,8 @@
           <span class="PosTit" style="font-weight:700">调整顺序</span>
           <div class="draggableCon">
             <vuedraggable v-model="addInfos" element="ul">
-              <transition-group>
-                <div v-for="item in addInfos" :key="item.id">
+              <transition-group tag="p">
+                <div v-for="(item,index) in addInfos" v-bind:key="index">
                   <div
                     class="draggableDiv draggableDivFirst"
                     v-if="item.type==0"
@@ -210,15 +210,15 @@ export default {
       const isGIF = file.type === "image/gif";
       const isPNG = file.type === "image/png";
       const isBMP = file.type === "image/bmp";
-      const isLt2M = file.size / 1024 / 1024 < 2;
+      const isLt10M = file.size / 1024 / 1024 < 10;
 
       if (!isJPG && !isGIF && !isPNG && !isBMP) {
-        this.common.errorTip("上传图片必须是JPG/GIF/PNG/BMP 格式!");
+        this.$message.error("上传图片必须是JPG/GIF/PNG/BMP 格式!");
       }
-      if (!isLt2M) {
-        this.common.errorTip("上传图片大小不能超过 2MB!");
+      if (!isLt10M) {
+        this.$message.error("上传图片大小不能超过 2MB!");
       }
-      return (isJPG || isBMP || isGIF || isPNG) && isLt2M;
+      return (isJPG || isBMP || isGIF || isPNG) && isLt10M;
     },
     handleAvatarSuccessImg(res, file) {
       this.ImgUrl = res.data;
@@ -239,9 +239,9 @@ export default {
         this.$message.error("上传图片必须是JPG/GIF/PNG/BMP 格式!");
       }
       if (!isLt10M) {
-        this.$message.error("上传图片大小不能超过 10MB!");
+        this.$message.error("上传图片大小不能超过 2MB!");
       }
-      return (isJPG || isBMP || isGIF || isPNG) && isLt2M;
+      return (isJPG || isBMP || isGIF || isPNG) && isLt10M;
     },
     handleAvatarSuccessVid(res, file, fileList) {
       this.VidUrl = res.data;

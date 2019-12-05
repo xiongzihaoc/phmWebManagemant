@@ -83,11 +83,13 @@
               :action="this.UPLOAD_IMG"
               :show-file-list="false"
               :on-success="handleAvatarSuccess"
+              :on-progress="uploadVideoProcess"
               :before-upload="beforeAvatarUpload"
             >
               <img v-if="editForm.iconUrl" :src="editForm.iconUrl" class="avatar" />
               <i v-else class="el-icon-plus avatar-uploader-icon"></i>
             </el-upload>
+            <el-progress v-if="videoFlag == true"  :percentage="percentageFile"></el-progress>
           </el-form-item>
           <el-form-item label="描述" prop="description">
             <el-input v-model="editForm.description"></el-input>
@@ -121,6 +123,8 @@ export default {
       dialogTitle: "",
       imageUrl: "",
       upLoad: "",
+      videoFlag: false,
+      percentageFile: 0,
       currentRow: null
     };
   },
@@ -222,7 +226,14 @@ export default {
       this.editDialogVisible = true;
     },
 
+    uploadVideoProcess(event, file, fileList) {
+      this.videoFlag = true;
+      this.percentageFile = parseInt(file.percentage);
+    },
     handleAvatarSuccess(res, file) {
+      if (res.code != 200) return this.$message.error('上传失败')
+      this.percentageFile = 0;
+      this.videoFlag = false;
       this.imageUrl = res.data;
       this.editForm.iconUrl = res.data;
     },
@@ -239,7 +250,7 @@ export default {
       if (!isLt10M) {
         this.$message.error("上传图片大小不能超过 10MB!");
       }
-      return (isJPG || isBMP || isGIF || isPNG) && isLt2M;
+      return (isJPG || isBMP || isGIF || isPNG) && isLt10M;
     },
     // 实现表格单行选择高亮
     setCurrent(row) {

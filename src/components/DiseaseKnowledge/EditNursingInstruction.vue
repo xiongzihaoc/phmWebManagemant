@@ -51,8 +51,8 @@
           <span class="PosTit" style="font-weight:700">调整顺序</span>
           <div class="draggableCon">
             <vuedraggable v-model="addInfos" element="ul">
-              <transition-group>
-                <div v-for="item in addInfos" :key="item.id">
+              <transition-group tag="p">
+                <div v-for="(item,index) in addInfos"  v-bind:key="index">
                   <div
                     class="draggableDiv draggableDivFirst"
                     v-if="item.type==0"
@@ -217,7 +217,7 @@ export default {
       if (!isLt10M) {
         this.$message.error("上传图片大小不能超过 10MB!");
       }
-      return (isJPG || isBMP || isGIF || isPNG) && isLt2M;
+      return (isJPG || isBMP || isGIF || isPNG) && isLt10M;
     },
     handleAvatarSuccessImg(res, file) {
       this.ImgUrl = res.data;
@@ -240,7 +240,7 @@ export default {
       if (!isLt10M) {
         this.$message.error("上传图片大小不能超过 10MB!");
       }
-      return (isJPG || isBMP || isGIF || isPNG) && isLt2M;
+      return (isJPG || isBMP || isGIF || isPNG) && isLt10M;
     },
     handleAvatarSuccessVid(res, file) {
       console.log(res);

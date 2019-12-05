@@ -86,11 +86,13 @@
               :action="this.UPLOAD_IMG"
               :show-file-list="false"
               :on-success="handleAvatarSuccess"
+              :on-progress="uploadVideoProcess"
               :before-upload="beforeAvatarUpload"
             >
               <img v-if="editForm.fmPhotoPath" :src="editForm.fmPhotoPath" class="avatar" />
               <i v-else class="el-icon-plus avatar-uploader-icon"></i>
             </el-upload>
+            <el-progress v-if="videoFlag == true" :percentage="percentageFile"></el-progress>
           </el-form-item>
           <el-form-item label="类型" prop="fmType">
             <el-select v-model="editForm.fmType" placeholder="请选择">
@@ -138,6 +140,8 @@ export default {
       id: 0,
       dialogTitle: "",
       imageUrl: "",
+      videoFlag: false,
+      percentageFile: 0,
       currentRow: null
     };
   },
@@ -254,11 +258,17 @@ export default {
     },
 
     handleAvatarSuccess(res, file) {
+      if (res.code != 200) return this.$message.error("上传失败");
+      this.percentageFile = 0;
+      this.videoFlag = false;
       this.imageUrl = res.data;
       this.editForm.fmPhotoPath = res.data;
     },
+    uploadVideoProcess(event, file, fileList) {
+      this.videoFlag = true;
+      this.percentageFile = parseInt(file.percentage);
+    },
     beforeAvatarUpload(file) {
-      console.log(file);
       const isJPG = file.type === "image/jpeg";
       const isGIF = file.type === "image/gif";
       const isPNG = file.type === "image/png";

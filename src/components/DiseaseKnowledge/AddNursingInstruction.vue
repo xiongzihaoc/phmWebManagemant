@@ -204,7 +204,7 @@ export default {
       if (!isLt10M) {
         this.$message.error("上传图片大小不能超过 10MB!");
       }
-      return (isJPG || isBMP || isGIF || isPNG) && isLt2M;
+      return (isJPG || isBMP || isGIF || isPNG) && isLt10M;
     },
     handleAvatarSuccessImg(res, file) {
       this.ImgUrl = res.data;
@@ -227,7 +227,7 @@ export default {
       if (!isLt10M) {
         this.$message.error("上传图片大小不能超过 10MB!");
       }
-      return (isJPG || isBMP || isGIF || isPNG) && isLt2M;
+      return (isJPG || isBMP || isGIF || isPNG) && isLt10M;
     },
     handleAvatarSuccessVid(res, file) {
       console.log(res);
