@@ -100,6 +100,8 @@
               :reserve-keyword="true"
               filterable
               multiple
+                  remote
+                  
               clearable
               placeholder="请选择"
             >
@@ -174,7 +176,6 @@ export default {
       );
       this.waterTypeList = res.rows;
       this.total = res.total;
-      console.log(res);
     },
     // 获取饮水种类
     async getDrinkTypeList() {
@@ -183,6 +184,7 @@ export default {
         {}
       );
       this.DrinkTypeList = res.rows;
+      
     },
     // 分页
     handleSizeChange(newSize) {

@@ -35,7 +35,7 @@
         <el-table-column align="center" prop="elementUnit" label="元素单位" width="200"></el-table-column>
         <el-table-column align="center" prop="elementMinValue" label="最小临界值" width="200"></el-table-column>
         <el-table-column align="center" prop="elementMaxValue" label="最大临界值"></el-table-column>
-        <el-table-column align="center" prop="describe" label="描述"></el-table-column>
+        <el-table-column align="center" prop="description" label="描述"></el-table-column>
         <el-table-column align="center" prop="operate" label="操作" width="240">
           <template slot-scope="scope">
             <!-- 修改按钮 -->
@@ -44,14 +44,14 @@
               @click="showEditdialog(scope.row)"
               type="primary"
               icon="el-icon-edit"
-            ></el-button>
+            >编辑</el-button>
             <!-- 删除按钮 -->
             <el-button
               size="mini"
               @click="removeUserById(scope.row.id)"
               type="danger"
               icon="el-icon-delete"
-            ></el-button>
+            >删除</el-button>
           </template>
         </el-table-column>
       </el-table>

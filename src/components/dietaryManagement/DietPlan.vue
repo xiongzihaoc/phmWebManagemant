@@ -85,10 +85,10 @@
           <el-form-item label="禁忌食物" prop="addFoodIds">
             <el-select
               v-model="AddEditForm.addFoodIds"
-              clearable
-              reserve-keyword
-              multiple
+              @focus="ttfocus"
               filterable
+              multiple
+              clearable
               remote
               :remote-method="remoteMethod"
               :loading="loading"
@@ -146,26 +146,23 @@ export default {
         dsDescribe: ""
       },
       id: "",
+      currentRow: null,
       foodList: [],
       list: [],
       options: [],
-      loading: false,
-      currentRow: null
+      loading: false
     };
   },
   created() {
     this.getFoodTypeList();
+    this.getFoodManagemant();
   },
   methods: {
     // 获取食物列表
     async getFoodManagemant() {
       const { data: res } = await this.$http.post("food/getPFoodList.do", {});
       this.foodList = res.rows;
-      console.log(res.rows);
-      
-      this.list = this.foodList.map(item => {
-        return { value: item.id, label: item.fdName };
-      });
+      // console.log(res);
     },
     // 获取列表
     async getFoodTypeList() {
@@ -213,7 +210,7 @@ export default {
     editAddDialogClosed() {
       this.$refs.editFormRef.resetFields();
     },
-    async AddEdit() {
+    AddEdit() {
       this.$refs.editFormRef.validate(async valid => {
         if (!valid) return this.$message.error("失败");
         let httpUrl = "";
@@ -223,7 +220,7 @@ export default {
           parm = {
             id: this.id,
             dsName: this.AddEditForm.dsName,
-            dsTabooFoodId: this.AddEditForm.addFoodIds.toString(),
+            dsTabooFoodId: this.AddEditForm.addFoodIds + "",
             dsTabooDescribe: this.AddEditForm.dsTabooDescribe,
             dsDescribe: this.AddEditForm.dsDescribe
           };
@@ -231,7 +228,7 @@ export default {
           httpUrl = "foodPlan/savePFoodPlan.do";
           parm = {
             dsName: this.AddEditForm.dsName,
-            dsTabooFoodId: this.AddEditForm.addFoodIds.toString(),
+            dsTabooFoodId: this.AddEditForm.addFoodIds + "",
             dsTabooDescribe: this.AddEditForm.dsTabooDescribe,
             dsDescribe: this.AddEditForm.dsDescribe
           };
@@ -274,8 +271,6 @@ export default {
     },
     // 跳转到元素列表
     jumpElementList(info) {
-      // console.log(info);
-
       this.$router.push({ path: "/food/ElementList", query: { id: info.id } });
     },
     // 实现表格单行选择高亮
@@ -285,25 +280,32 @@ export default {
     handleCurrentChange(val) {
       this.currentRow = val;
     },
+    ttfocus() {
+      this.options = this.foodList;
+      // console.log(this.options);
+    },
     remoteMethod(query) {
-      console.log(query);
-
+      // this.list = this.foodList.map(item => {
+      //   return { value: id, label: fdName };
+      // });
       if (query !== "") {
         this.loading = true;
         setTimeout(() => {
           this.loading = false;
-          this.options = this.list.filter(item => {
-            return item.label.toLowerCase().indexOf(query.toLowerCase()) > -1;
+          this.options = this.foodList.filter(item => {
+            console.log(item);
+            
+            return item.fdName.toLowerCase().indexOf(query.toLowerCase()) > -1;
           });
         }, 200);
       } else {
         this.options = [];
       }
     }
-  },
-  mounted() {
-    this.getFoodManagemant();
   }
+  // mounted() {
+
+  // }
 };
 </script>
 <style lang='less' scoped>
