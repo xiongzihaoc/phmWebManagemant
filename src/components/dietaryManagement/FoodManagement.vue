@@ -179,12 +179,11 @@ export default {
         pageNum: this.pageNum
       });
       console.log(res);
-
       if (res.code != 200) return this.$message.error("获取食物列表失败");
       this.foodList = res.rows;
       this.total = res.total;
     },
-    // 获取类型
+    // 获取类型列表
     async getTypeList() {
       const { data: res } = await this.$http.post(
         "foodType/getPFoodTypeList.do",
@@ -193,7 +192,6 @@ export default {
           pageNum: this.pageNum
         }
       );
-      console.log(res);
       this.foodTypeList = res.data;
     },
     // 分页

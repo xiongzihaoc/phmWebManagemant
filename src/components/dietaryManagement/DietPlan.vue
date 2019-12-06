@@ -32,7 +32,7 @@
         <el-table-column align="center" type="selection" width="60"></el-table-column>
         <el-table-column align="center" type="index" label="序号" width="60"></el-table-column>
         <el-table-column align="center" prop="dsName" label="名称" width="200"></el-table-column>
-        <el-table-column align="center" prop="dsTabooFood" label="禁忌食物" width="200"></el-table-column>
+        <el-table-column align="center" prop="dsTabooFood" show-overflow-tooltip label="禁忌食物" width="200"></el-table-column>
         <el-table-column align="center" prop="dsTabooDescribe" show-overflow-tooltip label="禁忌食物描述"></el-table-column>
         <el-table-column align="center" prop="dsDescribe" show-overflow-tooltip label="描述"></el-table-column>
         <el-table-column align="center" prop="operate" label="操作" width="300">
@@ -89,9 +89,6 @@
               filterable
               multiple
               clearable
-              remote
-              :remote-method="remoteMethod"
-              :loading="loading"
               placeholder="请选择"
             >
               <el-option
@@ -150,7 +147,8 @@ export default {
       foodList: [],
       list: [],
       options: [],
-      loading: false
+      loading: false,
+      query: ""
     };
   },
   created() {
@@ -160,9 +158,12 @@ export default {
   methods: {
     // 获取食物列表
     async getFoodManagemant() {
-      const { data: res } = await this.$http.post("food/getPFoodList.do", {});
+      const { data: res } = await this.$http.post("food/getPFoodList.do", {
+        pageSize: 15000,
+        pageNum: this.pageNum,
+        // fdName: this.query
+      });
       this.foodList = res.rows;
-      // console.log(res);
     },
     // 获取列表
     async getFoodTypeList() {
@@ -280,32 +281,33 @@ export default {
     handleCurrentChange(val) {
       this.currentRow = val;
     },
+
     ttfocus() {
       this.options = this.foodList;
-      // console.log(this.options);
     },
-    remoteMethod(query) {
-      // this.list = this.foodList.map(item => {
-      //   return { value: id, label: fdName };
-      // });
-      if (query !== "") {
-        this.loading = true;
-        setTimeout(() => {
-          this.loading = false;
-          this.options = this.foodList.filter(item => {
-            console.log(item);
-            
-            return item.fdName.toLowerCase().indexOf(query.toLowerCase()) > -1;
-          });
-        }, 200);
-      } else {
-        this.options = [];
-      }
-    }
-  }
-  // mounted() {
 
-  // }
+    async remoteMethod(query) {
+      // this.query = query;
+      // if (query !== "") {
+      //   this.loading = true;
+      //   const { data: res } = await this.$http.post("food/getPFoodList.do", {
+      //     pageSize: this.pageSize,
+      //     pageNum: this.pageNum,
+      //     fdName: query
+      //   });
+      //   this.foodList = res.rows;
+      //   setTimeout(() => {
+      //     this.getFoodManagemant();
+      //     this.loading = false;
+      //     this.options = this.foodList.filter(item => {
+      //       return item.fdName.toLowerCase().indexOf(query.toLowerCase()) > -1;
+      //     });
+      //   }, 200);
+      // } else {
+      //   this.options = [];
+      // }
+    }
+  },
 };
 </script>
 <style lang='less' scoped>

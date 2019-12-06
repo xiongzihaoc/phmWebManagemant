@@ -32,8 +32,8 @@
         <el-table-column align="center" type="selection" width="60"></el-table-column>
         <el-table-column align="center" type="index" label="序号" width="60"></el-table-column>
         <el-table-column align="center" prop="name" label="名称" width="120"></el-table-column>
-        <el-table-column align="center" prop="allowWater" label="推荐饮水种类"></el-table-column>
-        <el-table-column align="center" prop="noWater" label="不推荐饮水种类"></el-table-column>
+        <el-table-column align="center" prop="allowWater" show-overflow-tooltip label="推荐饮水种类"></el-table-column>
+        <el-table-column align="center" prop="noWater" show-overflow-tooltip label="不推荐饮水种类"></el-table-column>
         <el-table-column align="center" prop="drinkWaterAmount" label="每日饮水量 (ml)"></el-table-column>
         <el-table-column align="center" prop="drinkWaterRange" label="饮水范围 (ml)"></el-table-column>
         <el-table-column align="center" prop="description" show-overflow-tooltip label="描述"></el-table-column>
@@ -81,36 +81,25 @@
             <el-select
               v-model="editAddForm.addAllowWaterIds"
               clearable
-              :reserve-keyword="true"
+              @focus="ttfocus"
               filterable
               multiple
+              :filter-method="remoteMethod"
               placeholder="请选择"
             >
-              <el-option
-                v-for="item in DrinkTypeList"
-                :key="item.id"
-                :label="item.name"
-                :value="item.id"
-              ></el-option>
+              <el-option v-for="item in options" :key="item.id" :label="item.name" :value="item.id"></el-option>
             </el-select>
           </el-form-item>
           <el-form-item label="不推荐类" prop="addNoWaterIds">
             <el-select
               v-model="editAddForm.addNoWaterIds"
-              :reserve-keyword="true"
               filterable
               multiple
-                  remote
-                  
+              @focus="ttfocus"
               clearable
               placeholder="请选择"
             >
-              <el-option
-                v-for="item in DrinkTypeList"
-                :key="item.id"
-                :label="item.name"
-                :value="item.id"
-              ></el-option>
+              <el-option v-for="item in options" :key="item.id" :label="item.name" :value="item.id"></el-option>
             </el-select>
           </el-form-item>
           <el-form-item label="每日饮水" prop="drinkWaterAmount">
@@ -156,6 +145,7 @@ export default {
       },
       id: 0,
       DrinkTypeList: [],
+      options: [],
       currentRow: null
     };
   },
@@ -170,8 +160,7 @@ export default {
         "water/plan/getPWaterPlanList.do",
         {
           pageSize: this.pageSize,
-          pageNum: this.pageNum,
-          name: this.input
+          pageNum: this.pageNum
         }
       );
       this.waterTypeList = res.rows;
@@ -181,10 +170,9 @@ export default {
     async getDrinkTypeList() {
       const { data: res } = await this.$http.post(
         "water/type/getPWaterTypeList.do",
-        {}
+        { pageSize: 15000, pageNum: this.pageNum }
       );
       this.DrinkTypeList = res.rows;
-      
     },
     // 分页
     handleSizeChange(newSize) {
@@ -299,7 +287,35 @@ export default {
     },
     handleCurrentChange(val) {
       this.currentRow = val;
-    }
+    },
+    ttfocus() {
+      this.options = this.DrinkTypeList
+    },
+    // async remoteMethod(query) {
+    //   if (query !== "") {
+    //     this.loading = true;
+    //     const { data: res } = await this.$http.post(
+    //       "water/type/getPWaterTypeList.do",
+    //       {
+    //         pageSize: this.pageSize,
+    //         pageNum: this.pageNum,
+    //         name: query
+    //       }
+    //     );
+    //     this.DrinkTypeList = res.rows;
+    //     setTimeout(() => {
+    //       this.getDrinkTypeList();
+    //       this.loading = false;
+    //       this.options = this.DrinkTypeList.filter(item => {
+    //         console.log(item);
+
+    //         return item.name.toLowerCase().indexOf(query.toLowerCase()) > -1;
+    //       });
+    //     }, 200);
+    //   } else {
+    //     this.options = [];
+    //   }
+    // }
   }
 };
 </script>
