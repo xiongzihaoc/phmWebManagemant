@@ -160,13 +160,17 @@
         @closed="addDeptDialogClosed"
       >
         <el-form-item prop="deptName">
-          <el-tree
-            icon-class="el-icon-sunny"
-            :default-expand-all="true"
-            :data="hosMenuList"
-            :props="defaultProps"
-            @node-click="handleNodeAddClick"
-          ></el-tree>
+          <div class="mytree">
+            <el-tree
+              show-checkbox
+              check-strictly
+              icon-class="el-icon-sunny"
+              :default-expand-all="true"
+              :data="hosMenuList"
+              :props="defaultProps"
+              @node-click="handleNodeAddClick"
+            ></el-tree>
+          </div>
         </el-form-item>
       </el-form>
       <span slot="footer" class="dialog-footer">
@@ -185,7 +189,11 @@
       >
         <el-form-item prop="deptName">
           <el-tree
+            show-checkbox
+            check-strictly
+            icon-class="el-icon-sunny"
             :default-expand-all="true"
+            :current-node-key="addValue"
             :data="hosMenuList"
             :props="defaultProps"
             @node-click="handleNodeEditClick"
@@ -409,8 +417,6 @@ export default {
     },
     // 部门新增
     deptAdd() {
-      console.log(111);
-
       this.addDeptDialogVisible = true;
     },
     addDeptDialogClosed() {
@@ -449,5 +455,5 @@ export default {
   }
 };
 </script>
-<style lang='less' scoped>
+<style lang='scss' scoped>
 </style>
