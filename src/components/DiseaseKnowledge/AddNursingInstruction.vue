@@ -37,11 +37,17 @@
             :action="this.UPLOAD_IMG"
             :show-file-list="false"
             :on-success="handleAvatarSuccessSM"
+            :on-progress="uploadArtImgProcess"
             :before-upload="beforeAvatarUploadSM"
           >
             <img v-if="editform.articleImagesUrl" :src="editform.articleImagesUrl" class="avatar" />
             <i v-else class="el-icon-plus avatar-uploader-icon"></i>
           </el-upload>
+          <el-progress
+            v-if="artImgFlag == true"
+            :percentage="percentageFile"
+            style="margin-top:10px;width:120px;"
+          ></el-progress>
         </el-form-item>
         <el-form-item></el-form-item>
       </el-form>
@@ -72,15 +78,27 @@
       <ul class="addImgVid" v-for="item in addInfoss" :key="item.id">
         <li class="addChild" v-if="item.type==0">
           <textarea class="txtClass" placeholder="请输入内容" v-model="item.textDescription"></textarea>
-          <span @click="infoDelete(item.id)" class="el-icon-error closeTxt"></span>
+          <img
+            src="../../assets/images/deleteItem.png"
+            @click="infoDelete(item.id)"
+            class="el-icon-error closeTxt"
+          />
         </li>
         <li class="addChild" v-if="item.type==1">
           <img class="impImg" :src="item.imageUrl" alt />
-          <span @click="infoDelete(item.id)" class="el-icon-error closeImg"></span>
+          <img
+            src="../../assets/images/deleteItem.png"
+            @click="infoDelete(item.id)"
+            class="el-icon-error closeImg"
+          />
         </li>
         <li class="addChild" v-if="item.type==2">
           <video class="addVideo" :src="item.videoUrl" controls :poster="item.imageUrl"></video>
-          <span @click="infoDelete(item.id)" class="el-icon-error closeVideo"></span>
+          <img
+            src="../../assets/images/deleteItem.png"
+            @click="infoDelete(item.id)"
+            class="el-icon-error closeVideo"
+          />
         </li>
       </ul>
       <div style="overflow:hidden;">
@@ -89,19 +107,27 @@
           class="upload-demo"
           :action="this.UPLOAD_IMG"
           :on-success="handleAvatarSuccessImg"
+          :on-progress="uploadImgProcess"
           :before-upload="beforeAvatarUploadImg"
           :show-file-list="false"
         >
           <el-button class="addBTN upImg" round type="primary">添加图片</el-button>
+          <el-progress v-if="imgFlag == true" :percentage="percentageFile" style="margin-top:10px;"></el-progress>
         </el-upload>
         <el-upload
           class="upload-demo"
           :action="this.UPLOAD_IMG"
           :on-success="handleAvatarSuccessVid"
+          :on-progress="uploadVidProcess"
           :before-upload="beforeAvatarUploadVid"
           :show-file-list="false"
         >
           <el-button class="addBTN upImg" round type="primary">添加视频</el-button>
+          <el-progress
+            v-if="videoFlag == true"
+            :percentage="percentageFile"
+            style="margin-top:10px;"
+          ></el-progress>
         </el-upload>
         <el-button @click="saveInfo" type="success" class="saveInfo" round>保存修改</el-button>
       </div>
@@ -126,7 +152,11 @@ export default {
       imageUrl: "",
       addInfoss: [],
       ImgUrl: "",
-      VidUrl: ""
+      VidUrl: "",
+      imgFlag: false,
+      percentageFile: 0,
+      videoFlag: false,
+      artImgFlag: false
     };
   },
   created() {
@@ -189,7 +219,13 @@ export default {
       }
     },
     handleAvatarSuccessSM(res, file) {
+      this.percentageFile = 0;
+      this.artImgFlag = false;
       this.editform.articleImagesUrl = res.data;
+    },
+    uploadArtImgProcess(event, file, fileList) {
+      this.artImgFlag = true;
+      this.percentageFile = parseInt(file.percentage);
     },
     beforeAvatarUploadSM(file) {
       const isJPG = file.type === "image/jpeg";
@@ -207,12 +243,18 @@ export default {
       return (isJPG || isBMP || isGIF || isPNG) && isLt10M;
     },
     handleAvatarSuccessImg(res, file) {
+      this.percentageFile = 0;
+      this.imgFlag = false;
       this.ImgUrl = res.data;
       let objImg = {
         imageUrl: this.ImgUrl,
         type: 1
       };
       this.addInfoss.push(objImg);
+    },
+    uploadImgProcess(event, file, fileList) {
+      this.imgFlag = true;
+      this.percentageFile = parseInt(file.percentage);
     },
     beforeAvatarUploadImg(file) {
       const isJPG = file.type === "image/jpeg";
@@ -230,14 +272,18 @@ export default {
       return (isJPG || isBMP || isGIF || isPNG) && isLt10M;
     },
     handleAvatarSuccessVid(res, file) {
-      console.log(res);
-
+      this.percentageFile = 0;
+      this.videoFlag = false;
       this.VidUrl = res.data;
       let objVideo = {
         videoUrl: this.VidUrl,
         type: 2
       };
       this.addInfoss.push(objVideo);
+    },
+    uploadVidProcess(event, file, fileList) {
+      this.videoFlag = true;
+      this.percentageFile = parseInt(file.percentage);
     },
     beforeAvatarUploadVid(file) {
       const isLt10M = file.size / 1024 / 1024 < 10;
@@ -369,7 +415,6 @@ li {
   width: 180px;
   overflow: hidden;
   float: right;
-  margin-right: 300px;
   padding-bottom: 20px;
 }
 .draggableDiv {

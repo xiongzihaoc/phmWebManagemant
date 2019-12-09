@@ -162,9 +162,6 @@
         <el-form-item prop="deptName">
           <div class="mytree">
             <el-tree
-              show-checkbox
-              check-strictly
-              icon-class="el-icon-sunny"
               :default-expand-all="true"
               :data="hosMenuList"
               :props="defaultProps"
@@ -189,9 +186,6 @@
       >
         <el-form-item prop="deptName">
           <el-tree
-            show-checkbox
-            check-strictly
-            icon-class="el-icon-sunny"
             :default-expand-all="true"
             :current-node-key="addValue"
             :data="hosMenuList"

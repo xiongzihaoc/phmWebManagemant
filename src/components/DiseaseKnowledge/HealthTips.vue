@@ -81,9 +81,9 @@ export default {
     },
     // 修改
     showEditdialog(info) {
+      window.sessionStorage.setItem("editHealth", info.id);
       this.$router.push({
-        path: "/diseaseknowledge/EditHealthTips",
-        query: { info }
+        path: "/diseaseknowledge/EditHealthTips"
       });
     },
     // 搜索

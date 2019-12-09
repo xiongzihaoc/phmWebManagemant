@@ -89,7 +89,7 @@
               <img v-if="editForm.iconUrl" :src="editForm.iconUrl" class="avatar" />
               <i v-else class="el-icon-plus avatar-uploader-icon"></i>
             </el-upload>
-            <el-progress v-if="videoFlag == true"  :percentage="percentageFile"></el-progress>
+            <el-progress v-if="videoFlag == true"  :percentage="percentageFile" style="margin-top:10px;"></el-progress>
           </el-form-item>
           <el-form-item label="描述" prop="description">
             <el-input v-model="editForm.description"></el-input>

@@ -73,7 +73,6 @@ export default {
       );
       if (res.code != 200) return this.$message.error("数据获取失败");
       this.menuList = res.rows;
-      console.log(res);
       this.total = res.total;
     },
     // 搜索
