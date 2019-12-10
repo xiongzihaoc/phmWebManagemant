@@ -95,10 +95,10 @@
           ></i>
         </div>
         <div class="header_right">
-          <img class="logoutImg" src="../assets/images/header.gif" alt />
           <el-dropdown @command="handleCommand">
-            <span class="el-dropdown-link">
-              {{loginName}}
+            <span class="el-dropdown-link aaa">
+              <img class="logoutImg" src="../assets/images/header.gif" alt />
+              <span class="loginName">{{loginName}}</span>
               <i class="el-icon-arrow-down el-icon--right"></i>
             </span>
             <el-dropdown-menu slot="dropdown">
@@ -191,14 +191,6 @@ export default {
   float: right;
   height: 60px;
 }
-.el-dropdown {
-  float: right;
-  margin-top: 25px;
-}
-.el-dropdown-link {
-  cursor: pointer;
-  color: #2c3e50;
-}
 .el-icon-arrow-down {
   font-size: 12px;
   color: #2c3e50;
@@ -241,13 +233,21 @@ export default {
 }
 .el-dropdown {
   float: right;
-  margin-left: 5px;
+  margin-top: 10px;
+}
+.aaa {
+  display: inline-block;
+  cursor: pointer;
+
+  color: #2c3e50;
 }
 .logoutImg {
-  float: left;
+  display: inline-block;
+  cursor: pointer;
   width: 40px;
   height: 40px;
   border-radius: 50%;
-  margin-top: 10px;
+  margin-right: 5px;
+  vertical-align: middle;
 }
 </style>

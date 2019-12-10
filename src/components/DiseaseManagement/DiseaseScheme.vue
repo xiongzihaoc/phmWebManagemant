@@ -15,7 +15,7 @@
         </el-col>
         <!-- 添加食物按钮 -->
         <el-col :span="4">
-          <el-button type="primary" @click="addFood">添加疾病方案</el-button>
+          <el-button type="primary" @click="addFood">新增疾病方案</el-button>
         </el-col>
       </el-row>
       <!-- 表格 -->

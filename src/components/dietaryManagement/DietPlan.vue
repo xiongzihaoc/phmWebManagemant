@@ -15,7 +15,7 @@
         </el-col>
         <!-- 添加食物按钮 -->
         <el-col :span="4">
-          <el-button type="primary" @click="addFoodType">添加饮食方案</el-button>
+          <el-button type="primary" @click="addFoodType">新增饮食方案</el-button>
         </el-col>
       </el-row>
       <!-- 表格 -->

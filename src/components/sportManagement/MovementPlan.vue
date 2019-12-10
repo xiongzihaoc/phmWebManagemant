@@ -20,7 +20,7 @@
         </el-col>
         <!-- 添加用户按钮 -->
         <el-col :span="4">
-          <el-button type="primary" @click="addSportType">添加运动方案</el-button>
+          <el-button type="primary" @click="addSportType">新增运动方案</el-button>
         </el-col>
       </el-row>
       <!-- 表格 -->

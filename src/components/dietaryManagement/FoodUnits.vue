@@ -16,7 +16,7 @@
         </el-col>
         <!-- 添加用户按钮 -->
         <el-col :span="4">
-          <el-button type="primary" @click="addWater">添加食物单位</el-button>
+          <el-button type="primary" @click="addWater">新增食物单位</el-button>
         </el-col>
       </el-row>
       <!-- 表格 -->

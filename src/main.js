@@ -1,9 +1,10 @@
 import Vue from 'vue'
 import App from './App.vue'
 import router from './router'
+// 全局css
 import './assets/css/global.css'
 import './plugins/element.js'
-// nprogress 导入
+// nprogress 请求进度条导入
 import Nprogress from 'nprogress'
 import 'nprogress/nprogress.css'
 // 导入字体图表图标
@@ -32,6 +33,7 @@ axios.interceptors.request.use(function (config) {
 })
 // axios响应拦截器
 axios.interceptors.response.use(function (config) {
+  if (config.status != 200) return this.$message.error('服务器异常')
   Nprogress.done()
   return config;
 }, function (error) {

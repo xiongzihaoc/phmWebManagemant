@@ -15,7 +15,7 @@
         </el-col>
         <!-- 添加饮水方案按钮 -->
         <el-col :span="4">
-          <el-button type="primary" @click="addWaterType">添加饮水方案</el-button>
+          <el-button type="primary" @click="addWaterType">新增饮水方案</el-button>
         </el-col>
       </el-row>
       <!-- 表格 -->

@@ -16,7 +16,7 @@
         </el-col>
         <!-- 添加用户按钮 -->
         <el-col :span="4">
-          <el-button type="primary" @click="addWater">添加元素</el-button>
+          <el-button type="primary" @click="addWater">新增元素</el-button>
         </el-col>
       </el-row>
       <!-- 表格 -->
