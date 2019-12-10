@@ -3,71 +3,28 @@
     <!-- 面包屑 -->
     <el-breadcrumb separator-class="el-icon-arrow-right">
       <el-breadcrumb-item :to="{ path: '/home' }">首页</el-breadcrumb-item>
-      <el-breadcrumb-item :to="{ path: '/diseaseknowledge/healthKnowledge' }">健康小知识</el-breadcrumb-item>
-      <el-breadcrumb-item>健康小知识新增</el-breadcrumb-item>
+      <el-breadcrumb-item :to="{ path: '/sport/MovementPlan' }">运动方案</el-breadcrumb-item>
+      <el-breadcrumb-item>运动介绍</el-breadcrumb-item>
     </el-breadcrumb>
     <!-- 卡片视图 -->
     <el-card>
-      <el-form ref="editFormRef" :model="editform" label-width="80px">
-        <el-form-item label="文章名称">
-          <el-input v-model="editform.name"></el-input>
-        </el-form-item>
-        <el-form-item label="疾病类型">
-          <el-select v-model="editform.diseaseTypeId" placeholder="请选择疾病类型">
-            <el-option
-              v-for="item in healthList"
-              :key="item.id"
-              :label="item.name"
-              :value="item.id"
-            ></el-option>
-          </el-select>
-        </el-form-item>
-        <el-form-item label="文本描述">
-          <el-input
-            :autosize="{ minRows: 5, maxRows: 10}"
-            type="textarea"
-            :rows="2"
-            placeholder="请输入内容"
-            v-model="editform.description"
-          ></el-input>
-        </el-form-item>
-        <el-form-item label="文章封面">
-          <el-upload
-            class="avatar-uploader"
-            :action="this.UPLOAD_IMG"
-            :show-file-list="false"
-            :on-success="handleAvatarSuccessSM"
-            :on-progress="uploadArtImgProcess"
-            :before-upload="beforeAvatarUploadSM"
-          >
-            <img v-if="editform.articleImagesUrl" :src="editform.articleImagesUrl" class="avatar" />
-            <i v-else class="el-icon-plus avatar-uploader-icon"></i>
-          </el-upload>
-          <el-progress
-            v-if="artImgFlag == true"
-            :percentage="percentageFile"
-            style="margin-top:10px;width:120px;"
-          ></el-progress>
-        </el-form-item>
-        <el-form-item></el-form-item>
-      </el-form>
       <!-- 拖拽区域 -->
-      <el-card class="draggableCard" v-show="addInfoss.length>0">
+      <el-card class="draggableCard" v-show="addInfos.length>0">
         <div id="changePositionBox">
           <span class="PosTit" style="font-weight:700">调整顺序</span>
           <div class="draggableCon">
-            <vuedraggable v-model="addInfoss">
+            <vuedraggable v-model="addInfos">
               <transition-group tag="p">
-                <div v-for="(item,index) in addInfoss" v-bind:key="index">
+                <div v-for="(item,index) in addInfos" v-bind:key="index">
                   <div
                     class="draggableDiv draggableDivFirst"
-                    v-if="item.type==0"
-                  >{{item.textDescription}}</div>
-                  <div class="draggableDiv" v-if="item.type==1">
-                    <img :src="item.imageUrl" alt width="140" height="140" />
+                    v-if="item.resType==0"
+                  >{{item.resContent}}</div>
+                  <div class="draggableDiv" v-if="item.resType==1">
+                    <img :src="item.resHttpPath" alt width="140" height="140" />
                   </div>
-                  <div class="draggableDiv" v-if="item.type==2">
-                    <video :src="item.videoUrl" width="140" height="140" controls></video>
+                  <div class="draggableDiv" v-if="item.resType==2">
+                    <video :src="item.resHttpPath" width="140" height="140" controls></video>
                   </div>
                 </div>
               </transition-group>
@@ -75,25 +32,25 @@
           </div>
         </div>
       </el-card>
-      <ul class="addImgVid" v-for="item in addInfoss" :key="item.id">
-        <li class="addChild" v-if="item.type==0">
-          <textarea class="txtClass" placeholder="请输入内容" v-model="item.textDescription"></textarea>
+      <ul class="addImgVid" v-for="item in addInfos" :key="item.id">
+        <li class="addChild" v-if="item.resType==0">
+          <textarea class="txtClass" placeholder="请输入内容" v-model="item.resContent"></textarea>
           <img
             src="../../assets/images/deleteItem.png"
             @click="infoDelete(item.id)"
             class="el-icon-error closeTxt"
           />
         </li>
-        <li class="addChild" v-if="item.type==1">
-          <img class="impImg" :src="item.imageUrl" alt />
+        <li class="addChild" v-if="item.resType==1">
+          <img class="impImg" :src="item.resHttpPath" />
           <img
             src="../../assets/images/deleteItem.png"
             @click="infoDelete(item.id)"
             class="el-icon-error closeImg"
           />
         </li>
-        <li class="addChild" v-if="item.type==2">
-          <video class="AddVdieo" :src="item.videoUrl" controls :poster="item.imageUrl"></video>
+        <li class="addChild" v-if="item.resType==2">
+          <video class="addVideo" :src="item.resHttpPath" controls></video>
           <img
             src="../../assets/images/deleteItem.png"
             @click="infoDelete(item.id)"
@@ -137,20 +94,13 @@
 <script>
 import vuedraggable from "vuedraggable";
 export default {
-  name: "AddHealthTips",
+  name: "EditHealthTips",
   components: { vuedraggable },
   data() {
     return {
-      editform: {
-        name: "",
-        diseaseTypeId: "",
-        description: "",
-        diseaseTypeValue: "",
-        articleImagesUrl: ""
-      },
-      healthList: [],
-      imageUrl: "",
-      addInfoss: [],
+      // movemenPlanList:[],
+      infoId: null,
+      addInfos: [],
       ImgUrl: "",
       VidUrl: "",
       imgFlag: false,
@@ -160,95 +110,62 @@ export default {
     };
   },
   created() {
-    this.getHealthList();
+    this.infoId = window.sessionStorage.getItem("movementVal");
+    this.getMovemenPlanList();
   },
   methods: {
-    // 获取疾病类型
-    async getHealthList() {
+    async getMovemenPlanList() {
       const { data: res } = await this.$http.post(
-        "disease/type/getPDiseaseTypeList.do",
-        {}
+        "resources/savePResourcesList.do",
+        { id: this.infoId }
       );
-      if (res.code != 200) return this.$message.error("数获取失败");
-      this.foodList = res.rows;
-      this.total = res.total;
-      this.healthList = res.rows;
+      console.log(res);
+      
+      // this.movemenPlanList = res.rows;
     },
-    saveInfo() {
-      this.$refs.editFormRef.validate(async valid => {
-        if (!valid) return this.$message.error("失败");
-        const { data: res } = await this.$http.post(
-          "healthKnowledge/savePHealthKnowledge.do",
-          {
-            name: this.editform.name,
-            diseaseTypeId: this.editform.diseaseTypeId,
-            description: this.editform.description,
-            type: 1,
-            resourcesList: this.addInfoss,
-            articleImagesUrl: this.editform.articleImagesUrl
-          }
-        );
-        if (res.code != 200) {
-          this.$message.error("保存失败");
-          return;
-        } else {
-          this.$message.success("保存成功");
-          this.$router.push("/diseaseknowledge/healthKnowledge");
+    async saveInfo() {
+      const { data: res } = await this.$http.post(
+        "resources/savePResourcesList.do",
+        {
+          sportPlanID: this.infoId,
+          resourcesList: this.addInfos
         }
-      });
+      );
+      if (res.code != 200) {
+        this.$message.error("保存失败");
+        return;
+      } else {
+        this.$message.success("保存成功");
+        this.$router.push("/sport/MovementPlan");
+      }
     },
-    // 添加文字
+    // 文字修改
     addWord() {
       let objWord = {
-        textDescription: "",
-        type: 0
+        resContent: "",
+        resType: 0
       };
-      this.addInfoss.push(objWord);
+      this.addInfos.push(objWord);
     },
     // 單個刪除
     infoDelete(info) {
-      var arr = this.addInfoss;
+      var arr = this.addInfos;
       for (let i = 0; i < arr.length; i++) {
         if (arr[i].id == info) {
           arr[i].ImgUrl = "";
-          arr[i].VidUrl = "";
           arr.splice(i, 1);
         }
       }
-    },
-    handleAvatarSuccessSM(res, file) {
-      this.percentageFile = 0;
-      this.artImgFlag = false;
-      this.editform.articleImagesUrl = res.data;
-    },
-    uploadArtImgProcess(event, file, fileList) {
-      this.artImgFlag = true;
-      this.percentageFile = parseInt(file.percentage);
-    },
-    beforeAvatarUploadSM(file) {
-      const isJPG = file.type === "image/jpeg";
-      const isGIF = file.type === "image/gif";
-      const isPNG = file.type === "image/png";
-      const isBMP = file.type === "image/bmp";
-      const isLt10M = file.size / 1024 / 1024 < 10;
-
-      if (!isJPG && !isGIF && !isPNG && !isBMP) {
-        this.$message.error("上传图片必须是JPG/GIF/PNG/BMP 格式!");
-      }
-      if (!isLt10M) {
-        this.$message.error("上传图片大小不能超过 10MB!");
-      }
-      return (isJPG || isBMP || isGIF || isPNG) && isLt10M;
     },
     handleAvatarSuccessImg(res, file) {
       this.percentageFile = 0;
       this.imgFlag = false;
       this.ImgUrl = res.data;
       let objImg = {
-        imageUrl: this.ImgUrl,
-        type: 1
+        resType: 1,
+        resHttpPath: this.ImgUrl
       };
-      this.addInfoss.push(objImg);
+      this.addInfos.push(objImg);
     },
     uploadImgProcess(event, file, fileList) {
       this.imgFlag = true;
@@ -269,15 +186,15 @@ export default {
       }
       return (isJPG || isBMP || isGIF || isPNG) && isLt10M;
     },
-    handleAvatarSuccessVid(res, file) {
+    handleAvatarSuccessVid(res, file, fileList) {
       this.percentageFile = 0;
       this.videoFlag = false;
       this.VidUrl = res.data;
       let objVideo = {
-        videoUrl: this.VidUrl,
-        type: 2
+        resType: 2,
+        resHttpPath: this.VidUrl
       };
-      this.addInfoss.push(objVideo);
+      this.addInfos.push(objVideo);
     },
     uploadVidProcess(event, file, fileList) {
       this.videoFlag = true;
@@ -373,7 +290,7 @@ li {
   resize: none;
   padding: 15px;
 }
-.AddVdieo {
+.addVideo {
   width: 100%;
   height: 400px;
 }

@@ -40,7 +40,7 @@
         <el-table-column align="center" prop="sportGroupNum" label="运动组数"></el-table-column>
         <el-table-column align="center" prop="sportGroupRange" label="运动范围"></el-table-column>
         <el-table-column align="center" show-overflow-tooltip prop="sportDescribe" label="描述"></el-table-column>
-        <el-table-column align="center" prop="operate" label="操作" width="200">
+        <el-table-column align="center" prop="operate" label="操作" width="290">
           <template slot-scope="scope">
             <!-- 修改按钮 -->
             <el-button
@@ -49,6 +49,13 @@
               type="primary"
               icon="el-icon-edit"
             >编辑</el-button>
+            <!-- 运动介绍 -->
+            <el-button
+              size="mini"
+              @click="movementInfo(scope.row)"
+              type="success"
+              icon="el-icon-edit"
+            >运动介绍</el-button>
             <!-- 删除按钮 -->
             <el-button
               size="mini"
@@ -218,6 +225,13 @@ export default {
       this.dialogTitle = "新增";
       this.editForm = {};
       this.editDialogVisible = true;
+    },
+    // 跳转到运动介绍
+    movementInfo(info){
+      console.log(info);
+      
+      window.sessionStorage.setItem('movementVal',info.id)
+      this.$router.push('/sport/MovementIntroduced')
     },
     // 实现表格单行选择高亮
     setCurrent(row) {

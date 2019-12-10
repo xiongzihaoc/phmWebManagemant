@@ -191,6 +191,14 @@ const routes = [{
         }
       },
       {
+        path: '/sport/MovementIntroduced',
+        name: "运动介绍",
+        component: () => import('@/components/sportManagement/MovementIntroduced.vue'),
+        meta: {
+          title: '运动介绍'
+        }
+      },
+      {
         path: '/water/WaterSolution',
         name: "饮水方案",
         component: () => import('@/components/waterManagement/WaterSolution.vue'),

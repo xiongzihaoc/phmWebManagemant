@@ -43,7 +43,11 @@
             <img v-if="editform.articleImagesUrl" :src="editform.articleImagesUrl" class="avatar" />
             <i v-else class="el-icon-plus avatar-uploader-icon"></i>
           </el-upload>
-          <el-progress v-if="artImgFlag == true" :percentage="percentageFile" style="margin-top:10px;width:120px;"></el-progress>
+          <el-progress
+            v-if="artImgFlag == true"
+            :percentage="percentageFile"
+            style="margin-top:10px;width:120px;"
+          ></el-progress>
         </el-form-item>
       </el-form>
       <!-- 拖拽区域 -->
@@ -153,7 +157,7 @@ export default {
       imgFlag: false,
       percentageFile: 0,
       videoFlag: false,
-      artImgFlag:false,
+      artImgFlag: false
     };
   },
   created() {
@@ -167,6 +171,8 @@ export default {
         "healthKnowledge/getDetails.do",
         { id: this.infoId }
       );
+      console.log(res);
+
       this.editform = res.data;
       this.illnessId = res.data.id;
       this.addInfos = res.data.resourcesList;
@@ -292,23 +298,20 @@ export default {
       this.percentageFile = parseInt(file.percentage);
     },
     beforeAvatarUploadVid(file) {
-      const isLt10M = file.size / 1024 / 1024 < 20;
-      if (
-        [
-          "video/mp4",
-          "video/ogg",
-          "video/flv",
-          "video/avi",
-          "video/wmv",
-          "video/rmvb"
-        ].indexOf(file.type) == -1
-      ) {
-        this.$message.error("请上传正确的视频格式");
-        return false;
+      console.log(file);
+      
+      const isJPG = file.type === "video/mp4";
+      const isGIF = file.type === "video/ogg";
+      const isPNG = file.type === "video/flv";
+      const isBMP = file.type === "video/avi";
+      const isWmv = file.type === "video/wmv";
+      const isRmvb= file.type === "video/rmvb";
+      const isLt10M = file.size / 1024 / 1024 < 10;
+      if (!isJPG && !isGIF && !isPNG && !isBMP && !isWmv && !isRmvb) {
+        this.$message.error("请上传正确的视频格式!");
       }
       if (!isLt10M) {
-        this.$message.error("上传视频大小不能超过20MB哦!");
-        return false;
+        return this.$message.error("上传视频大小不能超过10MB哦!");
       }
     }
   }
