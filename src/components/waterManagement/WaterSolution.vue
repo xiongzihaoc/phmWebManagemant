@@ -159,7 +159,8 @@ export default {
         "water/plan/getPWaterPlanList.do",
         {
           pageSize: this.pageSize,
-          pageNum: this.pageNum
+          pageNum: this.pageNum,
+          name: this.input
         }
       );
       this.waterTypeList = res.rows;
@@ -288,8 +289,8 @@ export default {
       this.currentRow = val;
     },
     ttfocus() {
-      this.options = this.DrinkTypeList
-    },
+      this.options = this.DrinkTypeList;
+    }
     // async remoteMethod(query) {
     //   if (query !== "") {
     //     this.loading = true;

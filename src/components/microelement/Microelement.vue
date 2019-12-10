@@ -16,7 +16,7 @@
         </el-col>
         <!-- 添加用户按钮 -->
         <el-col :span="4">
-          <el-button type="primary" @click="addWater">新增元素</el-button>
+          <el-button type="primary" @click="addWater">新增微量元素</el-button>
         </el-col>
       </el-row>
       <!-- 表格 -->
@@ -141,7 +141,7 @@ export default {
     async getMicroList() {
       const { data: res } = await this.$http.post(
         "foodElement/getPFoodElementList.do",
-        { foodId: this.foodId, name: this.input }
+        { foodId: this.foodId, miName: this.input }
       );
       console.log(res);
       this.FoodEleList = res.rows;

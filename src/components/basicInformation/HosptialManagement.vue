@@ -14,6 +14,7 @@
         style="width: 100%;margin-bottom: 20px;"
         row-key="id"
         ref="singleTable"
+        :expand-row-keys="['1']"
         highlight-current-row
         @current-change="handleCurrentChange"
         :tree-props="{children: 'child', hasChildren: 'hasChildren'}"

@@ -9,13 +9,14 @@
     <el-card>
       <el-table
         :data="menuList"
-        style="width: 100%;margin-bottom: 20px;"
-        row-key="menuId"
+        :tree-props="{children: 'child', hasChildren: 'hasChildren'}"
         :header-cell-style="{background:'#f5f5f5'}"
+        row-key="menuId"
         ref="singleTable"
+        :expand-row-keys="['1']"
         highlight-current-row
         @current-change="handleCurrentChange"
-        :tree-props="{children: 'child', hasChildren: 'hasChildren'}"
+        style="width: 100%;margin-bottom: 20px;"
       >
         <el-table-column align="center" prop="menuName" label="名称" sortable width="180"></el-table-column>
         <el-table-column align="center" prop="menuType" label="菜单类型" sortable width="180"></el-table-column>
@@ -129,6 +130,7 @@ export default {
         icon: "",
         url: ""
       },
+      idArr: [],
       editId: 0,
       goBack: ""
     };

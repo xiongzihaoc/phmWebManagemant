@@ -162,9 +162,10 @@
         <el-form-item prop="deptName">
           <div class="mytree">
             <el-tree
-              :default-expand-all="true"
               :data="hosMenuList"
               :props="defaultProps"
+              node-key="id"
+              :default-expanded-keys="idArr"
               @node-click="handleNodeAddClick"
             ></el-tree>
           </div>
@@ -186,10 +187,10 @@
       >
         <el-form-item prop="deptName">
           <el-tree
-            :default-expand-all="true"
-            :current-node-key="addValue"
+            :default-expanded-keys="idArr"
             :data="hosMenuList"
             :props="defaultProps"
+            node-key="id"
             @node-click="handleNodeEditClick"
           ></el-tree>
         </el-form-item>
@@ -252,6 +253,7 @@ export default {
       // 部门增加
       addDeptForm: {},
       addDeptDialogVisible: false,
+      idArr: [],
       defaultProps: {
         label: "deptName",
         children: "child",
@@ -305,20 +307,19 @@ export default {
       if (res.code != 200) return this.$message.error("数获取失败");
       this.userList = res.rows;
       this.total = res.total;
-      // console.log(res);
+      console.log(res);
     },
     // 获取角色列表
     async getRoleList() {
       const { data: res } = await this.$http.post("role/getSysRoleList.do", {});
       if (res.code != 200) return this.$message.error("列表获取失败");
       this.RoleList = res.rows;
-      console.log(res);
     },
     // 获取部门列表
     async getHosMenuList() {
       const { data: res } = await this.$http.post("dept/getDeptList.do", {});
-      console.log(res);
       this.hosMenuList = res.data;
+      this.idArr.push(res.data[0].id);
     },
     // 分页
     handleSizeChange(newSize) {
@@ -411,6 +412,8 @@ export default {
     },
     // 部门新增
     deptAdd() {
+      console.log(this.idArr);
+
       this.addDeptDialogVisible = true;
     },
     addDeptDialogClosed() {

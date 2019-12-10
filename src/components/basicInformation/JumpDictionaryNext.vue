@@ -16,7 +16,7 @@
         </el-col>
         <!-- 添加按钮 -->
         <el-col :span="4">
-          <el-button type="primary" @click="addDictionaryInfo">添加字典数据</el-button>
+          <el-button type="primary" @click="addDictionaryInfo">新增字典数据</el-button>
         </el-col>
       </el-row>
       <el-table
