@@ -201,8 +201,6 @@ export default {
         "foodPlan/getPFoodPlanList.do",
         { pageSize: 15000, pageNum: this.pageNum }
       );
-      // console.log(res);
-
       this.foodPlanList = res.rows;
     },
 
@@ -219,8 +217,6 @@ export default {
         "sportPlan/getPSportPlanList.do",
         { pageSize: 15000, pageNum: this.pageNum }
       );
-      console.log(res.rows);
-
       this.sportsPlanList = res.rows;
     },
 
@@ -233,7 +229,6 @@ export default {
       this.pageNum = newPage;
       this.getDisPlanList();
     },
-    // 添加
     // 删除
     async removeUserById(info) {
       const confirmResult = await this.$confirm(

@@ -30,9 +30,11 @@
         style="width: 100%"
       >
         <el-table-column align="center" type="selection" width="60"></el-table-column>
-        <el-table-column align="center" type="index" label="封面" width="60"></el-table-column>
-        <el-table-column align="center" prop="fmName" label="类型"></el-table-column>
-        <el-table-column align="center" label="网页地址"></el-table-column>
+        <el-table-column align="center" type="index" width="60"></el-table-column>
+        <el-table-column align="center"  label="封面" ></el-table-column>
+        <el-table-column align="center" prop="resourceType" label="类型"></el-table-column>
+        <el-table-column align="center" prop="resourceUrl" label="网页地址"></el-table-column>
+        <el-table-column align="center" prop="resourceOrder" label="排序号"></el-table-column>
         <el-table-column align="center" prop="operate" label="操作" width="200">
           <template slot-scope="scope">
             <!-- 修改按钮 -->
@@ -69,28 +71,18 @@
         width="40%"
         @closed="editDialogClosed"
       >
-        <!-- <el-form :model="editForm" ref="editFormRef" label-width="80px">
+        <el-form :model="editForm" ref="editFormRef" label-width="80px">
           <el-form-item label="名称" prop="fmName">
             <el-input v-model="editForm.fmName"></el-input>
           </el-form-item>
           <el-form-item label="图标" prop="fmPhotoPath"></el-form-item>
-          <el-form-item label="类型" prop="fmType">
-            <el-select v-model="editForm.fmType" placeholder="请选择">
-              <el-option
-                v-for="item in EstimateTypeList"
-                :key="item.id"
-                :label="item.name"
-                :value="item.id"
-              ></el-option>
-            </el-select>
-          </el-form-item>
           <el-form-item label="重量" prop="fmWeight">
             <el-input v-model="editForm.fmWeight"></el-input>
           </el-form-item>
           <el-form-item label="描述" prop="fmDescribe">
             <el-input v-model="editForm.fmDescribe"></el-input>
           </el-form-item>
-        </el-form>-->
+        </el-form>
         <span slot="footer" class="dialog-footer">
           <el-button @click="editDialogVisible = false">取 消</el-button>
           <el-button type="primary" @click="editEnter">确 定</el-button>
@@ -108,7 +100,8 @@ export default {
       editForm: {},
       pageNum: 1,
       pageSize: 10,
-      total: 0
+      total: 0,
+      VideoDiseaseList:[],
     };
   },
   created() {
@@ -122,11 +115,19 @@ export default {
         { pageSize: this.pageSize, pageNum: this.pageNum }
       );
       console.log(res);
+      
+      this.VideoDiseaseList = res.rows
     },
     // 新增轮播图
     addImg() {},
+    showEditdialog(){
+      this.editDialogVisible = true
+    },
+    removeUserById(){},
     // 确定修改
-    editEnter() {},
+    editEnter() {
+      this.editDialogVisible = false
+    },
     // 搜索
     ImgSearch() {},
     // 分页
@@ -137,7 +138,12 @@ export default {
     handleCurrentChangev(newPage) {
       this.pageNum = newPage;
       this.getWaterTypeList();
-    }
+    },
+    editDialogClosed(){
+    
+    },
+    // 高亮
+    handleCurrentChange(){},
   }
 };
 </script>
