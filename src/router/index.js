@@ -183,6 +183,14 @@ const routes = [{
         }
       },
       {
+        path: '/water/WaterDrinkingDetail',
+        name: "饮水指导详情",
+        component: () => import('@/components/waterManagement/WaterDrinkingDetail.vue'),
+        meta: {
+          title: '饮水指导详情'
+        }
+      },
+      {
         path: '/sport/MovementPlan',
         name: "运动方案",
         component: () => import('@/components/sportManagement/MovementPlan.vue'),
@@ -212,6 +220,13 @@ const routes = [{
         component: () => import('@/components/waterManagement/WaterType.vue'),
         meta: {
           title: '饮水种类'
+        }
+      },{
+        path: '/water/guide',
+        name: "饮水指导",
+        component: () => import('@/components/waterManagement/WaterDrinking.vue'),
+        meta: {
+          title: '饮水指导'
         }
       },
       {
