@@ -73,7 +73,7 @@
           <el-input v-model="editForm.name"></el-input>
         </el-form-item>
         <el-form-item label="疾病类型" prop="diseaseTypeId">
-          <el-select v-model="editForm.diseaseTypeId" placeholder="请选择">
+          <el-select v-model="editForm.diseaseTypeId" filterable clearable placeholder="请选择">
             <el-option
               v-for="item in disTypeList"
               :key="item.id"
@@ -83,7 +83,7 @@
           </el-select>
         </el-form-item>
         <el-form-item label="饮食方案" prop="foodPlanId">
-          <el-select v-model="editForm.foodPlanId" placeholder="请选择">
+          <el-select v-model="editForm.foodPlanId" filterable clearable placeholder="请选择">
             <el-option
               v-for="item in foodPlanList"
               :key="item.id"
@@ -93,7 +93,7 @@
           </el-select>
         </el-form-item>
         <el-form-item label="饮水方案" prop="waterPlanId">
-          <el-select v-model="editForm.waterPlanId" placeholder="请选择">
+          <el-select v-model="editForm.waterPlanId" filterable clearable placeholder="请选择">
             <el-option
               v-for="item in waterPlanList"
               :key="item.id"
@@ -105,7 +105,6 @@
         <el-form-item label="运动方案" prop="addSportPlanIds">
           <el-select
             v-model="editForm.addSportPlanIds"
-            :reserve-keyword="true"
             filterable
             multiple
             clearable
@@ -184,8 +183,6 @@ export default {
           pageNum: this.pageNum
         }
       );
-      console.log(res);
-
       if (res.code != 200) return this.$message.error("数获取失败");
       this.disPlanList = res.rows;
       this.total = res.total;
@@ -194,7 +191,7 @@ export default {
     async getDisTypeList() {
       const { data: res } = await this.$http.post(
         "disease/type/getPDiseaseTypeList.do",
-        {}
+        { pageSize: 15000, pageNum: this.pageNum }
       );
       this.disTypeList = res.rows;
     },
@@ -202,15 +199,17 @@ export default {
     async getFoodPlanList() {
       const { data: res } = await this.$http.post(
         "foodPlan/getPFoodPlanList.do",
-        {}
+        { pageSize: 15000, pageNum: this.pageNum }
       );
+      // console.log(res);
+
       this.foodPlanList = res.rows;
     },
 
     async getWaterPlanList() {
       const { data: res } = await this.$http.post(
         "water/plan/getPWaterPlanList.do",
-        {}
+        { pageSize: 15000, pageNum: this.pageNum }
       );
       this.waterPlanList = res.rows;
     },
@@ -218,9 +217,9 @@ export default {
     async getSportsPlanList() {
       const { data: res } = await this.$http.post(
         "sportPlan/getPSportPlanList.do",
-        {}
+        { pageSize: 15000, pageNum: this.pageNum }
       );
-      console.log(res);
+      console.log(res.rows);
 
       this.sportsPlanList = res.rows;
     },

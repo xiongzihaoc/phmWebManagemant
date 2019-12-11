@@ -81,12 +81,11 @@
             <el-select
               v-model="editAddForm.addAllowWaterIds"
               clearable
-              @focus="ttfocus"
               filterable
               multiple
               placeholder="请选择"
             >
-              <el-option v-for="item in options" :key="item.id" :label="item.name" :value="item.id"></el-option>
+              <el-option v-for="item in DrinkTypeList" :key="item.id" :label="item.name" :value="item.id"></el-option>
             </el-select>
           </el-form-item>
           <el-form-item label="不推荐类" prop="addNoWaterIds">
@@ -94,11 +93,10 @@
               v-model="editAddForm.addNoWaterIds"
               filterable
               multiple
-              @focus="ttfocus"
               clearable
               placeholder="请选择"
             >
-              <el-option v-for="item in options" :key="item.id" :label="item.name" :value="item.id"></el-option>
+              <el-option v-for="item in DrinkTypeList" :key="item.id" :label="item.name" :value="item.id"></el-option>
             </el-select>
           </el-form-item>
           <el-form-item label="每日饮水" prop="drinkWaterAmount">
@@ -288,34 +286,6 @@ export default {
     handleCurrentChange(val) {
       this.currentRow = val;
     },
-    ttfocus() {
-      this.options = this.DrinkTypeList;
-    }
-    // async remoteMethod(query) {
-    //   if (query !== "") {
-    //     this.loading = true;
-    //     const { data: res } = await this.$http.post(
-    //       "water/type/getPWaterTypeList.do",
-    //       {
-    //         pageSize: this.pageSize,
-    //         pageNum: this.pageNum,
-    //         name: query
-    //       }
-    //     );
-    //     this.DrinkTypeList = res.rows;
-    //     setTimeout(() => {
-    //       this.getDrinkTypeList();
-    //       this.loading = false;
-    //       this.options = this.DrinkTypeList.filter(item => {
-    //         console.log(item);
-
-    //         return item.name.toLowerCase().indexOf(query.toLowerCase()) > -1;
-    //       });
-    //     }, 200);
-    //   } else {
-    //     this.options = [];
-    //   }
-    // }
   }
 };
 </script>

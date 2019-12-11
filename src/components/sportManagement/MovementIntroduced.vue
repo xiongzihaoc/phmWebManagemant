@@ -98,7 +98,6 @@ export default {
   components: { vuedraggable },
   data() {
     return {
-      // movemenPlanList:[],
       infoId: null,
       addInfos: [],
       ImgUrl: "",
@@ -116,12 +115,13 @@ export default {
   methods: {
     async getMovemenPlanList() {
       const { data: res } = await this.$http.post(
-        "resources/savePResourcesList.do",
-        { id: this.infoId }
+        "resources/getResourcesBySportPlan.do",
+        { sportPlanID: this.infoId }
       );
       console.log(res);
-      
-      // this.movemenPlanList = res.rows;
+      if (res.data.length > 0) {
+        this.addInfos = res.data;
+      }
     },
     async saveInfo() {
       const { data: res } = await this.$http.post(

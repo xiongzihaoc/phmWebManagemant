@@ -85,14 +85,13 @@
           <el-form-item label="禁忌食物" prop="addFoodIds">
             <el-select
               v-model="AddEditForm.addFoodIds"
-              @focus="ttfocus"
               filterable
               multiple
               clearable
               placeholder="请选择"
             >
               <el-option
-                v-for="item in options"
+                v-for="item in foodList"
                 :key="item.id"
                 :label="item.fdName"
                 :value="item.id"
@@ -281,32 +280,6 @@ export default {
     handleCurrentChange(val) {
       this.currentRow = val;
     },
-
-    ttfocus() {
-      this.options = this.foodList;
-    },
-
-    async remoteMethod(query) {
-      // this.query = query;
-      // if (query !== "") {
-      //   this.loading = true;
-      //   const { data: res } = await this.$http.post("food/getPFoodList.do", {
-      //     pageSize: this.pageSize,
-      //     pageNum: this.pageNum,
-      //     fdName: query
-      //   });
-      //   this.foodList = res.rows;
-      //   setTimeout(() => {
-      //     this.getFoodManagemant();
-      //     this.loading = false;
-      //     this.options = this.foodList.filter(item => {
-      //       return item.fdName.toLowerCase().indexOf(query.toLowerCase()) > -1;
-      //     });
-      //   }, 200);
-      // } else {
-      //   this.options = [];
-      // }
-    }
   },
 };
 </script>

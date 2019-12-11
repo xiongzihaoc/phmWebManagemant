@@ -54,7 +54,7 @@
               size="mini"
               @click="movementInfo(scope.row)"
               type="success"
-              icon="el-icon-edit"
+              icon="el-icon-s-unfold"
             >运动介绍</el-button>
             <!-- 删除按钮 -->
             <el-button
@@ -183,7 +183,6 @@ export default {
         const { data: res } = await this.$http.post(httpUrl, parm);
         if (res.code != 200) return this.$message.error(res.msg);
         console.log(res);
-        
         this.$message.success(res.msg);
         this.getMovemenPlanList();
         this.editDialogVisible = false;
