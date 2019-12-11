@@ -280,6 +280,14 @@ const routes = [{
         }
       },
       {
+        path: '/VideoDisease',
+        name: "疾病轮播图",
+        component: () => import('@/components/DiseaseKnowledge/VideoDisease.vue'),
+        meta: {
+          title: '疾病轮播图'
+        }
+      },
+      {
         path: '/Health/inquiry',
         name: "轻问诊记录",
         component: () => import('@/components/HealthManagemant/EasyInquiry.vue'),
