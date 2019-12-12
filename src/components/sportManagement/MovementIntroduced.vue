@@ -118,7 +118,7 @@ export default {
         "resources/getResourcesBySportPlan.do",
         { sportPlanID: this.infoId }
       );
-      console.log(res);
+      // console.log(res);
       if (res.data.length > 0) {
         this.addInfos = res.data;
       }
