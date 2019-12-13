@@ -90,16 +90,7 @@ export default {
     showEditdialog() {},
     // 改变状态按钮
     async userStateChanged(userinfo) {
-      // const { data: res } = await this.$http.post("menu/updateSysMenu.do", {
-      //   menuId: userinfo.menuId,
-      //   code: userinfo.code
-      // });
-      // if (res.code != 200) {
-      //   userinfo.code = !userinfo.code;
-      //   return this.$message.error("更新用户状态失败");
-      // } else {
-      //   this.$message.success("更新用户状态成功");
-      // }
+
     },
     // 搜索
     hospSearch() {},

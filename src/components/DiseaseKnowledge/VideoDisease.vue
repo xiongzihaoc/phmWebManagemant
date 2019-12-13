@@ -224,11 +224,16 @@
               <img v-if="addForm.resourceUrl" :src="addForm.resourceUrl" class="avatar" />
               <i v-else class="el-icon-plus avatar-uploader-icon"></i>
             </el-upload>
+            <el-progress
+              v-if="videoFlag == true"
+              :percentage="percentageFile"
+              style="margin-top:20px;"
+            ></el-progress>
           </el-form-item>
         </el-form>
         <span slot="footer" class="dialog-footer">
           <el-button @click="addDialogVisible = false">取 消</el-button>
-          <el-button type="primary" @click="addEnter">确 定</el-button>
+          <el-button type="primary"  @click="addEnter" :disabled="isDisabled">确 定</el-button>
         </span>
       </el-dialog>
     </el-card>
@@ -263,7 +268,8 @@ export default {
       imageUrl: "",
       editId: "",
       videoFlag: false,
-      percentageFile: 0
+      percentageFile: 0,
+      isDisabled: false
     };
   },
   created() {
@@ -342,44 +348,62 @@ export default {
       this.editDialogVisible = true;
     },
     // 确定修改
-    async editEnter() {
-      const { data: res } = await this.$http.post(
-        "disease/banner/updateDiseaseBanner.do",
-        {
-          id: this.editId,
-          diseaseTypeId: this.editForm.diseaseTypeId,
-          resourceType: this.editForm.resourceType,
-          resourceTypeDetail: this.editForm.resourceTypeDetail,
-          resourceUrl: this.editForm.resourceUrl
-        }
-      );
-      if (res.code != 200) return this.$$message.error("修改失败");
-      this.$message.success("修改成功");
-      this.getInfoList();
-      this.editDialogVisible = false;
+    editEnter() {
+      this.$refs.editFormRef.validate(async valid => {
+        if (!valid) return this.$message.error("修改失败");
+        const { data: res } = await this.$http.post(
+          "disease/banner/updateDiseaseBanner.do",
+          {
+            id: this.editId,
+            diseaseTypeId: this.editForm.diseaseTypeId,
+            resourceType: this.editForm.resourceType,
+            resourceTypeDetail: this.editForm.resourceTypeDetail,
+            resourceUrl: this.editForm.resourceUrl
+          }
+        );
+        if (res.code != 200) return this.$message.error("修改失败");
+        this.$message.success("修改成功");
+        this.getInfoList();
+        this.editDialogVisible = false;
+      });
     },
-    editDialogClosed() {},
+    editDialogClosed() {
+      this.$refs.editFormRef.resetFields();
+    },
     // 搜索
     ImgSearch() {},
     // 新增轮播图
-    async addEnter() {
-      this.addDialogVisible = false;
-      const { data: res } = await this.$http.post(
-        "disease/banner/saveDiseaseBanner.do",
-        {
-          diseaseTypeId: this.addForm.diseaseTypeId,
-          resourceType: this.addForm.resourceType,
-          resourceTypeDetail: this.addForm.resourceTypeDetail,
-          resourceUrl: this.addForm.resourceUrl
-        }
-      );
-      this.getInfoList();
-      console.log(res);
+    addEnter() {
+      this.isDisable = true;
+      setTimeout(() => {
+        this.isDisable = false; 
+        //点击一次时隔两秒后才能再次点击
+      }, 2000);
+      this.$refs.addFormRef.validate(async valid => {
+        if (!valid) return this.$message.error("添加失败");
+        this.addDialogVisible = false;
+        const { data: res } = await this.$http.post(
+          "disease/banner/saveDiseaseBanner.do",
+          {
+            diseaseTypeId: this.addForm.diseaseTypeId,
+            resourceType: this.addForm.resourceType,
+            resourceTypeDetail: this.addForm.resourceTypeDetail,
+            resourceUrl: this.addForm.resourceUrl
+          }
+        );
+        if (res.code != 200) return this.$message.error("添加失败");
+        this.$message.success("添加成功");
+        this.getInfoList();
+      });
     },
+    // 新增轮播图弹框
     addImg() {
       this.addDialogVisible = true;
+      this.addForm = {};
     },
-    addDialogClosed() {},
+    addDialogClosed() {
+      this.$refs.addFormRef.resetFields();
+    },
     handleAvatarSuccess(res, file) {
       if (res.code != 200) return this.$message.error("上传失败");
       this.percentageFile = 0;
