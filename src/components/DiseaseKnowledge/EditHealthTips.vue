@@ -92,7 +92,7 @@
           />
         </li>
         <li class="addChild" v-if="item.type==2">
-          <video class="addVideo" :src="item.videoUrl" controls :poster="item.imageUrl"></video>
+          <video class="addVideo" :src="item.videoUrl" controls autoplay></video>
           <img
             src="../../assets/images/deleteItem.png"
             @click="infoDelete(item.id)"
@@ -283,7 +283,33 @@ export default {
       }
       return (isJPG || isBMP || isGIF || isPNG) && isLt10M;
     },
+    // 截取视频上传第一帧
+    captureImage(videoId, index, key) {
+      const self = this;
+      setTimeout(function() {
+        const videoEle = document.getElementById("addVideo");
+        const canvas = document.createElement("canvas");
+        canvas.width = 600;
+        canvas.height = 400;
+        videoEle.addEventListener(
+          "timeupdate",
+          function() {
+            canvas
+              .getContext("2d")
+              .drawImage(videoEle, 0, 0, canvas.width, canvas.height);
+            const dataUrl = canvas.toDataURL("image/png");
+            console.log(dataUrl);
+            
+            self.$set(self.$data[key][index], "cover", dataUrl);
+            videoEle.pause();
+            
+          },
+          false
+        );
+      }, 3000);
+  },
     handleAvatarSuccessVid(res, file, fileList) {
+      console.log(res);
       this.percentageFile = 0;
       this.videoFlag = false;
       this.VidUrl = res.data;
@@ -292,6 +318,7 @@ export default {
         type: 2
       };
       this.addInfos.push(objVideo);
+    
     },
     uploadVidProcess(event, file, fileList) {
       this.videoFlag = true;
@@ -299,13 +326,13 @@ export default {
     },
     beforeAvatarUploadVid(file) {
       console.log(file);
-      
+
       const isJPG = file.type === "video/mp4";
       const isGIF = file.type === "video/ogg";
       const isPNG = file.type === "video/flv";
       const isBMP = file.type === "video/avi";
       const isWmv = file.type === "video/wmv";
-      const isRmvb= file.type === "video/rmvb";
+      const isRmvb = file.type === "video/rmvb";
       const isLt10M = file.size / 1024 / 1024 < 10;
       if (!isJPG && !isGIF && !isPNG && !isBMP && !isWmv && !isRmvb) {
         this.$message.error("请上传正确的视频格式!");

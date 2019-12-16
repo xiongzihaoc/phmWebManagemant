@@ -285,7 +285,6 @@ export default {
         "disease/banner/getDiseaseBannerList.do",
         { pageSize: 100000, pageNum: 1 }
       );
-      console.log(res);
       this.VideoDiseaseList = res.rows;
     },
     // 获取疾病类型列表
@@ -296,7 +295,6 @@ export default {
       );
       if (res.code != 200) return this.$message.error("数获取失败");
       this.disTypeList = res.rows;
-      console.log(this.disTypeList);
     },
     // 获取健康知识列表
     async getHealthList() {

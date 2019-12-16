@@ -43,46 +43,6 @@
           </el-menu-item>
         </el-submenu>
       </el-menu>
-
-      <!-- <el-menu
-        background-color="#304156"
-        text-color="#BFCBD9"
-        active-text-color="orange"
-        :unique-opened="true"
-        :collapse="isCollapse"
-        :collapse-transition="false"
-        router
-        :default-active="this.$route.path"
-      >
-      <div v-for="item in menuList" :key="item.id">-->
-      <!-- 一级菜单 -->
-      <!-- <el-submenu :index="item.id + ''" :key="item.id" v-if="item.child.length > 1">
-            <template slot="title">
-              <i :class="item.icon" height="24px"></i>
-              <span>{{item.menuName}}</span>
-      </template>-->
-      <!-- 二级菜单 -->
-      <!-- <el-menu-item
-              :index="'/' + subItem.url"
-              v-for="subItem in item.child"
-              :key="subItem.id"
-              @click="saveNavState('/' + subItem.url)"
-            >
-              <template slot="title">
-                <i class="el-icon-menu"></i>
-                <span>{{subItem.menuName}}</span>
-              </template>
-            </el-menu-item>
-          </el-submenu>
-
-          <el-menu-item :index="'/' + item.child[0].url" :key="item.child[0].id" v-else>
-            <template slot="title">
-              <i :class="item.icon" height="24px"></i>
-              <span>{{item.child[0].menuName}}</span>
-            </template>
-          </el-menu-item>
-        </div>
-      </el-menu>-->
     </el-aside>
     <el-container>
       <!-- 头部区域 -->
@@ -112,6 +72,9 @@
       <el-main>
         <router-view></router-view>
       </el-main>
+      <el-footer>
+       Copyright © 2019 zhuoya All rights reserved
+      </el-footer>
     </el-container>
   </el-container>
 </template>
@@ -249,5 +212,10 @@ export default {
   border-radius: 50%;
   margin-right: 5px;
   vertical-align: middle;
+}
+.el-footer {  
+  background-color: #BFCBD9;
+  text-align: center;
+  padding-top: 20px;
 }
 </style>
