@@ -1,16 +1,12 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
-import router from '../router'
-import Router from 'vue-router'
 Vue.use(Vuex)
-Vue.use(Router)
-const originalPush = Router.prototype.push
-Router.prototype.push = function push(location) {
-  return originalPush.call(this, location).catch(err => err)
-}
 // 应用初始状态
 const state = {
-  options: [],
+  options: [{
+    name: "首页",
+    route: "/index"
+  }],
   activeIndex: '/'
 }
 
@@ -40,6 +36,5 @@ const mutations = {
 // 创建 store 实例
 export default new Vuex.Store({
   state,
-  router,
   mutations
 })

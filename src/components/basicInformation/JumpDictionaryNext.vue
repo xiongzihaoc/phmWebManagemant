@@ -1,11 +1,5 @@
 <template>
   <div>
-    <!-- 面包屑 -->
-    <el-breadcrumb separator-class="el-icon-arrow-right">
-      <el-breadcrumb-item :to="{ path: '/home' }">首页</el-breadcrumb-item>
-      <el-breadcrumb-item :to="{ path: '/system/dict' }">数据字典</el-breadcrumb-item>
-      <el-breadcrumb-item>字典数据</el-breadcrumb-item>
-    </el-breadcrumb>
     <!-- 卡片视图 -->
     <el-card>
       <el-row :gutter="20">

@@ -1,7 +1,6 @@
 <template>
   <div>
     <h3>Welcome To Index</h3>
-    <img src="../assets/images/angry.gif" alt />
   </div>
 </template>
 <script>

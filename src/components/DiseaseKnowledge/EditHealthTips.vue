@@ -1,11 +1,5 @@
 <template>
   <div>
-    <!-- 面包屑 -->
-    <el-breadcrumb separator-class="el-icon-arrow-right">
-      <el-breadcrumb-item :to="{ path: '/home' }">首页</el-breadcrumb-item>
-      <el-breadcrumb-item :to="{ path: '/diseaseknowledge/healthKnowledge' }">健康小知识</el-breadcrumb-item>
-      <el-breadcrumb-item>健康小知识修改</el-breadcrumb-item>
-    </el-breadcrumb>
     <!-- 卡片视图 -->
     <el-card>
       <el-form ref="editFormRef" :model="editform" label-width="80px">

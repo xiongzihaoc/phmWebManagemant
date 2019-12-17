@@ -38,14 +38,14 @@ const routes = [{
           title: '系统账户'
         }
       },
-      {
-        path: '/system/UserList',
-        name: "用户管理",
-        component: () => import('@/components/basicInformation/UserManagemant.vue'),
-        meta: {
-          title: '用户管理'
-        }
-      },
+      // {
+      //   path: '/system/UserList',
+      //   name: "用户管理",
+      //   component: () => import('@/components/basicInformation/UserManagemant.vue'),
+      //   meta: {
+      //     title: '用户管理'
+      //   }
+      // },
       {
         path: '/system/doctor',
         name: "医生管理",

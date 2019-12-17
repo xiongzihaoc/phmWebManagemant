@@ -72,7 +72,7 @@
       <div class="topTags">
         <el-tabs
           v-model="activeIndex"
-          type="border-card"
+          type="card"
           closable
           @tab-click="tabClick"
           v-if="options.length"
@@ -86,7 +86,6 @@
           ></el-tab-pane>
         </el-tabs>
       </div>
-
       <!-- 主体内容区域 -->
       <el-main>
         <router-view></router-view>
@@ -229,11 +228,12 @@ export default {
   background: #304156;
 }
 .el-header {
+  height: 55px !important;
   overflow: hidden;
 }
 .header_left {
   float: left;
-  margin-top: 25px;
+  margin-top: 20px;
 }
 .header_left:hover {
   cursor: pointer;
@@ -241,7 +241,7 @@ export default {
 .header_right {
   overflow: hidden;
   float: right;
-  height: 60px;
+  height: 50px;
 }
 .el-icon-arrow-down {
   font-size: 12px;
@@ -260,11 +260,6 @@ export default {
 #index {
   float: left;
   margin-left: 10px;
-}
-.el-breadcrumb {
-  float: left;
-  margin-left: 20px;
-  margin-top: 26px;
 }
 .logoImg {
   float: left;
@@ -288,7 +283,7 @@ export default {
 }
 .el-dropdown {
   float: right;
-  margin-top: 10px;
+  margin-top: 7px;
 }
 .aaa {
   display: inline-block;
@@ -315,8 +310,14 @@ export default {
   border-left: 2px solid orange;
 }
 .topTags {
+  height: 20px!important;
   width: 100%;
-  height: 30px;
-  background-color: red;
+  background-color: #f5f5f5;
+}
+.el-tabs {
+  height: 20px;
+}
+.el-tab-pane {
+  height: 15px;
 }
 </style>
