@@ -56,10 +56,10 @@ const routes = [{
       },
       {
         path: '/system/hosptial',
-        name: "医院管理",
+        name: "组织管理",
         component: () => import('@/components/basicInformation/HosptialManagement.vue'),
         meta: {
-          title: '医院管理'
+          title: '组织管理'
         }
       },
       {

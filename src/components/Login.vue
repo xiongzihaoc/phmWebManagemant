@@ -45,7 +45,7 @@
         :disabled="isDisabled"
         style="width:100%;margin-bottom:30px;"
         @click.native.prevent="handleLogin"
-      >登录</el-button>
+      >登 录</el-button>
     </el-form>
   </div>
 </template>
@@ -92,7 +92,7 @@ export default {
         // token 存入 sessionstorage
         window.sessionStorage.setItem("token", res.data.token);
         // 跳转
-        window.localStorage.setItem('loginName',this.loginForm.loginName)
+        window.localStorage.setItem("loginName", this.loginForm.loginName);
         this.$router.push({
           path: "/home"
         });
@@ -199,11 +199,18 @@ $light_gray: #eee;
     }
   }
   .el-input {
-    width: 100%;
+    width: 90%;
     padding-left: 20px;
   }
   .el-input__icon {
     margin-top: 10px;
+  }
+  .el-form-item {
+    border-radius: 40px 40px 40px 40px;
+  }
+  .el-button {
+    height: 45px;
+    border-radius: 40px 40px 40px 40px;
   }
 }
 </style>

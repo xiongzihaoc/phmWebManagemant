@@ -21,7 +21,7 @@
         :collapse="isCollapse"
         :collapse-transition="false"
         router
-        :default-active="this.$route.path"
+        :default-active="$route.path"
       >
         <!-- 一级菜单 -->
         <el-submenu :index="item.id + ''" v-for="item in menuList" :key="item.id">
@@ -68,13 +68,32 @@
           </el-dropdown>
         </div>
       </el-header>
+      <!-- 标签页 -->
+      <div class="topTags">
+        <el-tabs
+          v-model="activeIndex"
+          type="border-card"
+          closable
+          @tab-click="tabClick"
+          v-if="options.length"
+          @tab-remove="tabRemove"
+        >
+          <el-tab-pane
+            :key="item.route"
+            v-for="item in options"
+            :label="item.name"
+            :name="item.route"
+          ></el-tab-pane>
+        </el-tabs>
+      </div>
+
       <!-- 主体内容区域 -->
       <el-main>
         <router-view></router-view>
       </el-main>
-      <el-footer>
+      <!-- <el-footer>
        Copyright © 2019 zhuoya All rights reserved
-      </el-footer>
+      </el-footer>-->
     </el-container>
   </el-container>
 </template>
@@ -109,7 +128,6 @@ export default {
     async getMenuList() {
       const { data: res } = await this.$http.post("menu/getMenuList.do", {});
       if (res.code != 200) return this.$message.error(res.msg);
-
       this.menuList = res.data;
     },
     // 是否折叠展架侧边栏
@@ -127,7 +145,79 @@ export default {
     saveNavState(activePath) {
       window.sessionStorage.setItem("activePath", activePath);
     },
-    handleCommand(command) {}
+    handleCommand(command) {},
+    // tab切换时，动态的切换路由
+    // tab切换时，动态的切换路由
+    tabClick(tab) {
+      let path = this.activeIndex;
+      this.$router.replace({ path: path });
+    },
+    tabRemove(targetName) {
+      // 首页不可删除
+      if (targetName == "/") {
+        return;
+      }
+      this.$store.commit("delete_tabs", targetName);
+      if (this.activeIndex === targetName) {
+        // 设置当前激活的路由
+        if (this.options && this.options.length >= 1) {
+          this.$store.commit(
+            "set_active_index",
+            this.options[this.options.length - 1].route
+          );
+          this.$router.replace({ path: this.activeIndex });
+        } else {
+          this.$router.replace({ path: "/" });
+        }
+      }
+    }
+  },
+  // mounted() {
+  //   // 刷新时以当前路由做为tab加入tabs
+  //   if (
+  //     this.$route.path !== "/" &&
+  //     this.$route.path.indexOf("userInfo") == -1
+  //   ) {
+  //     this.$store.commit("add_tabs", { route: "/", name: "首页" });
+  //     this.$store.commit("add_tabs", {
+  //       route: this.$route.path,
+  //       name: this.$route.name
+  //     });
+  //     this.$store.commit("set_active_index", this.$route.path);
+  //   } else {
+  //     this.$store.commit("add_tabs", { route: "/", name: "首页" });
+  //     this.$store.commit("set_active_index", "/");
+  //     this.$router.push("/");
+  //   }
+  // },
+  computed: {
+    options() {
+      return this.$store.state.options;
+    },
+    activeIndex: {
+      get() {
+        return this.$store.state.activeIndex;
+      },
+      set(val) {
+        this.$store.commit("set_active_index", val);
+      }
+    }
+  },
+  watch: {
+    $route(to) {
+      let flag = false;
+      for (let option of this.options) {
+        if (option.route === to.path) {
+          flag = true;
+          this.$store.commit("set_active_index", to.path);
+          break;
+        }
+      }
+      if (!flag) {
+        this.$store.commit("add_tabs", { route: to.path, name: to.name });
+        this.$store.commit("set_active_index", to.path);
+      }
+    }
   }
 };
 </script>
@@ -140,7 +230,6 @@ export default {
 }
 .el-header {
   overflow: hidden;
-  box-shadow: 0 4px 4px rgba(0, 21, 41, 0.08);
 }
 .header_left {
   float: left;
@@ -164,6 +253,9 @@ export default {
 }
 #toggle {
   float: left;
+}
+.el-main {
+  background-color: #f5f5f5;
 }
 #index {
   float: left;
@@ -213,9 +305,18 @@ export default {
   margin-right: 5px;
   vertical-align: middle;
 }
-.el-footer {  
-  background-color: #BFCBD9;
+.el-footer {
+  background-color: #fff;
+  box-shadow: 4px 4px 4px 4px rgba(0, 21, 41, 0.08);
   text-align: center;
   padding-top: 20px;
+}
+.el-menu-item {
+  border-left: 2px solid orange;
+}
+.topTags {
+  width: 100%;
+  height: 30px;
+  background-color: red;
 }
 </style>
