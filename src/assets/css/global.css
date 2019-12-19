@@ -22,3 +22,11 @@
 .el-tooltip__popper {
     max-width: 300px;
 }
+
+.el-dialog__header {
+    background-color: #409EFF;
+    height: 10px;
+}
+.el-dialog {
+    /* background-color: purple!important; */
+}
