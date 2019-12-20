@@ -16,7 +16,7 @@
       <el-menu
         background-color="#304156"
         text-color="#BFCBD9"
-        active-text-color="orange"
+        active-text-color="#42B983"
         :unique-opened="true"
         :collapse="isCollapse"
         :collapse-transition="false"
@@ -171,24 +171,6 @@ export default {
       }
     }
   },
-  // mounted() {
-  //   // 刷新时以当前路由做为tab加入tabs
-  //   if (
-  //     this.$route.path !== "/" &&
-  //     this.$route.path.indexOf("userInfo") == -1
-  //   ) {
-  //     this.$store.commit("add_tabs", { route: "/", name: "首页" });
-  //     this.$store.commit("add_tabs", {
-  //       route: this.$route.path,
-  //       name: this.$route.name
-  //     });
-  //     this.$store.commit("set_active_index", this.$route.path);
-  //   } else {
-  //     this.$store.commit("add_tabs", { route: "/", name: "首页" });
-  //     this.$store.commit("set_active_index", "/");
-  //     this.$router.push("/");
-  //   }
-  // },
   computed: {
     options() {
       return this.$store.state.options;
@@ -307,17 +289,12 @@ export default {
   padding-top: 20px;
 }
 .el-menu-item {
-  border-left: 2px solid orange;
+  border-left: 2px solid #42B983;
 }
 .topTags {
-  height: 20px!important;
+  height: 20px !important;
   width: 100%;
   background-color: #f5f5f5;
 }
-.el-tabs {
-  height: 20px;
-}
-.el-tab-pane {
-  height: 15px;
-}
+
 </style>

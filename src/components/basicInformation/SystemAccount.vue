@@ -155,7 +155,7 @@
         @closed="addDeptDialogClosed"
       >
         <el-form-item prop="deptName">
-          <div class="mytree">
+          <div class="tree-container">
             <el-tree
               :data="hosMenuList"
               :props="defaultProps"
