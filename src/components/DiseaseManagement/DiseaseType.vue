@@ -58,7 +58,7 @@
       ></el-pagination>
     </el-card>
     <!-- 修改页面 -->
-    <el-dialog :title="dialogTitle" :visible.sync="editDialogVisible" width="40%">
+    <el-dialog :title="dialogTitle" :visible.sync="editDialogVisible" width="40%" v-dialogDrag>
       <el-form :model="editForm" ref="editFormRef" @closed="editDialogClosed" label-width="80px">
         <el-form-item label="种类名称" prop="name">
           <el-input v-model="editForm.name"></el-input>

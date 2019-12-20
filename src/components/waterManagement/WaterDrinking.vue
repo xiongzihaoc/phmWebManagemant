@@ -1,6 +1,6 @@
 <template>
-    <div>
-     <el-card>
+  <div>
+    <el-card>
       <el-row :gutter="20">
         <el-col :span="7">
           <el-input placeholder="请输入内容" @keyup.13.native="WaterSearch" v-model="input" clearable>
@@ -29,7 +29,7 @@
         <el-table-column align="center" prop="drinkWaterAmount" show-overflow-tooltip label="饮水总量"></el-table-column>
         <el-table-column align="center" prop="description" show-overflow-tooltip label="描述"></el-table-column>
         <el-table-column align="center" prop="operate" label="操作" width="300">
-         <template slot-scope="scope">
+          <template slot-scope="scope">
             <!-- 修改按钮 -->
             <el-button
               size="mini"
@@ -65,12 +65,12 @@
         :total="total"
       ></el-pagination>
 
-
-       <el-dialog
+      <el-dialog
         :title="dialogTitle"
         :visible.sync="editDialogVisible"
         width="40%"
         @closed="editDialogClosed"
+        v-dialogDrag
       >
         <el-form :model="editAddForm" ref="editAddFormRef" label-width="80px">
           <el-form-item label="名称" prop="name">
@@ -89,26 +89,26 @@
         </span>
       </el-dialog>
     </el-card>
-    </div>
+  </div>
 </template>
 
 <script>
 export default {
   data() {
     return {
-        waterguideList:[],
-        dialogTitle: "",
-        editAddForm: {
-        drinkWaterAmount:"",
+      waterguideList: [],
+      dialogTitle: "",
+      editAddForm: {
+        drinkWaterAmount: "",
         name: "",
         description: ""
       },
       DialogVisible: false,
-      editDialogVisible:false,
+      editDialogVisible: false,
       pageSize: 10,
       pageNum: 1,
       total: 0,
-      input:""
+      input: ""
     };
   },
   created() {
@@ -128,13 +128,14 @@ export default {
       this.waterguideList = res.rows;
       this.total = res.total;
     },
-     // 搜索
+    // 搜索
     WaterSearch() {
       this.getWaterguideList();
-    },handleCurrentChange(val) {
+    },
+    handleCurrentChange(val) {
       this.currentRow = val;
     },
-     // 添加
+    // 添加
     addWaterGuideType() {
       this.dialogTitle = "新增";
       this.editAddForm = {};
@@ -171,7 +172,7 @@ export default {
         this.getWaterguideList();
         this.editDialogVisible = false;
       });
-    },  // 分页
+    }, // 分页
     handleSizeChange(newSize) {
       this.pageSize = newSize;
       this.getWaterguideList();
@@ -213,9 +214,12 @@ export default {
         this.$message.error("删除失败");
         return;
       }
-    },// 跳转到元素列表
+    }, // 跳转到元素列表
     jumpElementList(info) {
-      this.$router.push({ path: "/water/WaterDrinkingDetail", query: { id: info.id } });
+      this.$router.push({
+        path: "/water/WaterDrinkingDetail",
+        query: { id: info.id }
+      });
     }
   }
 };

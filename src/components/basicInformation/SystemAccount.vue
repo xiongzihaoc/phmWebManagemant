@@ -63,13 +63,14 @@
       ></el-pagination>
     </el-card>
     <!-- 修改页面 -->
-    <el-dialog title="修改信息" :visible.sync="editDialogVisible" width="40%">
+    <el-dialog title="修改信息" :visible.sync="editDialogVisible" width="40%" v-dialogDrag>
       <el-form
         :rules="addFormRules"
         ref="editFormRef"
         :model="editForm"
         label-width="80px"
         @closed="editDialogClosed"
+        v-dialogDrag
       >
         <el-form-item label="用户名" prop="userName">
           <el-input v-model="editForm.userName"></el-input>
@@ -103,7 +104,7 @@
       </span>
     </el-dialog>
     <!-- 添加页面 -->
-    <el-dialog title="新增用戶" :visible.sync="addDialogVisible" width="40%">
+    <el-dialog title="新增用戶" :visible.sync="addDialogVisible" width="40%" v-dialogDrag>
       <el-form
         :rules="addFormRules"
         ref="addFormRef"
@@ -146,7 +147,7 @@
       </span>
     </el-dialog>
     <!-- 部门新增页面 -->
-    <el-dialog title="选择部门" :visible.sync="addDeptDialogVisible" width="40%">
+    <el-dialog title="选择部门" :visible.sync="addDeptDialogVisible" width="40%" v-dialogDrag>
       <el-form
         :rules="addFormRules"
         ref="addFormRef"
@@ -172,7 +173,7 @@
       </span>
     </el-dialog>
     <!-- 部门修改页面 -->
-    <el-dialog title="选择部门" :visible.sync="DeptEditDialogVisible" width="40%">
+    <el-dialog title="选择部门" :visible.sync="DeptEditDialogVisible" width="40%" v-dialogDrag>
       <el-form
         :rules="addFormRules"
         ref="addFormRef"

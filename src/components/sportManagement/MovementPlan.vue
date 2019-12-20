@@ -77,6 +77,7 @@
         :visible.sync="editDialogVisible"
         width="40%"
         @closed="editDialogClosed"
+        v-dialogDrag
       >
         <el-form :model="editForm" ref="editFormRef" label-width="80px">
           <el-form-item label="方案名称" prop="name">
@@ -221,11 +222,11 @@ export default {
       this.editDialogVisible = true;
     },
     // 跳转到运动介绍
-    movementInfo(info){
+    movementInfo(info) {
       console.log(info);
-      
-      window.sessionStorage.setItem('movementVal',info.id)
-      this.$router.push('/sport/MovementIntroduced')
+
+      window.sessionStorage.setItem("movementVal", info.id);
+      this.$router.push("/sport/MovementIntroduced");
     },
     // 实现表格单行选择高亮
     setCurrent(row) {

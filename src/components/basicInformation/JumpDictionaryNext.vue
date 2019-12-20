@@ -64,6 +64,7 @@
       :visible.sync="DialogVisible"
       width="40%"
       @closed="AddEditDialogClosed"
+      v-dialogDrag
     >
       <el-form ref="addFormRef" :model="addEditForm" label-width="80px">
         <el-form-item label="名称">

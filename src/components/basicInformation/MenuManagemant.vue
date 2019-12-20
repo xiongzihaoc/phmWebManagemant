@@ -52,7 +52,7 @@
       </el-table>
     </el-card>
     <!-- 添加提示框 -->
-    <el-dialog title="添加选项" :visible.sync="addDialogVisible" width="40%">
+    <el-dialog title="添加选项" :visible.sync="addDialogVisible" width="40%" v-dialogDrag>
       <el-form ref="editFormRef" :model="addForm" label-width="80px">
         <el-form-item label="上一级">
           <el-input v-model="goBack" disabled></el-input>
@@ -81,6 +81,7 @@
       :visible.sync="editDialogVisible"
       width="40%"
       @closed="editDialogClosed"
+      v-dialogDrag
     >
       <el-form ref="editFormRef" :model="editForm" label-width="80px">
         <el-form-item label="名称" prop="menuName">

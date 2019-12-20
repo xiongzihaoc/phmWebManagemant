@@ -10,6 +10,7 @@ import Nprogress from 'nprogress'
 import 'nprogress/nprogress.css'
 // 导入字体图表图标
 import './assets/iconfont/iconfont.css'
+
 // 引入md5加密
 import md5 from 'js-md5';
 Vue.prototype.$md5 = md5;
@@ -46,7 +47,8 @@ Vue.prototype.$http = axios
 Vue.prototype.UPLOAD_IMG = 'http://test.phmzykj.com/zhuoya_manager/oss/fileUpload.do'
 Vue.config.productionTip = false
 
-
+// 弹框拖拽功能
+import './assets/js/directives.js'
 new Vue({
   router,
   store,

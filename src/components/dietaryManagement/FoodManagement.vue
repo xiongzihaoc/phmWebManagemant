@@ -80,7 +80,7 @@
       ></el-pagination>
     </el-card>
     <!-- 修改页面 -->
-    <el-dialog :title="dialogTitle" :visible.sync="editDialogVisible" width="40%">
+    <el-dialog :title="dialogTitle" :visible.sync="editDialogVisible" width="40%" v-dialogDrag>
       <el-form :model="editForm" ref="editFormRef" @closed="editDialogClosed" label-width="80px">
         <el-form-item label="食物名称" prop="fdName">
           <el-input v-model="editForm.fdName"></el-input>

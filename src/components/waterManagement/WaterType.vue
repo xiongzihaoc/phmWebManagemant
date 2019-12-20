@@ -67,6 +67,7 @@
         :visible.sync="editDialogVisible"
         width="40%"
         @closed="editDialogClosed"
+        v-dialogDrag
       >
         <el-form :model="editForm" ref="editFormRef" label-width="80px">
           <el-form-item label="名称" prop="name">
@@ -84,7 +85,11 @@
               <img v-if="editForm.iconUrl" :src="editForm.iconUrl" class="avatar" />
               <i v-else class="el-icon-plus avatar-uploader-icon"></i>
             </el-upload>
-            <el-progress v-if="videoFlag == true"  :percentage="percentageFile" style="margin-top:10px;"></el-progress>
+            <el-progress
+              v-if="videoFlag == true"
+              :percentage="percentageFile"
+              style="margin-top:10px;"
+            ></el-progress>
           </el-form-item>
           <el-form-item label="描述" prop="description">
             <el-input v-model="editForm.description"></el-input>
@@ -226,7 +231,7 @@ export default {
       this.percentageFile = parseInt(file.percentage);
     },
     handleAvatarSuccess(res, file) {
-      if (res.code != 200) return this.$message.error('上传失败')
+      if (res.code != 200) return this.$message.error("上传失败");
       this.percentageFile = 0;
       this.videoFlag = false;
       this.imageUrl = res.data;

@@ -67,7 +67,7 @@
         :total="total"
       ></el-pagination>
       <!-- 修改页面 -->
-      <el-dialog :title="dialogTitle" :visible.sync="editAddDialogVisible" width="40%">
+      <el-dialog :title="dialogTitle" :visible.sync="editAddDialogVisible" width="40%" v-dialogDrag>
         <el-form
           :model="AddEditForm"
           ref="editFormRef"

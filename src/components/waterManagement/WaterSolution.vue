@@ -67,6 +67,7 @@
         :visible.sync="DialogVisible"
         width="40%"
         @closed="DialogClosed"
+        v-dialogDrag
       >
         <el-form :model="editAddForm" ref="editAddFormRef" label-width="80px">
           <el-form-item label="名称" prop="name">
@@ -80,7 +81,12 @@
               multiple
               placeholder="请选择"
             >
-              <el-option v-for="item in DrinkTypeList" :key="item.id" :label="item.name" :value="item.id"></el-option>
+              <el-option
+                v-for="item in DrinkTypeList"
+                :key="item.id"
+                :label="item.name"
+                :value="item.id"
+              ></el-option>
             </el-select>
           </el-form-item>
           <el-form-item label="不推荐类" prop="addNoWaterIds">
@@ -91,7 +97,12 @@
               clearable
               placeholder="请选择"
             >
-              <el-option v-for="item in DrinkTypeList" :key="item.id" :label="item.name" :value="item.id"></el-option>
+              <el-option
+                v-for="item in DrinkTypeList"
+                :key="item.id"
+                :label="item.name"
+                :value="item.id"
+              ></el-option>
             </el-select>
           </el-form-item>
           <el-form-item label="每日饮水" prop="drinkWaterAmount">
@@ -280,7 +291,7 @@ export default {
     },
     handleCurrentChange(val) {
       this.currentRow = val;
-    },
+    }
   }
 };
 </script>

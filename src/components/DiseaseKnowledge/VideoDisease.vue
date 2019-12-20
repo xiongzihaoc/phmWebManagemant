@@ -70,6 +70,7 @@
         :visible.sync="editDialogVisible"
         width="40%"
         @closed="editDialogClosed"
+        v-dialogDrag
       >
         <el-form :model="editForm" ref="editFormRef" label-width="80px">
           <el-form-item label="类型" prop="resourceType">
@@ -152,7 +153,7 @@
         </span>
       </el-dialog>
       <!-- 添加页面 -->
-      <el-dialog title="新增" :visible.sync="addDialogVisible" width="40%" @closed="addDialogClosed">
+      <el-dialog title="新增" :visible.sync="addDialogVisible" width="40%" @closed="addDialogClosed" v-dialogDrag>
         <el-form :model="addForm" ref="addFormRef" label-width="80px">
           <el-form-item label="类型" prop="resourceType">
             <el-select v-model="addForm.resourceType" filterable clearable placeholder="请选择">
@@ -228,7 +229,7 @@
         </el-form>
         <span slot="footer" class="dialog-footer">
           <el-button @click="addDialogVisible = false">取 消</el-button>
-          <el-button type="primary"  @click="addEnter" :disabled="isDisabled">确 定</el-button>
+          <el-button type="primary" @click="addEnter" :disabled="isDisabled">确 定</el-button>
         </span>
       </el-dialog>
     </el-card>
@@ -369,7 +370,7 @@ export default {
     addEnter() {
       this.isDisable = true;
       setTimeout(() => {
-        this.isDisable = false; 
+        this.isDisable = false;
         //点击一次时隔两秒后才能再次点击
       }, 2000);
       this.$refs.addFormRef.validate(async valid => {

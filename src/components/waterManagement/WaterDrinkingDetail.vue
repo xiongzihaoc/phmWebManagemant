@@ -1,6 +1,6 @@
 <template>
-    <div>
-     <el-card>
+  <div>
+    <el-card>
       <el-row :gutter="20">
         <el-col :span="7">
           <el-input placeholder="请输入内容" @keyup.13.native="WaterSearch" v-model="input" clearable>
@@ -27,10 +27,11 @@
         <el-table-column align="center" type="index" label="序号" width="60"></el-table-column>
         <el-table-column align="center" prop="drinkWaterAmount" show-overflow-tooltip label="饮水量"></el-table-column>
         <el-table-column align="center" prop="drinkTime" label="开始时间" width="120"></el-table-column>
-        <el-table-column align="center" prop="endDrinkTime" label="结束时间" width="120"></el-table-column> <el-table-column align="center" prop="description" show-overflow-tooltip label="描述"></el-table-column>
-         <el-table-column align="center" prop="description" show-overflow-tooltip label="描述"></el-table-column>
+        <el-table-column align="center" prop="endDrinkTime" label="结束时间" width="120"></el-table-column>
+        <el-table-column align="center" prop="description" show-overflow-tooltip label="描述"></el-table-column>
+        <el-table-column align="center" prop="description" show-overflow-tooltip label="描述"></el-table-column>
         <el-table-column align="center" prop="operate" label="操作" width="200">
-         <template slot-scope="scope">
+          <template slot-scope="scope">
             <!-- 修改按钮 -->
             <el-button
               size="mini"
@@ -59,12 +60,12 @@
         :total="total"
       ></el-pagination>
 
-
-       <el-dialog
+      <el-dialog
         :title="dialogTitle"
         :visible.sync="editDialogVisible"
         width="40%"
         @closed="editDialogClosed"
+        v-dialogDrag
       >
         <el-form :model="editAddForm" ref="editAddFormRef" label-width="80px">
           <el-form-item label="饮水量" prop="drinkWaterAmount">
@@ -72,30 +73,28 @@
           </el-form-item>
           <el-form-item label="开始时间" prop="drinkTime">
             <!-- <el-input v-model="editAddForm.drinkTime"></el-input> -->
-             <el-time-select
-            v-model="editAddForm.drinkTime"
-            :picker-options="{
+            <el-time-select
+              v-model="editAddForm.drinkTime"
+              :picker-options="{
                 start: '00:00',
                 step: '00:30',
                 end: '23:59'
             }"
-            placeholder="开始时间">
-            </el-time-select>
+              placeholder="开始时间"
+            ></el-time-select>
           </el-form-item>
-
-           
 
           <el-form-item label="结束时间" prop="endDrinkTime">
             <!-- <el-input v-model="editAddForm.endDrinkTime"></el-input> -->
-             <el-time-select
-            v-model="editAddForm.endDrinkTime"
-            :picker-options="{
+            <el-time-select
+              v-model="editAddForm.endDrinkTime"
+              :picker-options="{
                 start: '00:00',
                 step: '00:30',
                 end: '23:59'
             }"
-            placeholder="开始时间">
-            </el-time-select>
+              placeholder="开始时间"
+            ></el-time-select>
           </el-form-item>
           <el-form-item label="描述" prop="description">
             <el-input v-model="editAddForm.description"></el-input>
@@ -107,7 +106,7 @@
         </span>
       </el-dialog>
     </el-card>
-    </div>
+  </div>
 </template>
 
 <script>
