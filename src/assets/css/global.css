@@ -24,9 +24,13 @@
 }
 
 .el-dialog__header {
-    background-color: #409EFF;
-    height: 10px;
+    background-color: #f5f5f5;
+    padding: 15px 20px 10px!important;
 }
-.el-dialog {
-    /* background-color: purple!important; */
+.el-dialog__title {
+    font-weight: 400!important;
+}
+.el-dialog__footer {
+    padding: 10px 20px 10px!important;
+    background-color: #f5f5f5;
 }
