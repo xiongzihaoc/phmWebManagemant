@@ -156,11 +156,13 @@
         @closed="addDeptDialogClosed"
       >
         <el-form-item prop="deptName">
-          <div class="tree-container">
+          <div class="mytree">
             <el-tree
+              class="tree"
               :data="hosMenuList"
               :props="defaultProps"
               node-key="id"
+              :indent="0"
               :default-expanded-keys="idArr"
               @node-click="handleNodeAddClick"
             ></el-tree>
@@ -448,5 +450,63 @@ export default {
   }
 };
 </script>
-<style lang='scss' scoped>
+<style scoped>
+.mytree /deep/ .el-tree > .el-tree-node:after {
+  border-top: none;
+  border-left: none;
+}
+.tree /deep/ .el-tree-node {
+  position: relative;
+  padding-left: 16px;
+}
+
+.tree /deep/ .el-tree-node__children {
+  padding-left: 16px;
+}
+
+.tree /deep/ .el-tree-node :last-child:before {
+  height: 38px;
+}
+
+.tree /deep/ .el-tree > .el-tree-node:before {
+  border-left: none;
+}
+
+.mytree /deep/ .el-tree > .el-tree-node:after {
+  border-top: none;
+}
+
+.tree /deep/ .el-tree-node:before {
+  content: "";
+  left: -4px;
+  position: absolute;
+  right: auto;
+  border-width: 1px;
+}
+
+.tree /deep/ .el-tree-node:after {
+  content: "";
+  left: -4px;
+  position: absolute;
+  right: auto;
+  border-width: 1px;
+}
+
+.tree /deep/ .el-tree-node:before {
+  border-left: 1px solid #ccc;
+  bottom: 0px;
+  height: 100%;
+  top: -26px;
+  width: 1px;
+}
+.tree /deep/ .el-tree-node:before:nth-child(0) {
+  border-left: none!important;
+}
+
+.tree /deep/ .el-tree-node:after {
+  border-top: 1px solid #ccc;
+  height: 20px;
+  top: 12px;
+  width: 24px;
+}
 </style>

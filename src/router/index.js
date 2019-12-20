@@ -112,10 +112,10 @@ const routes = [{
       },
       {
         path: '/system/test',
-        name: "测试页面",
+        name: "加密管理",
         component: () => import('@/components/basicInformation/Test.vue'),
         meta: {
-          title: '测试页面'
+          title: '加密管理'
         }
       },
       {
