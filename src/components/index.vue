@@ -19,11 +19,8 @@ img {
 h3 {
   font-weight: 700;
   font-size: 80px;
-  color: #eee;
+  color: #000;
   text-align: center;
   margin: 50px 180px 0 0;
-}
-h3:hover {
-  color: #000;
 }
 </style>

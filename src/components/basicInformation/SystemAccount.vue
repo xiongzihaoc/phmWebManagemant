@@ -70,7 +70,6 @@
         :model="editForm"
         label-width="80px"
         @closed="editDialogClosed"
-        v-dialogDrag
       >
         <el-form-item label="用户名" prop="userName">
           <el-input v-model="editForm.userName"></el-input>
@@ -185,6 +184,7 @@
       >
         <el-form-item prop="deptName">
           <el-tree
+            class="tree"
             :default-expanded-keys="idArr"
             :data="hosMenuList"
             :props="defaultProps"
@@ -264,6 +264,7 @@ export default {
       DeptEditDialogVisible: false,
       RoleList: [],
       hosMenuList: [],
+      filterText: "",
       addFormRules: {
         userName: [
           { required: true, message: "请输入用户", trigger: "blur" },
@@ -305,7 +306,6 @@ export default {
       if (res.code != 200) return this.$message.error("数获取失败");
       this.userList = res.rows;
       this.total = res.total;
-      console.log(res);
     },
     // 获取角色列表
     async getRoleList() {
@@ -500,7 +500,7 @@ export default {
   width: 1px;
 }
 .tree /deep/ .el-tree-node:before:nth-child(0) {
-  border-left: none!important;
+  border-left: none !important;
 }
 
 .tree /deep/ .el-tree-node:after {

@@ -5,12 +5,18 @@ import store from '@/store/index';
 // 全局css
 import './assets/css/global.css'
 import './plugins/element.js'
+import $ from 'jquery'
 // nprogress 请求进度条导入
 import Nprogress from 'nprogress'
 import 'nprogress/nprogress.css'
 // 导入字体图表图标
 import './assets/iconfont/iconfont.css'
+//import css
+import 'vue-beauty/package/style/vue-beauty.min.css'
 
+//import components
+import vueBeauty from 'vue-beauty'
+Vue.use(vueBeauty)
 // 引入md5加密
 import md5 from 'js-md5';
 Vue.prototype.$md5 = md5;

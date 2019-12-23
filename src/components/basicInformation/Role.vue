@@ -100,7 +100,7 @@ export default {
     },
     // 弹框
     showEditdialog(info) {
-      this.AddEditForm = info;
+      this.AddEditForm =  JSON.parse(JSON.stringify(info));;
       this.dialogTitle = "修改";
       this.id = info.roleId;
       this.editAddDialogVisible = true;

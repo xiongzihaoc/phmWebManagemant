@@ -7,7 +7,7 @@ const state = {
     name: "首页",
     route: "/index"
   }],
-  activeIndex: '/'
+  activeIndex: '/index'
 }
 
 // 定义所需的 mutations
