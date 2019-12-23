@@ -162,6 +162,7 @@
               :props="defaultProps"
               node-key="id"
               :indent="0"
+              icon-class='el-icon-circle-plus'
               :default-expanded-keys="idArr"
               @node-click="handleNodeAddClick"
             ></el-tree>
@@ -264,7 +265,6 @@ export default {
       DeptEditDialogVisible: false,
       RoleList: [],
       hosMenuList: [],
-      filterText: "",
       addFormRules: {
         userName: [
           { required: true, message: "请输入用户", trigger: "blur" },
@@ -410,8 +410,6 @@ export default {
     },
     // 部门新增
     deptAdd() {
-      console.log(this.idArr);
-
       this.addDeptDialogVisible = true;
     },
     addDeptDialogClosed() {
@@ -458,18 +456,26 @@ export default {
 .tree /deep/ .el-tree-node {
   position: relative;
   padding-left: 16px;
+  font-weight: 700;
+  color: #333;
 }
 
 .tree /deep/ .el-tree-node__children {
   padding-left: 16px;
+  color: red;
 }
 
 .tree /deep/ .el-tree-node :last-child:before {
   height: 38px;
+  color: #409eff;
+}
+.tree /deep/ .el-tree-node :first-child:before {
+  height: 38px;
+  color: #409eff;
 }
 
 .tree /deep/ .el-tree > .el-tree-node:before {
-  border-left: none;
+  border-left: none !important;
 }
 
 .mytree /deep/ .el-tree > .el-tree-node:after {
@@ -481,7 +487,6 @@ export default {
   left: -4px;
   position: absolute;
   right: auto;
-  border-width: 1px;
 }
 
 .tree /deep/ .el-tree-node:after {
@@ -499,14 +504,15 @@ export default {
   top: -26px;
   width: 1px;
 }
-.tree /deep/ .el-tree-node:before:nth-child(0) {
-  border-left: none !important;
-}
 
 .tree /deep/ .el-tree-node:after {
   border-top: 1px solid #ccc;
   height: 20px;
   top: 12px;
   width: 24px;
+}
+
+.mytree {
+  overflow: hidden;
 }
 </style>
