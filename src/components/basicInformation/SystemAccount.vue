@@ -1,7 +1,21 @@
 <template>
   <div>
     <!-- 卡片视图 -->
-    <el-card>
+    <div class="card_left">
+      <div class="mytree">
+        <el-tree
+          class="tree showTree"
+          :default-expanded-keys="showArr"
+          :data="hosMenuList"
+          :props="defaultProps"
+          node-key="id"
+          :indent="0"
+          icon-class="el-icon-circle-plus"
+          @node-click="handleNodeEditClick"
+        ></el-tree>
+      </div>
+    </div>
+    <el-card class="conCard">
       <el-row :gutter="20">
         <el-col :span="7">
           <el-input placeholder="请输入内容" v-model="input" @keyup.13.native="systemSearch" clearable>
@@ -17,13 +31,11 @@
       <el-table
         stripe
         ref="singleTable"
-        highlight-current-row
-        @current-change="handleCurrentChange"
         :data="userList"
         :header-cell-style="{background:'#f5f5f5'}"
         style="width: 100%"
       >
-        <el-table-column align="center" type="selection" width="60"></el-table-column>
+        <!-- <el-table-column align="center" type="selection" width="60"></el-table-column> -->
         <el-table-column align="center" prop="acId" label="序号" width="60"></el-table-column>
         <el-table-column align="center" prop="userName" label="用户名"></el-table-column>
         <el-table-column align="center" prop="loginName" label="登录名"></el-table-column>
@@ -149,7 +161,7 @@
     <el-dialog title="选择部门" :visible.sync="addDeptDialogVisible" width="40%" v-dialogDrag>
       <el-form
         :rules="addFormRules"
-        ref="addFormRef"
+        ref="deptAddFormRef"
         :model="addDeptForm"
         label-width="80px"
         @closed="addDeptDialogClosed"
@@ -162,7 +174,7 @@
               :props="defaultProps"
               node-key="id"
               :indent="0"
-              icon-class='el-icon-circle-plus'
+              icon-class="el-icon-circle-plus"
               :default-expanded-keys="idArr"
               @node-click="handleNodeAddClick"
             ></el-tree>
@@ -178,20 +190,24 @@
     <el-dialog title="选择部门" :visible.sync="DeptEditDialogVisible" width="40%" v-dialogDrag>
       <el-form
         :rules="addFormRules"
-        ref="addFormRef"
+        ref="deptEditFormRef"
         :model="DeptEditForm"
         label-width="80px"
         @closed="editDeptDialogClosed"
       >
         <el-form-item prop="deptName">
-          <el-tree
-            class="tree"
-            :default-expanded-keys="idArr"
-            :data="hosMenuList"
-            :props="defaultProps"
-            node-key="id"
-            @node-click="handleNodeEditClick"
-          ></el-tree>
+          <div class="mytree">
+            <el-tree
+              class="tree"
+              :default-expanded-keys="defaultId"
+              :data="hosMenuList"
+              :props="defaultProps"
+              node-key="id"
+              :indent="0"
+              icon-class="el-icon-circle-plus"
+              @node-click="handleNodeEditClick"
+            ></el-tree>
+          </div>
         </el-form-item>
       </el-form>
       <span slot="footer" class="dialog-footer">
@@ -225,7 +241,6 @@ export default {
       pageSize: 10,
       pageNum: 1,
       total: 0,
-      currentRow: null,
       editDialogVisible: false,
       // 修改
       editForm: {
@@ -253,6 +268,8 @@ export default {
       addDeptForm: {},
       addDeptDialogVisible: false,
       idArr: [],
+      defaultId: [],
+      showArr: [2],
       defaultProps: {
         label: "deptName",
         children: "child",
@@ -330,12 +347,15 @@ export default {
     },
     // 修改
     showEditdialog(info) {
+      this.defaultId = [];
+      this.defaultId.push(info.deptId);
       this.editId = info.acId;
       this.editForm = JSON.parse(JSON.stringify(info));
       this.editDialogVisible = true;
       this.EditValue = info.deptName;
     },
     editDialogClosed() {
+      this.defaultId = [];
       this.$refs.editFormRef.resetFields();
     },
     edit() {
@@ -355,6 +375,7 @@ export default {
         } else {
           this.$message.success("修改用户成功");
           this.editDialogVisible = false;
+          this.defaultId = [];
           this.getUserList();
         }
       });
@@ -413,11 +434,12 @@ export default {
       this.addDeptDialogVisible = true;
     },
     addDeptDialogClosed() {
-      this.$refs.addFormRef.resetFields();
+      this.$refs.deptAddFormRef.resetFields();
     },
     addDeptEnter() {
       this.addDeptDialogVisible = false;
       this.addValue = this.addTransit;
+      this.getHosMenuList();
     },
     handleNodeAddClick(val) {
       this.addTransit = val.deptName;
@@ -430,20 +452,14 @@ export default {
     DeptEditEnter() {
       this.DeptEditDialogVisible = false;
       this.EditValue = this.editTransit;
+      this.getHosMenuList();
     },
     editDeptDialogClosed() {
-      this.$refs.addFormRef.resetFields();
+      this.$refs.deptEditFormRef.resetFields();
     },
     handleNodeEditClick(val) {
       this.editTransit = val.deptName;
       this.editForm.deptId = val.id;
-    },
-    // 实现表格单行选择高亮
-    setCurrent(row) {
-      this.$refs.singleTable.setCurrentRow(row);
-    },
-    handleCurrentChange(val) {
-      this.currentRow = val;
     }
   }
 };
@@ -462,7 +478,6 @@ export default {
 
 .tree /deep/ .el-tree-node__children {
   padding-left: 16px;
-  color: red;
 }
 
 .tree /deep/ .el-tree-node :last-child:before {
@@ -499,7 +514,7 @@ export default {
 .tree /deep/ .el-tree-node:before {
   border-left: 1px solid #ccc;
   bottom: 0px;
-  /* height: 100%; */
+  height: 100%;
   top: -26px;
   width: 1px;
 }
@@ -513,5 +528,25 @@ export default {
 
 .mytree {
   overflow: hidden;
+}
+</style>
+<style>
+.card_left {
+  float: left;
+  height: 800px;
+  margin-top: 10px;
+  max-height: 100%;
+  width: 15%;
+  /* box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.1); */
+  background-color: #f5f5f5;
+}
+.conCard {
+  float: right;
+  height: 800px;
+  width: 83%;
+  max-height: 100%;
+}
+.showTree {
+  background-color: #f5f5f5;
 }
 </style>

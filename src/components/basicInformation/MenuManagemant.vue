@@ -109,7 +109,6 @@ export default {
   data() {
     return {
       input: "",
-      currentRow: null,
       menuList: [],
       addDialogVisible: false,
       addForm: {

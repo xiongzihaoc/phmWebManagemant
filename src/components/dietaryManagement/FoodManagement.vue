@@ -187,6 +187,8 @@ export default {
           pageNum: this.pageNum
         }
       );
+      console.log(res);
+      
       this.foodTypeList = res.data;
     },
     // 分页

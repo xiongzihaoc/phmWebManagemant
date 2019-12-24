@@ -1,6 +1,6 @@
 <template>
   <div>
-    <h3>Welcome To Index</h3>
+    <h3>Index</h3>
   </div>
 </template>
 <script>
@@ -21,6 +21,6 @@ h3 {
   font-size: 80px;
   color: #000;
   text-align: center;
-  margin: 50px 180px 0 0;
+  margin: 300px 180px 0 0;
 }
 </style>

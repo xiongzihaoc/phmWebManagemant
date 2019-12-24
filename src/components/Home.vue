@@ -153,7 +153,7 @@ export default {
     },
     tabRemove(targetName) {
       // 首页不可删除
-      if (targetName == "/") {
+      if (targetName == "/index") {
         return;
       }
       this.$store.commit("delete_tabs", targetName);

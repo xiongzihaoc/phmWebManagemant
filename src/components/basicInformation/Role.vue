@@ -17,8 +17,6 @@
       <el-table
         :data="RoleList"
         ref="singleTable"
-        highlight-current-row
-        @current-change="handleCurrentChange"
         stripe
         :header-cell-style="{background:'#f5f5f5'}"
         style="width: 100%"
@@ -83,7 +81,6 @@ export default {
         roleName: ""
       },
       id: "",
-      currentRow: null
     };
   },
   created() {
@@ -154,13 +151,6 @@ export default {
       }
       this.$message.success("更新用户状态成功");
     },
-    // 实现表格单行选择高亮
-    setCurrent(row) {
-      this.$refs.singleTable.setCurrentRow(row);
-    },
-    handleCurrentChange(val) {
-      this.currentRow = val;
-    }
   }
 };
 </script>
