@@ -470,7 +470,6 @@ export default {
   color: #409eff;
 }
 .tree /deep/ .el-tree-node :first-child:before {
-  height: 38px;
   color: #409eff;
 }
 
@@ -500,7 +499,7 @@ export default {
 .tree /deep/ .el-tree-node:before {
   border-left: 1px solid #ccc;
   bottom: 0px;
-  height: 100%;
+  /* height: 100%; */
   top: -26px;
   width: 1px;
 }
