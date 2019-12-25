@@ -75,8 +75,8 @@
         <el-form :model="editForm" ref="editFormRef" label-width="80px">
           <el-form-item label="类型" prop="resourceType">
             <el-select v-model="editForm.resourceType" filterable clearable placeholder="请选择">
-              <el-option label="护理指导" :value="0"></el-option>
-              <el-option label="健康知识" :value="1"></el-option>
+              <el-option label="护理指导" :value="'0'"></el-option>
+              <el-option label="健康知识" :value="'1'"></el-option>
               <el-option label="网页" :value="2"></el-option>
             </el-select>
           </el-form-item>
@@ -109,7 +109,7 @@
                 v-for="item in nursingList"
                 :key="item.id"
                 :label="item.name"
-                :value="item.id"
+                :value="item.id + ''"
               ></el-option>
             </el-select>
           </el-form-item>
@@ -124,7 +124,7 @@
                 v-for="item in healthList"
                 :key="item.id"
                 :label="item.name"
-                :value="item.id"
+                :value="item.id + ''"
               ></el-option>
             </el-select>
           </el-form-item>

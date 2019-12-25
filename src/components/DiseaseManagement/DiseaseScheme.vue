@@ -18,8 +18,6 @@
         tooltip-effect="dark"
         :data="disPlanList"
         ref="singleTable"
-        highlight-current-row
-        @current-change="handleCurrentChange"
         stripe
         :header-cell-style="{background:'#f5f5f5'}"
         style="width: 100%"
@@ -144,13 +142,12 @@ export default {
         diseaseTypeId: "",
         foodPlanId: "",
         waterPlanId: "",
-        sportPlanIds: "",
         addSportPlanIds: [],
+        sportPlanIds: "",
         description: ""
       },
       disPlanId: 0,
       value: "",
-      currentRow: null,
       disPlanList: [],
       disTypeList: [],
       foodPlanList: [],
@@ -213,6 +210,7 @@ export default {
         { pageSize: 15000, pageNum: this.pageNum }
       );
       this.sportsPlanList = res.rows;
+      console.log(res.rows);
     },
 
     // 分页
@@ -257,6 +255,8 @@ export default {
         ...this.editForm,
         ...info
       };
+      console.log(this.editForm);
+
       this.editForm.addSportPlanIds = this.editForm.sportPlanIds
         .split(",")
         .filter(n => n)
@@ -282,6 +282,7 @@ export default {
             waterPlanId: this.editForm.waterPlanId,
             description: this.editForm.description,
             sportPlanIds: sportPlanIds
+            // sportPlanIds: this.editForm.addSportPlanIds
           };
         } else {
           httpUrl = "disease/savePDisease.do";
@@ -309,13 +310,6 @@ export default {
     // 搜索
     disTypeSearch() {
       this.getDisPlanList();
-    },
-    // 实现表格单行选择高亮
-    setCurrent(row) {
-      this.$refs.singleTable.setCurrentRow(row);
-    },
-    handleCurrentChange(val) {
-      this.currentRow = val;
     }
   }
 };

@@ -195,6 +195,7 @@ export default {
         ...this.editAddForm,
         ...info
       };
+      
       this.editAddForm.addAllowWaterIds = this.editAddForm.allowWaterIds
         .split(",")
         .filter(n => n)
