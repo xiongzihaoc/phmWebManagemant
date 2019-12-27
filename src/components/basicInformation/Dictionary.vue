@@ -124,6 +124,8 @@ export default {
         "sys/dict/getSysDictList.do",
         { parentId: 1, name: this.input }
       );
+      console.log(res);
+      
       this.menuList = res.data;
     },
     // 跳转下一级

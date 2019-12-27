@@ -20,7 +20,6 @@
         ref="singleTable"
         highlight-current-row
         @current-change="handleCurrentChange"
-        stripe
         :header-cell-style="{background:'#f5f5f5'}"
         style="width: 100%"
       >
@@ -31,7 +30,7 @@
             <img id="img" :src="scope.row.resourceUrl" />
           </template>
         </el-table-column>
-        <el-table-column align="center" prop="resourceType" label="类型"></el-table-column>
+        <el-table-column align="center" prop="resourceType" :formatter="ifendcase" label="类型"></el-table-column>
         <el-table-column align="center" prop="diseaseTypeValue" label="疾病类型"></el-table-column>
         <el-table-column align="center" prop="resourceTypeDetail" label="资源路径"></el-table-column>
         <!-- <el-table-column align="center" prop="resourceOrder" label="排序号"></el-table-column> -->
@@ -153,7 +152,13 @@
         </span>
       </el-dialog>
       <!-- 添加页面 -->
-      <el-dialog title="新增" :visible.sync="addDialogVisible" width="40%" @closed="addDialogClosed" v-dialogDrag>
+      <el-dialog
+        title="新增"
+        :visible.sync="addDialogVisible"
+        width="40%"
+        @closed="addDialogClosed"
+        v-dialogDrag
+      >
         <el-form :model="addForm" ref="addFormRef" label-width="80px">
           <el-form-item label="类型" prop="resourceType">
             <el-select v-model="addForm.resourceType" filterable clearable placeholder="请选择">
@@ -281,6 +286,8 @@ export default {
         "disease/banner/getDiseaseBannerList.do",
         { pageSize: 100000, pageNum: 1 }
       );
+      console.log(res);
+
       this.VideoDiseaseList = res.rows;
     },
     // 获取疾病类型列表
@@ -424,7 +431,16 @@ export default {
       }
       return (isJPG || isBMP || isGIF || isPNG) && isLt10M;
     },
-
+    // 状态判断
+    ifendcase(val) {
+      if (val.resourceType == "0") {
+        return "护理指导";
+      } else if (val.resourceType == "1") {
+        return "健康知识";
+      } else {
+        return "网页";
+      }
+    },
     // 分页
     handleSizeChange(newSize) {
       this.pageSize = newSize;

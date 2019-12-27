@@ -18,8 +18,6 @@
         :data="foodList"
         tooltip-effect="dark"
         ref="singleTable"
-        highlight-current-row
-        @current-change="handleCurrentChange"
         stripe
         :header-cell-style="{background:'#f5f5f5'}"
         style="width: 100%"
@@ -34,7 +32,7 @@
         </el-table-column>
         <el-table-column align="center" prop="fdTypeValue" label="类型" width="160"></el-table-column>
         <el-table-column align="center" prop="elementName" show-overflow-tooltip label="元素名称"></el-table-column>
-        <el-table-column align="center" prop="fdState" label="是否常见 (1: 是 0: 否)"></el-table-column>
+        <el-table-column align="center" prop="fdState" label="是否常见" :formatter="ifendcase"></el-table-column>
         <el-table-column align="center" prop="fdDescribe" show-overflow-tooltip label="描述"></el-table-column>
         <el-table-column align="center" prop="operate" label="操作" width="400">
           <template slot-scope="scope">
@@ -121,7 +119,11 @@
             <img v-if="editForm.fdPhotoPath" :src="editForm.fdPhotoPath" class="avatar" />
             <i v-else class="el-icon-plus avatar-uploader-icon"></i>
           </el-upload>
-          <el-progress v-if="videoFlag == true" :percentage="percentageFile" style="margin-top:20px;"></el-progress>
+          <el-progress
+            v-if="videoFlag == true"
+            :percentage="percentageFile"
+            style="margin-top:20px;"
+          ></el-progress>
         </el-form-item>
       </el-form>
       <span slot="footer" class="dialog-footer">
@@ -155,8 +157,7 @@ export default {
       value: "",
       foodTypeList: [],
       videoFlag: false,
-      percentageFile: 0,
-      currentRow: null
+      percentageFile: 0
     };
   },
 
@@ -188,7 +189,7 @@ export default {
         }
       );
       console.log(res);
-      
+
       this.foodTypeList = res.data;
     },
     // 分页
@@ -301,16 +302,17 @@ export default {
       }
       return (isJPG || isBMP || isGIF || isPNG) && isLt10M;
     },
+    // 状态判断
+    ifendcase(val) {
+      if (val.fdState == "1") {
+        return "是";
+      } else {
+        return "否";
+      }
+    },
     // 搜索
     foodSearch() {
       this.getFoodList();
-    },
-    // 实现表格单行选择高亮
-    setCurrent(row) {
-      this.$refs.singleTable.setCurrentRow(row);
-    },
-    handleCurrentChange(val) {
-      this.currentRow = val;
     },
     // 跳转到微量元素页面
     jumpScruple(info) {
