@@ -532,7 +532,7 @@ export default {
 </style>
 <style>
 .card_left {
-  float: left;
+  float: right;
   height: 800px;
   margin-top: 10px;
   max-height: 100%;
@@ -541,7 +541,7 @@ export default {
   background-color: #f5f5f5;
 }
 .conCard {
-  float: right;
+  float: left;
   height: 800px;
   width: 83%;
   max-height: 100%;

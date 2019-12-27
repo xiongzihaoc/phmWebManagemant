@@ -145,6 +145,7 @@ export default {
     },
     // 修改
     showEditdialog(info) {
+      // console.log(info);
       this.dialogTitle = "修改";
       this.id = info.id;
       this.editForm = JSON.parse(JSON.stringify(info));

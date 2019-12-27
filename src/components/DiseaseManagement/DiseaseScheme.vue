@@ -28,7 +28,7 @@
         <el-table-column align="center" prop="diseaseTypeName" label="类型" width="100"></el-table-column>
         <el-table-column align="center" prop="foodPlanName" label="饮食方案"></el-table-column>
         <el-table-column align="center" prop="waterPlanName" label="饮水方案"></el-table-column>
-        <el-table-column align="center" prop="sportPlanName" label="运动方案"></el-table-column>
+        <el-table-column align="center" prop="sportPlanName" label="运动方案" show-overflow-tooltip></el-table-column>
         <el-table-column align="center" prop="description" show-overflow-tooltip label="描述"></el-table-column>
         <el-table-column align="center" prop="operate" label="操作" width="180">
           <template slot-scope="scope">
@@ -59,7 +59,7 @@
         :total="total"
       ></el-pagination>
     </el-card>
-    <!-- 修改页面 -->
+    <!-- 动态增修页面 -->
     <el-dialog :title="dialogTitle" :visible.sync="editDialogVisible" width="40%" v-dialogDrag>
       <el-form :model="editForm" ref="editFormRef" @closed="editDialogClosed" label-width="80px">
         <el-form-item label="疾病名称" prop="name">
@@ -249,14 +249,14 @@ export default {
     },
     // 修改
     showEditdialog(info) {
+      console.log(info);
+
       this.dialogTitle = "修改";
       this.disPlanId = info.id;
       this.editForm = {
         ...this.editForm,
         ...info
       };
-      console.log(this.editForm);
-
       this.editForm.addSportPlanIds = this.editForm.sportPlanIds
         .split(",")
         .filter(n => n)
@@ -282,7 +282,6 @@ export default {
             waterPlanId: this.editForm.waterPlanId,
             description: this.editForm.description,
             sportPlanIds: sportPlanIds
-            // sportPlanIds: this.editForm.addSportPlanIds
           };
         } else {
           httpUrl = "disease/savePDisease.do";

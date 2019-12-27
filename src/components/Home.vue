@@ -292,9 +292,8 @@ export default {
   border-left: 2px solid #42B983;
 }
 .topTags {
-  height: 20px !important;
+  height: 41px !important;
   width: 100%;
   background-color: #f5f5f5;
 }
-
 </style>
