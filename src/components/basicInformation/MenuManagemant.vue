@@ -147,7 +147,9 @@ export default {
     },
     // 修改弹框关闭
     editDialogClosed() {
-      this.$refs.editFormRef.resetFields();
+      console.log(111);
+      
+      // this.$refs.editFormRef.resetFields();
     },
     // 确定修改
     editEnter() {

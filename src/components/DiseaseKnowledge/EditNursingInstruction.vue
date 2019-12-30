@@ -419,6 +419,7 @@ li {
   width: 180px;
   overflow: hidden;
   float: right;
+  transform: translateX(-200px);
   padding-bottom: 20px;
 }
 .draggableDiv {
