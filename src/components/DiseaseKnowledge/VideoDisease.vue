@@ -286,9 +286,8 @@ export default {
         "disease/banner/getDiseaseBannerList.do",
         { pageSize: 100000, pageNum: 1 }
       );
-      console.log(res);
-
       this.VideoDiseaseList = res.rows;
+      this.total = res.total;
     },
     // 获取疾病类型列表
     async getdisTypeList() {

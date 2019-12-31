@@ -26,9 +26,8 @@
         <el-table-column align="center" type="selection" width="60"></el-table-column>
         <el-table-column align="center" type="index" label="序号" width="60"></el-table-column>
         <el-table-column align="center" prop="drinkWaterAmount" show-overflow-tooltip label="饮水量"></el-table-column>
-        <el-table-column align="center" prop="drinkTime" label="开始时间" width="120"></el-table-column>
-        <el-table-column align="center" prop="endDrinkTime" label="结束时间" width="120"></el-table-column>
-        <el-table-column align="center" prop="description" show-overflow-tooltip label="描述"></el-table-column>
+        <el-table-column align="center" prop="drinkTime" label="开始时间" width="220"></el-table-column>
+        <el-table-column align="center" prop="endDrinkTime" label="结束时间" width="220"></el-table-column>
         <el-table-column align="center" prop="description" show-overflow-tooltip label="描述"></el-table-column>
         <el-table-column align="center" prop="operate" label="操作" width="200">
           <template slot-scope="scope">
