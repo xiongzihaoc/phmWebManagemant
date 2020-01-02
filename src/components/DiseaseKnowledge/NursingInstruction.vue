@@ -23,7 +23,7 @@
       >
         <el-table-column align="center" type="selection" width="60"></el-table-column>
         <el-table-column align="center" type="index" label="序号" width="60"></el-table-column>
-        <el-table-column align="center" prop="name" label="名称"></el-table-column>
+        <el-table-column align="center" prop="name" label="名称" show-overflow-tooltip></el-table-column>
         <el-table-column align="center" prop="diseaseTypeValue" label="疾病类型"></el-table-column>
         <el-table-column align="center" prop="description" show-overflow-tooltip label="描述"></el-table-column>
         <el-table-column align="center" prop="operate" label="操作" width="200">

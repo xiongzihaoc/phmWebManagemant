@@ -14,7 +14,7 @@
         @current-change="handleCurrentChange"
         :tree-props="{children: 'child', hasChildren: 'hasChildren'}"
       >
-        <el-table-column align="center" prop="deptName" label="名称" sortable></el-table-column>
+        <el-table-column align="center" prop="deptName" label="名称" sortable width="200"></el-table-column>
         <el-table-column align="center" prop="deptManager" label="负责人" sortable></el-table-column>
         <el-table-column align="center" prop="phone" label="联系方式" sortable></el-table-column>
         <el-table-column align="center" prop="logo" label="图标" sortable>

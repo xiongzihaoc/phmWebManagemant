@@ -170,6 +170,8 @@
           <div class="mytree">
             <el-tree
               class="tree"
+              accordion
+              highlight-current
               :data="hosMenuList"
               :props="defaultProps"
               node-key="id"
@@ -199,6 +201,8 @@
           <div class="mytree">
             <el-tree
               class="tree"
+              accordion
+              highlight-current
               :default-expanded-keys="defaultId"
               :data="hosMenuList"
               :props="defaultProps"
@@ -335,6 +339,8 @@ export default {
       const { data: res } = await this.$http.post("dept/getDeptList.do", {});
       this.hosMenuList = res.data;
       this.idArr.push(res.data[0].id);
+      console.log(res);
+      
     },
     // 分页
     handleSizeChange(newSize) {
@@ -347,7 +353,6 @@ export default {
     },
     // 修改
     showEditdialog(info) {
-      this.defaultId = [];
       this.defaultId.push(info.deptId);
       this.editId = info.acId;
       this.editForm = JSON.parse(JSON.stringify(info));
@@ -355,7 +360,7 @@ export default {
       this.EditValue = info.deptName;
     },
     editDialogClosed() {
-      this.defaultId = [];
+      // this.defaultId = [];
       this.$refs.editFormRef.resetFields();
     },
     edit() {

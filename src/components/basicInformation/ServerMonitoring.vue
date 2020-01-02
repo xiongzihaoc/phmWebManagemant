@@ -1,8 +1,5 @@
 <template>
-  <div
-    v-loading="loading"
-    element-loading-text="拼命加载中"
-  >
+  <div v-loading="loading" element-loading-text="拼命加载中">
     <el-row :gutter="24">
       <el-col :span="12">
         <el-card class="box-card cardOne">
@@ -165,7 +162,7 @@ export default {
       this.mem = res.data.mem;
       this.sys = res.data.sys;
       this.sysFiles = res.data.sysFiles;
-      this.loading = false
+      this.loading = false;
     }
   }
 };
@@ -212,6 +209,9 @@ export default {
   overflow: hidden;
   padding: 10px 0 10px 0;
   border-bottom: 1px solid #e7eaec;
+}
+.el-card {
+  margin-bottom: 10px;
 }
 .el-card span {
   font-weight: 700;
