@@ -76,7 +76,7 @@
             <el-select v-model="editForm.resourceType" filterable clearable placeholder="请选择">
               <el-option label="护理指导" :value="'0'"></el-option>
               <el-option label="健康知识" :value="'1'"></el-option>
-              <el-option label="网页" :value="2"></el-option>
+              <el-option label="网页" :value="'2'"></el-option>
             </el-select>
           </el-form-item>
           <el-form-item label="疾病类型" prop="diseaseTypeValue">
