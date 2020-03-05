@@ -111,6 +111,7 @@ export default {
     };
   },
   created() {
+    console.log(this.activeIndex);
     this.getMenuList();
     this.activePath = window.sessionStorage.getItem("activePath");
     this.loginName = window.localStorage.getItem("loginName");
@@ -289,7 +290,7 @@ export default {
   padding-top: 20px;
 }
 .el-menu-item {
-  border-left: 2px solid #42B983;
+  border-left: 2px solid #42b983;
 }
 .topTags {
   height: 41px !important;

@@ -113,7 +113,6 @@ export default {
         "sys/dict/getSysDictList.do",
         { parentId: this.id, name: this.input }
       );
-      console.log(res);
       this.menuList = res.data;
     },
     // 修改

@@ -129,7 +129,11 @@ export default {
     async getMovemenPlanList() {
       const { data: res } = await this.$http.post(
         "sportPlan/getPSportPlanList.do",
-        { pageSize: this.pageSize, pageNum: this.pageNum, name: this.input }
+        {
+          pageSize: this.pageSize,
+          pageNum: this.pageNum,
+          name: this.input
+        }
       );
       this.movemenPlanList = res.rows;
       this.total = res.total;

@@ -19,7 +19,7 @@ const routes = [{
         name: "首页",
         component: () => import('@/components/Index.vue'),
         meta: {
-          title: '首页'
+          title: '首页',
         }
       },
       {
@@ -27,7 +27,7 @@ const routes = [{
         name: "菜单管理",
         component: () => import('@/components/basicInformation/MenuManagemant.vue'),
         meta: {
-          title: '菜单管理'
+          title: '菜单管理',
         }
       },
       {
@@ -35,17 +35,9 @@ const routes = [{
         name: "系统账户",
         component: () => import('@/components/basicInformation/SystemAccount.vue'),
         meta: {
-          title: '系统账户'
+          title: '系统账户',
         }
       },
-      // {
-      //   path: '/system/UserList',
-      //   name: "用户管理",
-      //   component: () => import('@/components/basicInformation/UserManagemant.vue'),
-      //   meta: {
-      //     title: '用户管理'
-      //   }
-      // },
       {
         path: '/system/doctor',
         name: "医生管理",
@@ -71,6 +63,14 @@ const routes = [{
         }
       },
       {
+        path: '/JumpDictionaryNext',
+        name: "字典数据",
+        component: () => import('@/components/basicInformation/JumpDictionaryNext.vue'),
+        meta: {
+          title: '字典数据'
+        }
+      },
+      {
         path: '/system/patient',
         name: "患者管理",
         component: () => import('@/components/basicInformation/PatientManagement.vue'),
@@ -92,14 +92,6 @@ const routes = [{
         component: () => import('@/components/basicInformation/Logmanagemant.vue'),
         meta: {
           title: '日志管理'
-        }
-      },
-      {
-        path: '/JumpDictionaryNext',
-        name: "字典数据",
-        component: () => import('@/components/basicInformation/JumpDictionaryNext.vue'),
-        meta: {
-          title: '字典数据'
         }
       },
       {
@@ -221,7 +213,7 @@ const routes = [{
         meta: {
           title: '饮水种类'
         }
-      },{
+      }, {
         path: '/water/guide',
         name: "饮水指导",
         component: () => import('@/components/waterManagement/WaterDrinking.vue'),

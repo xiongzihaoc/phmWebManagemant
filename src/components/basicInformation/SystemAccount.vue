@@ -273,7 +273,7 @@ export default {
       addDeptDialogVisible: false,
       idArr: [],
       defaultId: [],
-      showArr: [2],
+      showArr: [1],
       defaultProps: {
         label: "deptName",
         children: "child",
