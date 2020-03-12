@@ -38,7 +38,7 @@ Vue.prototype.$http = axios
 // 文件上传地址
 Vue.prototype.UPLOAD_IMG = 'http://test.phmzykj.com/zhuoya_manager/oss/fileUpload.do'
 Vue.config.productionTip = false
-
+// 测试
 // 弹框拖拽功能
 import './assets/js/directives.js'
 new Vue({
