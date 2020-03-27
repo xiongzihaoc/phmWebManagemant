@@ -20,6 +20,7 @@ const routes = [{
         component: () => import('@/components/Index.vue'),
         meta: {
           title: '首页',
+          keepAlive: true
         }
       },
       {
@@ -28,6 +29,7 @@ const routes = [{
         component: () => import('@/components/basicInformation/MenuManagemant.vue'),
         meta: {
           title: '菜单管理',
+          keepAlive: true
         }
       },
       {
@@ -36,6 +38,7 @@ const routes = [{
         component: () => import('@/components/basicInformation/SystemAccount.vue'),
         meta: {
           title: '系统账户',
+          keepAlive: true
         }
       },
       {
@@ -83,7 +86,8 @@ const routes = [{
         name: "角色管理",
         component: () => import('@/components/basicInformation/Role.vue'),
         meta: {
-          title: '角色管理'
+          title: '角色管理',
+          keepAlive: true
         }
       },
       {
@@ -115,7 +119,8 @@ const routes = [{
         name: "食物管理",
         component: () => import('@/components/dietaryManagement/FoodManagement.vue'),
         meta: {
-          title: '食物管理'
+          title: '食物管理',
+          keepAlive: true
         }
       },
       {
@@ -131,7 +136,8 @@ const routes = [{
         name: "估量食物管理",
         component: () => import('@/components/dietaryManagement/EstimateFood.vue'),
         meta: {
-          title: '估量食物管理'
+          title: '估量食物管理',
+          keepAlive: true
         }
       },
       {
@@ -139,7 +145,8 @@ const routes = [{
         name: "估量食物类型管理",
         component: () => import('@/components/dietaryManagement/EstimateFoodManagemant.vue'),
         meta: {
-          title: '估量食物类型管理'
+          title: '估量食物类型管理',
+          keepAlive: true
         }
       },
       {
@@ -147,7 +154,8 @@ const routes = [{
         name: "食物类型管理",
         component: () => import('@/components/dietaryManagement/FoodType.vue'),
         meta: {
-          title: '食物类型管理'
+          title: '食物类型管理',
+          keepAlive: true
         }
       },
       {
@@ -211,7 +219,8 @@ const routes = [{
         name: "饮水种类",
         component: () => import('@/components/waterManagement/WaterType.vue'),
         meta: {
-          title: '饮水种类'
+          title: '饮水种类',
+          keepAlive: true
         }
       }, {
         path: '/water/guide',
@@ -299,7 +308,8 @@ const routes = [{
         name: "轻问诊记录",
         component: () => import('@/components/HealthManagemant/EasyInquiry.vue'),
         meta: {
-          title: '轻问诊记录'
+          title: '轻问诊记录',
+          keepAlive: true
         }
       },
     ]
