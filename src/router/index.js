@@ -100,10 +100,10 @@ const routes = [{
       },
       {
         path: '/system/server',
-        name: "服务器监控",
+        name: "服务监控",
         component: () => import('@/components/basicInformation/ServerMonitoring.vue'),
         meta: {
-          title: '服务器监控'
+          title: '服务监控'
         }
       },
       {
