@@ -75,14 +75,14 @@
       ></el-pagination>
     </el-card>
     <!-- 修改页面 -->
-    <el-dialog title="修改信息" :visible.sync="editDialogVisible" width="40%" v-dialogDrag>
-      <el-form
-        :rules="addFormRules"
-        ref="editFormRef"
-        :model="editForm"
-        label-width="80px"
-        @closed="editDialogClosed"
-      >
+    <el-dialog
+      title="修改信息"
+      :visible.sync="editDialogVisible"
+      width="40%"
+      v-dialogDrag
+      @closed="editDialogClosed"
+    >
+      <el-form :rules="addFormRules" ref="editFormRef" :model="editForm" label-width="80px">
         <el-form-item label="用户名" prop="userName">
           <el-input v-model="editForm.userName"></el-input>
         </el-form-item>
@@ -340,7 +340,6 @@ export default {
       this.hosMenuList = res.data;
       this.idArr.push(res.data[0].id);
       console.log(res);
-      
     },
     // 分页
     handleSizeChange(newSize) {

@@ -116,7 +116,6 @@ export default {
     };
   },
   created() {
-    console.log(this.activeIndex);
     this.getMenuList();
     this.activePath = window.sessionStorage.getItem("activePath");
     this.loginName = window.localStorage.getItem("loginName");

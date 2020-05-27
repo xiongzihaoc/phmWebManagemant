@@ -170,7 +170,7 @@ export default {
     editAddDialogClosed() {
       this.$refs.editFormRef.resetFields();
     },
-    async AddEdit() {
+    AddEdit() {
       this.$refs.editFormRef.validate(async valid => {
         if (!valid) return this.$message.error("失败");
         let httpUrl = "";

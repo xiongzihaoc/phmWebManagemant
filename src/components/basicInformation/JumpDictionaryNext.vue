@@ -126,7 +126,7 @@ export default {
     AddEditDialogClosed() {
       this.$refs.addFormRef.resetFields();
     },
-    async addEditEnter() {
+    addEditEnter() {
       this.$refs.addFormRef.validate(async valid => {
         if (!valid) return this.$message.error("登录失败");
         let httpUrl = "";
